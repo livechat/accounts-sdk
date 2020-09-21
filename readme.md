@@ -7,6 +7,13 @@
 npm install --save @livechat/accounts-sdk
 ```
 
+## Button
+
+Example sign with livechat button desigs. Assets are available [here](https://livechat.design/).
+
+![Button](assets/button.svg)
+![Small button](assets/button-small.svg)
+
 ## Usage
 ```
 import { AccountsSDK } from '@livechat/accounts-sdk';
@@ -24,6 +31,7 @@ sdk.popup().authorize((err, authorizeData) => {
 // browser redirect
 sdk.redirect().authorize()
 
+// iframe redirect, not recommended
 sdk.iframe().authorize((err, authorizeData) => {
 })
 
