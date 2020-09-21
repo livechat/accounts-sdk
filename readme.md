@@ -9,7 +9,7 @@ npm install --save @livechat/accounts-sdk
 
 ## Button
 
-Example sign with livechat button desigs. Assets are available [here](https://livechat.design/).
+Example sign in with LiveChat button desigs. Assets are available [here](https://livechat.design/).
 
 ![Button](assets/button.svg)
 ![Small button](assets/button-small.svg)
