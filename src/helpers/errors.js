@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   oauth_exception: {
     invalid_request: {},
     access_denied: {},

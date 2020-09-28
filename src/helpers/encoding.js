@@ -3,6 +3,6 @@ function base64URLEncode(str) {
   return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-module.exports = {
+export default {
   base64URLEncode: base64URLEncode,
 };

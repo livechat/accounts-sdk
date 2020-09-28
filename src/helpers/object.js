@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-function pick(object, keys) {
+export function pick(object, keys) {
   return keys.reduce((prev, key) => {
     if (object[key]) {
       prev[key] = object[key];
@@ -13,7 +13,3 @@ function pick(object, keys) {
     return prev;
   }, {});
 }
-
-module.exports = {
-  pick: pick,
-};
