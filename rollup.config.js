@@ -5,24 +5,14 @@ import {terser} from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import serve from 'rollup-plugin-serve';
 
+const external = Object.keys(pkg.dependencies);
+external.push('crypto'); // imported from sjcl
+
 export default [
   {
     input: 'src/sdk.js',
     external: ['crypto'],
     output: [
-      {
-        file: pkg.module,
-        format: 'esm',
-        sourcemap: true,
-        exports: 'named',
-      },
-      {
-        name: 'AccountsSDK',
-        file: pkg.main,
-        format: 'cjs',
-        sourcemap: true,
-        exports: 'named',
-      },
       {
         name: 'AccountsSDK',
         file: pkg.unpkg,
@@ -48,6 +38,18 @@ export default [
       commonjs(),
       babel({presets: ['@babel/preset-env'], babelHelpers: 'bundled'}),
       process.env.ROLLUP_WATCH && serve('dist'),
+    ],
+  },
+  {
+    input: 'src/sdk.js',
+    external: external,
+    output: [
+      {
+        file: pkg.module,
+        format: 'esm',
+        sourcemap: true,
+        exports: 'named',
+      },
     ],
   },
 ];
