@@ -12,13 +12,14 @@ function string(length) {
     '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._~';
 
   const cryptoObj = window.crypto || window.msCrypto;
+  let random = '';
   if (!cryptoObj) {
     for (let i = 0; i < length; i++) {
-      result += charset.charAt(Math.floor(Math.random() * charset.length));
+      random += charset.charAt(Math.floor(Math.random() * charset.length));
     }
+  } else {
+    random = cryptoObj.getRandomValues(bytes);
   }
-
-  const random = cryptoObj.getRandomValues(bytes);
 
   for (let a = 0; a < random.length; a++) {
     result.push(charset[random[a] % charset.length]);
