@@ -1,4 +1,6 @@
 /* eslint-disable require-jsdoc */
+import './errors';
+import errors from './errors';
 export default class Listener {
   constructor(options = {}) {
     this.options = options;
@@ -42,7 +44,7 @@ export default class Listener {
     this.stop();
 
     if (event.data.error) {
-      this.callback(event.data.error, null);
+      this.callback(errors.extend(event.data.error), null);
     } else {
       if (event.data.data.scopes) {
         event.data.data.scope = event.data.data.scopes;

@@ -37,7 +37,7 @@ export default class Redirect {
           'token_type',
         ]);
         if (Object.keys(authorizeData).length != 5) {
-          callback(errors.identity_exception.unauthorized);
+          callback(errors.extend({identity_exception: 'unauthorized'}));
           return;
         }
 
@@ -50,7 +50,7 @@ export default class Redirect {
         });
         authorizeData = pick(authorizeData, ['state', 'code']);
         if (Object.keys(authorizeData).length < 2) {
-          callback(errors.identity_exception.unauthorized);
+          callback(errors.extend({identity_exception: 'unauthorized'}));
           return;
         }
     }

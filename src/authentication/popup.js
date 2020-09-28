@@ -15,6 +15,7 @@ export default class Popup {
    */
   authorize(callback) {
     const url = this.sdk.authorizeURL(this.options, 'button');
+
     const w = 500;
     const h = 650;
     const left = window.screen.width / 2 - w / 2;
