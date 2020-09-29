@@ -24,10 +24,19 @@ export default class Popup {
     const listener = new Listener(this.options);
     listener.start(null, callback);
 
-    window.open(
-      url,
-      'livechat-login-popup',
-      `resizable,scrollbars,width=${w},height=${h},left=${left},top=${top}`
-    );
+    var open = function () {
+      window.open(
+        url,
+        'livechat-login-popup',
+        `resizable,scrollbars,width=${w},height=${h},left=${left},top=${top}`
+      );
+    };
+
+    if (document.requestStorageAccess) {
+      var promise = document.requestStorageAccess();
+      promise.then(open, open);
+    } else {
+      open();
+    }
   }
 }
