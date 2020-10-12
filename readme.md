@@ -9,12 +9,12 @@ npm install --save @livechat/accounts-sdk
 
 ## Button
 
-Example sign in with LiveChat button desigs. Assets are available [here](https://livechat.design/).
+Example sign in with LiveChat button designs. Assets are available [here](https://livechat.design/).
 
 ![Button](assets/button.svg)
 ![Small button](assets/button-small.svg)
 
-## Usage
+## Example popup
 ```
 import { AccountsSDK } from '@livechat/accounts-sdk';
 
@@ -23,18 +23,51 @@ const sdk = new AccountsSDK({
   client_id: '<your_app_client_id>'
 });
 
-// use one of available methods to authorize a user
-// popup (must be run in an event hadler to avoid the popup beeing blocked)
-sdk.popup().authorize((err, authorizeData) => {
+document.getElementById('login-button').onclick = (e) => {
+  if (e && e.preventDefault) {
+    e.preventDefault();
+  }
+
+  sdk.popup().authorize().then((authorizeData)=>{
+    const transaction = sdk.verify(authorizeData);
+    if (transaction != null) {
+      // authorization success
+      // authorizeData contains `accessToken` or `code`
+      // transation contains state and optional code_verifier (code + PKCE)
+    }
+  }).catch((e)=>{
+    
+  })
+};
+```
+
+## Flows
+
+Authorize using a popup. It's possible to pass options to override constructor options.
+```
+const sdk = new AccountsSDK(options)
+const promise = sdk.popup(options).authorize()
+```
+
+Authorize using iframe. It's possible to pass options to override constructor options. Works when a browser doesn't check for ITP, and user authentication is set.
+```
+const sdk = new AccountsSDK(options)
+const promise = sdk.iframe(options).authorize()
+```
+
+Authorize using a full redirect. Authorize function performs full browser redirect to an authorization server. `authorizeData` function checks if authorization is set in URL.
+```
+const sdk = new AccountsSDK(options)
+
+sdk.redirect().authorizeData().then((authorizeData)=>{
+sdk.redirect().authorizeData().then((authorizeData)=>{
+  // authorize data found in URL
+  const transaction = sdk.verify(authorizeData);
+
+}).catch((e)=>{
+  // authorize data missing, redirect to authorization server
+  sdk.redirect().authorize()
 })
-
-// browser redirect
-sdk.redirect().authorize()
-
-// iframe redirect, not recommended
-sdk.iframe().authorize((err, authorizeData) => {
-})
-
 ```
 
 ## Options

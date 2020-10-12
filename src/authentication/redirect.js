@@ -12,49 +12,50 @@ export default class Redirect {
 
   /**
    * run default authorization flow
-   * @param {Function} callback callback for handling autorize errors
    */
-  authorize(callback) {
+  authorize() {
     const url = this.sdk.authorizeURL(this.options);
     window.location = url;
   }
 
   /**
    * this function checks if the current origin was redirected to with authorize data
-   * @param {Function} callback callback with authorize data
+   * @return {Promise} promise that resolves to authorize data or error
    */
-  authorizeData(callback) {
-    let authorizeData = {};
+  authorizeData() {
+    return new Promise((resolve, reject) => {
+      let authorizeData = {};
 
-    switch (this.options.response_type) {
-      case 'token':
-        authorizeData = qs.parse(window.location.hash.substring(1));
-        authorizeData = pick(authorizeData, [
-          'access_token',
-          'expires_in',
-          'state',
-          'scope',
-          'token_type',
-        ]);
-        if (Object.keys(authorizeData).length != 5) {
-          callback(errors.extend({identity_exception: 'unauthorized'}));
-          return;
-        }
+      switch (this.options.response_type) {
+        case 'token':
+          authorizeData = qs.parse(window.location.hash.substring(1));
+          authorizeData = pick(authorizeData, [
+            'access_token',
+            'expires_in',
+            'state',
+            'scope',
+            'token_type',
+          ]);
+          if (Object.keys(authorizeData).length != 5) {
+            reject(errors.extend({identity_exception: 'unauthorized'}));
+            return;
+          }
 
-        authorizeData.expires_in = parseInt(authorizeData.expires_in);
-        break;
+          authorizeData.expires_in = parseInt(authorizeData.expires_in);
+          break;
 
-      case 'code':
-        authorizeData = qs.parse(window.location.search, {
-          ignoreQueryPrefix: true,
-        });
-        authorizeData = pick(authorizeData, ['state', 'code']);
-        if (Object.keys(authorizeData).length < 2) {
-          callback(errors.extend({identity_exception: 'unauthorized'}));
-          return;
-        }
-    }
+        case 'code':
+          authorizeData = qs.parse(window.location.search, {
+            ignoreQueryPrefix: true,
+          });
+          authorizeData = pick(authorizeData, ['state', 'code']);
+          if (Object.keys(authorizeData).length < 2) {
+            reject(errors.extend({identity_exception: 'unauthorized'}));
+            return;
+          }
+      }
 
-    callback(null, authorizeData);
+      resolve(authorizeData);
+    });
   }
 }

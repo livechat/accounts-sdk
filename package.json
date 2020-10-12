@@ -1,6 +1,6 @@
 {
     "name": "@livechat/accounts-sdk",
-    "version": "2.0.0-rc.5",
+    "version": "2.0.0",
     "description": "SDK for 'Sign in with LiveChat'.",
     "author": "LiveChat",
     "license": "MIT",
@@ -38,7 +38,7 @@
         "rollup-plugin-serve": "^1.0.4",
         "rollup-plugin-terser": "^7.0.2"
     },
-    "browserslist": "> 0.1%, not dead",
+    "browserslist": "> 0.1%, not dead, not IE 11",
     "dependencies": {
         "js-cookie": "^2.2.1",
         "qs": "^6.9.4",
