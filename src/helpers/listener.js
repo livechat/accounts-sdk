@@ -41,6 +41,10 @@ export default class Listener {
       return;
     }
 
+    if (!event.data.data && !event.data.error) {
+      return;
+    }
+
     this.stop();
 
     if (event.data.error) {
