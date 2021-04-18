@@ -28,6 +28,13 @@ export default class Redirect {
 
       switch (this.options.response_type) {
         case 'token':
+          const requiredFields = [
+            'access_token',
+            'expires_in',
+            'state',
+            'token_type',
+          ];
+
           authorizeData = qs.parse(window.location.hash.substring(1));
           authorizeData = pick(authorizeData, [
             'access_token',
@@ -36,7 +43,12 @@ export default class Redirect {
             'scope',
             'token_type',
           ]);
-          if (Object.keys(authorizeData).length != 5) {
+
+          if (
+            !requiredFields.every((field) =>
+              authorizeData.hasOwnProperty(field)
+            )
+          ) {
             reject(errors.extend({identity_exception: 'unauthorized'}));
             return;
           }
@@ -45,11 +57,18 @@ export default class Redirect {
           break;
 
         case 'code':
+          const requiredFields = ['state', 'code'];
+
           authorizeData = qs.parse(window.location.search, {
             ignoreQueryPrefix: true,
           });
           authorizeData = pick(authorizeData, ['state', 'code']);
-          if (Object.keys(authorizeData).length < 2) {
+
+          if (
+            !requiredFields.every((field) =>
+              authorizeData.hasOwnProperty(field)
+            )
+          ) {
             reject(errors.extend({identity_exception: 'unauthorized'}));
             return;
           }
