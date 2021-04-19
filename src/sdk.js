@@ -48,6 +48,7 @@ export default class AccountsSDK {
       response_type: 'token',
       popup_flow: 'auto',
       state: '',
+      verify_state: true,
       verify_callback: true,
       scope: null,
       redirect_uri: '',
