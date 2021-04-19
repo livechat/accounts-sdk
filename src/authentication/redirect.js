@@ -28,12 +28,7 @@ export default class Redirect {
 
       switch (this.options.response_type) {
         case 'token':
-          const requiredFields = [
-            'access_token',
-            'expires_in',
-            'state',
-            'token_type',
-          ];
+          const requiredFields = ['access_token', 'expires_in', 'token_type'];
 
           authorizeData = qs.parse(window.location.hash.substring(1));
           authorizeData = pick(authorizeData, [
@@ -57,7 +52,7 @@ export default class Redirect {
           break;
 
         case 'code':
-          const requiredFields = ['state', 'code'];
+          const requiredFields = ['code'];
 
           authorizeData = qs.parse(window.location.search, {
             ignoreQueryPrefix: true,
