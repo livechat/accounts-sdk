@@ -1,6 +1,6 @@
 {
     "name": "@livechat/accounts-sdk",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "description": "SDK for 'Sign in with LiveChat'.",
     "author": "LiveChat",
     "license": "MIT",

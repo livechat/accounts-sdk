@@ -27,6 +27,7 @@ export default class AccountsSDK {
    * @param {String} [options.redirect_uri=''] OAuth redirect uri - default current location
    * @param {String} [options.email_hint=''] fill in email in forms
    * @param {String} [options.server_url='https://accounts.livechat.com'] authorization server url
+   * @param {String} [options.path=''] option to provide a path when loading accounts, for example '/signup'
    * @param {Object} [options.tracking] tracking querystring params
    * @param {Object} [options.transaction] options for transaction manager
    * @param {String} [options.transaction.namespace='com.livechat.accounts'] transaction keys prefix
@@ -144,6 +145,10 @@ export default class AccountsSDK {
     let url = localOptions.server_url;
     if (localOptions.popup_flow === 'manual') {
       url += '/signin';
+    }
+
+    if (localOptions.path) {
+      url += localOptions.path;
     }
 
     if (localOptions.response_type === 'code' && localOptions.pkce.enabled) {

@@ -82,6 +82,7 @@ sdk.redirect().authorizeData().then((authorizeData)=>{
    * `redirect_uri` **string** OAuth redirect URI - current location by default
    * `email_hint` **string** fill in an email hint in forms
    * `server_url='https://accounts.livechat.com'` **string** authorization server url
+   * `path=''` **string** option to provide a path when loading accounts, for example `/signup`
    * `tracking` **object** tracking querystring params
    * `transaction.namespace='com.livechat.accounts'` **string** transaction keys prefix
    * `transaction.key_length=32` **number** transaction random state length
