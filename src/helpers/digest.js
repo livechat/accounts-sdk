@@ -1,20 +1,9 @@
-/* eslint-disable require-jsdoc */
+var crypto = require('crypto');
 
-function digestMessage(message, algo = 'SHA-256') {
-  return new Promise((resolve, reject) => {
-    const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
-    // hash the message
-    window.crypto.subtle
-      .digest(algo, msgUint8)
-      .then((hashBuffer) => {
-        const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
-        const hashHex = hashArray
-          .map((b) => b.toString(16).padStart(2, '0'))
-          .join(''); // convert bytes to hex string
-        resolve(hashHex);
-      })
-      .catch((err) => reject(err));
-  });
+function digestMessage(message, algo = 'sha256', encoding = 'hex') {
+  const buff = Buffer.from(message);
+  const sha256Hex = crypto.createHash(algo).update(buff).digest(encoding);
+  return sha256Hex;
 }
 
-export default digestMessage;
+exports.module = digestMessage;
