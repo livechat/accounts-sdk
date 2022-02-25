@@ -6,12 +6,10 @@ import commonjs from '@rollup/plugin-commonjs';
 import serve from 'rollup-plugin-serve';
 
 const external = Object.keys(pkg.dependencies);
-external.push('crypto'); // imported from sjcl
 
 export default [
   {
     input: 'src/sdk.js',
-    external: ['crypto'],
     output: [
       {
         name: 'AccountsSDK',
