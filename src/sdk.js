@@ -3,7 +3,7 @@ import Redirect from './authentication/redirect';
 import Iframe from './authentication/iframe';
 import Transaction from './authentication/transaction';
 import qs from 'qs';
-import sjcl from 'sjcl';
+import sjcl from './vendor/sjcl';
 import {pick} from './helpers/object';
 import encoding from './helpers/encoding';
 

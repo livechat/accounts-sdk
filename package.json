@@ -41,7 +41,6 @@
     "browserslist": "> 0.1%, not dead, not IE 11",
     "dependencies": {
         "js-cookie": "^2.2.1",
-        "qs": "^6.9.4",
-        "sjcl": "^1.0.8"
+        "qs": "^6.9.4"
     }
 }
