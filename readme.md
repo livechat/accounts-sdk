@@ -18,7 +18,7 @@ Example sign in with LiveChat button designs. Assets are available [here](https:
 ## Example popup
 
 ```
-import { AccountsSDK } from '@livechat/accounts-sdk';
+import AccountsSDK from '@livechat/accounts-sdk';
 
 // create new SDK instance with it's options
 const sdk = new AccountsSDK({
