@@ -65,7 +65,6 @@ Authorize using a full redirect. Authorize function performs full browser redire
 const sdk = new AccountsSDK(options)
 
 sdk.redirect().authorizeData().then((authorizeData)=>{
-sdk.redirect().authorizeData().then((authorizeData)=>{
   // authorize data found in URL
   const transaction = sdk.verify(authorizeData);
 
