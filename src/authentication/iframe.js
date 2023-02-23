@@ -33,6 +33,7 @@ export default class Iframe {
       const iframe = document.createElement('iframe');
       iframe.setAttribute('src', url);
       iframe.setAttribute('id', this.iframeID());
+      iframe.setAttribute('sandbox', "allow-storage-access-by-user-activation allow-scripts allow-same-origin")
       iframe.style.width = '1px';
       iframe.style.height = '1px';
       iframe.style.position = 'fixed';
