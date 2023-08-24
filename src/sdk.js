@@ -115,8 +115,7 @@ export default class AccountsSDK {
     const localOptions = Object.assign({}, this.options, options);
 
     if (!localOptions.redirect_uri) {
-      localOptions.redirect_uri =
-        window.location.origin + window.location.pathname;
+      localOptions.redirect_uri = window.location.href;
     }
 
     const params = pick(localOptions, [
