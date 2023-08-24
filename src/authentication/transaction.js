@@ -1,6 +1,5 @@
 /* eslint-disable require-jsdoc */
 /* internal file */
-import random from '../helpers/random';
 import Storage from '../helpers/storage';
 
 export default class Transaction {
@@ -10,10 +9,6 @@ export default class Transaction {
   }
 
   generate(params) {
-    if (!params.state) {
-      params.state = random.string(this.options.key_length);
-    }
-
     // 30 minutes
     this.storage.setItem(
       this.options.namespace + params.state,

@@ -20,6 +20,11 @@ CookieStorage.prototype.setItem = function (key, value, options) {
   const params = Object.assign(
     {
       expires: 1, // 1 day
+
+      // After august 2020 chrome changed iframe cookie policy and without
+      // those parameters cookies wont we stored properly if document is inside iframe.
+      SameSite: 'none',
+      Secure: true,
     },
     options
   );
