@@ -70,6 +70,8 @@ export default class Redirect {
           }
       }
 
+      this.sdk.redirectUriParamsPersister.retrieve(authorizeData.state);
+
       resolve(authorizeData);
     });
   }

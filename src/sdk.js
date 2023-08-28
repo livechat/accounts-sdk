@@ -6,6 +6,7 @@ import qs from 'qs';
 import sjcl from './vendor/sjcl';
 import {pick} from './helpers/object';
 import encoding from './helpers/encoding';
+import RedirectUriParamsPersister from './helpers/persisters/redirectUriParams';
 
 import random from './helpers/random';
 /**
@@ -73,6 +74,9 @@ export default class AccountsSDK {
 
     this.options = Object.assign({}, defaultOptions, options);
     this.transaction = new Transaction(this.options);
+    this.redirectUriParamsPersister = new RedirectUriParamsPersister(
+      this.options
+    );
   }
 
   /**
@@ -113,6 +117,10 @@ export default class AccountsSDK {
    */
   authorizeURL(options = {}, flow = '') {
     const localOptions = Object.assign({}, this.options, options);
+
+    if (!params.state) {
+      localOptions.state = random.string(localOptions.key_length);
+    }
 
     if (!localOptions.redirect_uri) {
       localOptions.redirect_uri = window.location.href;
@@ -175,7 +183,10 @@ export default class AccountsSDK {
     }
 
     this.transaction.generate(params);
+    this.redirectUriParamsPersister.persist(params);
+
     delete params.code_verifier;
+
     return url + '?' + qs.stringify(params);
   }
 
