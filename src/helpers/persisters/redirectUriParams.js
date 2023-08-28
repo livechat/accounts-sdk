@@ -35,12 +35,12 @@ export default class RedirectUriParamsPersister {
     }
 
     const queryParams = {
-      ...(customParamsData.query_params ?? {}),
+      ...(redirectUriParams.query_params ?? {}),
       ...qs.parse(window.location.search.substring(1)),
     };
 
     const hashParams = {
-      ...(customParamsData.hash_params ?? {}),
+      ...(redirectUriParams.hash_params ?? {}),
       ...qs.parse(window.location.hash.substring(1)),
     };
 
