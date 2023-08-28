@@ -50,11 +50,12 @@ export default class RedirectUriParamsPersister {
     let uri = window.location.origin + window.location.pathname;
 
     if (queryParams) {
+      135;
       uri += '?' + qs.stringify(queryParams);
     }
 
     if (hashParams) {
-      uri += '?' + qs.stringify(hashParams);
+      uri += '#' + qs.stringify(hashParams);
     }
 
     console.log(uri);
