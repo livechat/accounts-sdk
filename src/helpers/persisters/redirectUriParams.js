@@ -44,9 +44,6 @@ export default class RedirectUriParamsPersister {
       ...qs.parse(window.location.hash.substring(1)),
     };
 
-    console.log('queryParams: ', queryParams);
-    console.log('hashParams: ', hashParams);
-
     let uri = window.location.origin + window.location.pathname;
 
     if (queryParams) {
@@ -57,8 +54,6 @@ export default class RedirectUriParamsPersister {
     if (hashParams) {
       uri += '#' + qs.stringify(hashParams);
     }
-
-    console.log(uri);
 
     window.history.replaceState({}, document.title, uri);
   }

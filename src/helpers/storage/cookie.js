@@ -20,6 +20,8 @@ CookieStorage.prototype.setItem = function (key, value, options) {
   const params = Object.assign(
     {
       expires: 1, // 1 day
+      SameSite: 'none',
+      Secure: true,
     },
     options
   );
