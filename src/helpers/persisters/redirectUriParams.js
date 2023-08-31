@@ -14,6 +14,10 @@ export default class RedirectUriParamsPersister {
     this.persister = new Persister(options, 'redirect_uri_params');
   }
 
+  /**
+   * Clears query and hash params from redirect_uri and persists them in storage
+   * @param {Object} params
+   */
   persist(params) {
     const redirectUrl = new URL(params.redirect_uri);
     const queryParams = qs.parse(redirectUrl.search.substring(1));
@@ -27,6 +31,11 @@ export default class RedirectUriParamsPersister {
     params.redirect_uri = redirectUrl.origin + redirectUrl.pathname;
   }
 
+  /**
+   * Retrieves persisted query and hash params from storage and updates current location accordingly.
+   * Params returned by global accounts overrides persisted params in case of duplications.
+   * @param {Object} state
+   */
   retrieve(state) {
     const redirectUriParams = this.persister.get(state, false);
 
@@ -47,7 +56,6 @@ export default class RedirectUriParamsPersister {
     let uri = window.location.origin + window.location.pathname;
 
     if (queryParams) {
-      135;
       uri += '?' + qs.stringify(queryParams);
     }
 

@@ -118,7 +118,7 @@ export default class AccountsSDK {
   authorizeURL(options = {}, flow = '') {
     const localOptions = Object.assign({}, this.options, options);
 
-    if (!localOptions.state) {
+    if (!params.state) {
       localOptions.state = random.string(localOptions.key_length);
     }
 
