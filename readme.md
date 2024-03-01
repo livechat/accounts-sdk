@@ -77,6 +77,7 @@ sdk.redirect().authorizeData().then((authorizeData)=>{
 ## Options
 
 - `client_id` **string** **required** registered client ID
+- `organization_id` **string** organization ID
 - `prompt` **string** use `consent` to force consent prompt in a popup and redirect flows
 - `response_type='token'` **string** OAuth response type, use `token` or `code`
 - `popup_flow='auto'` **string** `auto` - don't show popup when credentials are not required, `manual` - always show popup
