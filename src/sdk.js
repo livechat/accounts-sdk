@@ -19,6 +19,7 @@ export default class AccountsSDK {
    * @constructor
    * @param {Object} options
    * @param {String} options.client_id registered client ID
+   * @param {String} options.organization_id organization ID
    * @param {String} [options.prompt=''] use `consent` to force consent prompt in popup and redirect flows
    * @param {String} [options.response_type='token'] OAuth response type, use `token` or `code`
    * @param {String} [options.popup_flow='auto'] `auto` - close popup when not required, `manual` - always show popup
@@ -46,6 +47,7 @@ export default class AccountsSDK {
     }
 
     const defaultOptions = {
+      organization_id: '',
       prompt: '',
       response_type: 'token',
       popup_flow: 'auto',
@@ -128,6 +130,7 @@ export default class AccountsSDK {
 
     const params = pick(localOptions, [
       'client_id',
+      'organization_id',
       'redirect_uri',
       'state',
       'response_type',
