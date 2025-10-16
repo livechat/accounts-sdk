@@ -108,3 +108,82 @@ To do this build yourself and verify code integrity, do the following:
 3. Run `./configure --without-all --with-sha256 --compress=none` to configure our build.
 4. Run `make sjcl.js` to build the file.
 5. Compare newly created `sjcl.js` with the one included in `src/vendor`.
+
+
+## Release
+
+To release a new version of the package to npm:
+
+1. **Make sure you're logged in**:
+   ```bash
+   npm login
+   ```
+
+   This will prompt you for your npm username, password, and 2FA code (if enabled).
+   You can confirm you're logged in with:
+
+   ```bash
+   npm whoami
+   ```
+
+2. **Verify you have publish permissions**:
+   ```bash
+   npm publish --dry-run
+   ```
+   This will simulate publishing without actually publishing. If you don't have permission, you'll see:
+   ```
+   403 Forbidden - You do not have permission to publish to this organization
+   ```
+   
+   You can also check your permissions with:
+   ```bash
+   npm access list collaborators @livechat/accounts-sdk | grep "$(npm whoami)"
+   ```
+   
+   Or list all collaborators with write permission:
+   ```bash
+   npm access list collaborators @livechat/accounts-sdk | grep write
+   ```
+
+3. **Create a new branch** for the release:
+   ```bash
+   git checkout -b release-v2.0.11  # use the appropriate version number
+   ```
+
+4. **Update the version** in `package.json` following [semantic versioning](https://semver.org/):
+   ```bash
+   npm version patch  # for bug fixes (2.0.10 -> 2.0.11)
+   npm version minor  # for new features (2.0.10 -> 2.1.0)
+   npm version major  # for breaking changes (2.0.10 -> 3.0.0)
+   ```
+   This command updates `package.json`, creates a commit, and creates a git tag locally.
+
+5. **Build the package**:
+   ```bash
+   npm run build
+   ```
+
+6. **Run tests** to ensure everything works:
+   ```bash
+   npm test
+   ```
+
+7. **Push the branch with the tag**:
+   ```bash
+   git push origin release-v2.0.11 --follow-tags
+   ```
+
+8. **Create a pull request** with the version update and get it reviewed and merged.
+
+9. **After the PR is merged**, checkout the main branch and pull the latest changes:
+   ```bash
+   git checkout master
+   git pull origin master
+   ```
+
+10. **Publish to npm**:
+   ```bash
+   npm publish
+   ```
+
+**Note**: The git tag created by `npm version` will be included when the PR is merged. Make sure you have the necessary permissions to publish to the `@livechat` organization on npm. The `prepare` script will automatically run the build before publishing.
