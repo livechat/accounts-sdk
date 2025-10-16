@@ -84,7 +84,7 @@ export default class AccountsSDK {
   /**
    * use iframe for authorization
    * @param {Object} options for overriding defaults
-   * @return {Object} instance of an iframe flow
+   * @return {Iframe} instance of an iframe flow
    */
   iframe(options = {}) {
     const localOptions = Object.assign({}, this.options, options);
@@ -94,7 +94,7 @@ export default class AccountsSDK {
   /**
    * use popup for authorization
    * @param {Object} options for overriding defaults
-   * @return {Object} instance of a popup flow
+   * @return {Popup} instance of a popup flow
    */
   popup(options = {}) {
     const localOptions = Object.assign({}, this.options, options);
@@ -104,7 +104,7 @@ export default class AccountsSDK {
   /**
    * use redirect for authorization
    * @param {Object} options for overriding defaults
-   * @return {Object} instance of a redirect flow
+   * @return {Redirect} instance of a redirect flow
    */
   redirect(options = {}) {
     const localOptions = Object.assign({}, this.options, options);
