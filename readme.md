@@ -126,12 +126,31 @@ To release a new version of the package to npm:
    npm whoami
    ```
 
-2. **Create a new branch** for the release:
+2. **Verify you have publish permissions**:
+   ```bash
+   npm publish --dry-run
+   ```
+   This will simulate publishing without actually publishing. If you don't have permission, you'll see:
+   ```
+   403 Forbidden - You do not have permission to publish to this organization
+   ```
+   
+   You can also check your permissions with:
+   ```bash
+   npm access list collaborators @livechat/accounts-sdk | grep "$(npm whoami)"
+   ```
+   
+   Or list all collaborators with write permission:
+   ```bash
+   npm access list collaborators @livechat/accounts-sdk | grep write
+   ```
+
+3. **Create a new branch** for the release:
    ```bash
    git checkout -b release-v2.0.11  # use the appropriate version number
    ```
 
-3. **Update the version** in `package.json` following [semantic versioning](https://semver.org/):
+4. **Update the version** in `package.json` following [semantic versioning](https://semver.org/):
    ```bash
    npm version patch  # for bug fixes (2.0.10 -> 2.0.11)
    npm version minor  # for new features (2.0.10 -> 2.1.0)
@@ -139,34 +158,30 @@ To release a new version of the package to npm:
    ```
    This command updates `package.json`, creates a commit, and creates a git tag locally.
 
-4. **Build the package**:
+5. **Build the package**:
    ```bash
    npm run build
    ```
 
-5. **Run tests** to ensure everything works:
+6. **Run tests** to ensure everything works:
    ```bash
    npm test
    ```
 
-6. **Push the branch with the tag**:
+7. **Push the branch with the tag**:
    ```bash
    git push origin release-v2.0.11 --follow-tags
    ```
 
-7. **Create a pull request**
+8. **Create a pull request** with the version update and get it reviewed and merged.
 
-   with the version update and get it reviewed and merged.
-
-8. **After the PR is merged**
-
-   checkout the main branch and pull the latest changes:
+9. **After the PR is merged**, checkout the main branch and pull the latest changes:
    ```bash
    git checkout master
    git pull origin master
    ```
 
-9. **Publish to npm**:
+10. **Publish to npm**:
    ```bash
    npm publish
    ```
