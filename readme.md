@@ -152,11 +152,15 @@ To release a new version of the package to npm:
 
 4. **Update the version** in `package.json` following [semantic versioning](https://semver.org/):
    ```bash
-   npm version patch  # for bug fixes (2.0.10 -> 2.0.11)
-   npm version minor  # for new features (2.0.10 -> 2.1.0)
-   npm version major  # for breaking changes (2.0.10 -> 3.0.0)
+   npm version patch --no-git-tag-version  # for bug fixes (2.0.10 -> 2.0.11)
+   npm version minor --no-git-tag-version  # for new features (2.0.10 -> 2.1.0)
+   npm version major --no-git-tag-version  # for breaking changes (2.0.10 -> 3.0.0)
    ```
-   This command updates `package.json`, creates a commit, and creates a git tag locally.
+   Then commit the change:
+   ```bash
+   git add package.json package-lock.json
+   git commit -m "Bump version to 2.0.11"
+   ```
 
 5. **Build the package**:
    ```bash
@@ -168,22 +172,28 @@ To release a new version of the package to npm:
    npm test
    ```
 
-7. **Push the branch with the tag**:
+7. **Push the branch**:
    ```bash
-   git push origin release-v2.0.11 --follow-tags
+   git push origin release-v2.0.11
    ```
 
 8. **Create a pull request** with the version update and get it reviewed and merged.
 
-9. **After the PR is merged**, checkout the main branch and pull the latest changes:
+9. **After the PR is merged**, checkout the default branch and pull the latest changes:
    ```bash
    git checkout master
-   git pull origin master
+   git pull
    ```
 
-10. **Publish to npm**:
-   ```bash
-   npm publish
-   ```
+10. **Create and push the git tag on the merged commit**:
+    ```bash
+    git tag v2.0.11
+    git push origin v2.0.11
+    ```
 
-**Note**: The git tag created by `npm version` will be included when the PR is merged. Make sure you have the necessary permissions to publish to the `@livechat` organization on npm. The `prepare` script will automatically run the build before publishing.
+11. **Publish to npm**:
+    ```bash
+    npm publish
+    ```
+
+**Note**: Tagging *after* the PR is merged keeps the tag on the commit that actually landed on the default branch (important when using squash/rebase merges). The `prepare` script will automatically run the build before publishing.
