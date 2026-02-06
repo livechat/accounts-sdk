@@ -1,4 +1,3 @@
-/* eslint-disable require-jsdoc */
 import './errors';
 import errors from './errors';
 export default class Listener {

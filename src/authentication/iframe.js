@@ -4,7 +4,6 @@ import Listener from '../helpers/listener';
  * Class for authentication using Iframe
  */
 export default class Iframe {
-  // eslint-disable-next-line require-jsdoc
   constructor(sdk, options) {
     this.options = options;
     this.sdk = sdk;
@@ -45,12 +44,10 @@ export default class Iframe {
     });
   }
 
-  // eslint-disable-next-line require-jsdoc
   iframeID() {
     return this.options.client_id + this.options.response_type;
   }
 
-  // eslint-disable-next-line require-jsdoc
   removeIframe() {
     const ref = document.getElementById(this.iframeID());
     if (ref && ref.parentNode) {

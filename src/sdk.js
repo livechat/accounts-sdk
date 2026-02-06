@@ -167,7 +167,7 @@ export default class AccountsSDK {
         random.string(localOptions.pkce.code_verifier_length);
 
       switch (localOptions.pkce.code_challange_method) {
-        case 'S256':
+        case 'S256': {
           const codeChallenge = sjcl.hash.sha256.hash(codeVerifier);
           Object.assign(params, {
             code_verifier: codeVerifier,
@@ -175,6 +175,7 @@ export default class AccountsSDK {
             code_challenge_method: localOptions.pkce.code_challange_method,
           });
           break;
+        }
 
         default:
           Object.assign(params, {

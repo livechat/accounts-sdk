@@ -1,5 +1,3 @@
-/* eslint-disable require-jsdoc */
-
 /** @fileOverview
  * @author Auth0 https://github.com/auth0/auth0.js
  * @license MIT
@@ -15,7 +13,7 @@ Storage.prototype.getItem = function (key) {
   const value = this.handler.getItem(key);
   try {
     return JSON.parse(value);
-  } catch (_) {
+  } catch {
     return value;
   }
 };

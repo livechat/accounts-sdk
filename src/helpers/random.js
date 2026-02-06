@@ -1,5 +1,3 @@
-/* eslint-disable require-jsdoc */
-
 /** @fileOverview
  * @author Auth0 https://github.com/auth0/auth0.js
  * @license MIT
@@ -10,7 +8,8 @@ function string(length) {
     '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._~';
   const charsetLength = charset.length;
   const cryptoObj = window.crypto || window.msCrypto;
-  const hasCrypto = cryptoObj && typeof cryptoObj.getRandomValues === 'function';
+  const hasCrypto =
+    cryptoObj && typeof cryptoObj.getRandomValues === 'function';
 
   if (!hasCrypto) {
     return generateWithMathRandom(length, charset, charsetLength);

@@ -1,9 +1,9 @@
 import expect from 'expect.js';
+import { afterEach, beforeEach, describe, it } from 'mocha';
+
 import random from '../src/helpers/random';
 
 describe('helpers/random', function () {
-  const charset =
-    '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._~';
   let originalCryptoDescriptor;
   let originalMsCryptoDescriptor;
   let originalMathRandom;

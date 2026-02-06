@@ -1,7 +1,9 @@
-import SDK from '../src/sdk';
 import url from 'url';
 import expect from 'expect.js';
 import qs from 'qs';
+import { describe, it } from 'mocha';
+
+import SDK from '../src/sdk';
 
 describe('sdk', function () {
   it('should return correct default URL', function () {
