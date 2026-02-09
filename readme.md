@@ -156,42 +156,60 @@ To release a new version of the package to npm:
    npm version minor --no-git-tag-version  # for new features (2.0.10 -> 2.1.0)
    npm version major --no-git-tag-version  # for breaking changes (2.0.10 -> 3.0.0)
    ```
-   Then commit the change:
+
+5. **Update the CHANGELOG.md**:
+   - Move all items from the `[Unreleased]` section to a new version section with the release version number and date
+   - Ensure the changes are categorized properly (Added, Changed, Fixed, Security, Documentation)
+   - Add a new empty `[Unreleased]` section at the top
+   - Update the version comparison links at the bottom of the file
+
+   Example:
+   ```markdown
+   ## [Unreleased]
+
+
+   ## [2.0.11] - 2026-02-09
+
+   ### Fixed
+   - Fix issue with authentication flow
+   ```
+
+   Then commit both changes:
    ```bash
-   git add package.json package-lock.json
+   git add package.json package-lock.json CHANGELOG.md
    git commit -m "Bump version to 2.0.11"
    ```
 
-5. **Build the package**:
+6. **Build the package**:
    ```bash
    npm run build
    ```
 
-6. **Run tests** to ensure everything works:
+7. **Run tests** to ensure everything works:
    ```bash
    npm test
    ```
 
-7. **Push the branch**:
+8. **Push the branch**:
    ```bash
    git push origin release-v2.0.11
    ```
 
-8. **Create a pull request** with the version update and get it reviewed and merged.
+9. **Create a pull request** with the version update and get it reviewed and merged.
 
-9. **After the PR is merged**, checkout the default branch and pull the latest changes:
-   ```bash
-   git checkout master
-   git pull
-   ```
+10. **After the PR is merged**, checkout the default branch and pull the latest changes:
+    ```bash
+    git checkout master
+    git pull
+    ```
 
-10. **Create and push the git tag on the merged commit**:
+11. **Create and push the git tag on the merged commit**:
     ```bash
     git tag v2.0.11
     git push origin v2.0.11
     ```
 
-11. **Publish to npm**:
+12. **Publish to npm**:
     ```bash
     npm publish
     ```
