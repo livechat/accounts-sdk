@@ -1,12 +1,15 @@
-/* eslint-disable require-jsdoc */
-
-/** @fileOverview
+/**
+ * @file
  * @author Auth0 https://github.com/auth0/auth0.js
  * @license MIT
  */
 
 import StorageHandler from './storage/handler';
 
+/**
+ * A wrapper around the underlying storage mechanism that handles JSON serialization and deserialization.
+ * @param {object} options Storage configuration options passed to the underlying StorageHandler.
+ */
 function Storage(options) {
   this.handler = new StorageHandler(options);
 }
@@ -15,7 +18,7 @@ Storage.prototype.getItem = function (key) {
   const value = this.handler.getItem(key);
   try {
     return JSON.parse(value);
-  } catch (_) {
+  } catch {
     return value;
   }
 };

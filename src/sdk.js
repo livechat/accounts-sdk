@@ -15,31 +15,31 @@ import random from './helpers/random';
 export default class AccountsSDK {
   /**
    * Accounts SDK constructor
-   *
-   * @constructor
-   * @param {Object} options
-   * @param {String} options.client_id registered client ID
-   * @param {String} options.organization_id organization ID
-   * @param {String} [options.prompt=''] use `consent` to force consent prompt in popup and redirect flows
-   * @param {String} [options.response_type='token'] OAuth response type, use `token` or `code`
-   * @param {String} [options.popup_flow='auto'] `auto` - close popup when not required, `manual` - always show popup
-   * @param {String} [options.state=''] OAuth state param
-   * @param {Boolean} [options.verify_state=true] check if state matches after redirect
-   * @param {String} [options.scope=null] request exact scopes - must be configured for a given client id
-   * @param {String} [options.redirect_uri=''] OAuth redirect uri - default current location
-   * @param {String} [options.email_hint=''] fill in email in forms
-   * @param {String} [options.server_url='https://accounts.livechat.com'] authorization server url
-   * @param {String} [options.path=''] option to provide a path when loading accounts, for example '/signup'
-   * @param {Object} [options.tracking] tracking querystring params
-   * @param {Object} [options.transaction] options for transaction manager
-   * @param {String} [options.transaction.namespace='com.livechat.accounts'] transaction keys prefix
-   * @param {Number} [options.transaction.key_length=32] transaction random state length
-   * @param {Boolean} [options.transaction.force_local_storage=false] try to use local storage instead of cookies
-   * @param {Object} [options.pkce] PKCE configuration
-   * @param {Boolean} [options.pkce.enabled=true] Oauth 2.1 PKCE extension enabled
-   * @param {String} [options.pkce.code_verifier] override auto generated code verifier
-   * @param {Number} [options.pkce.code_verifier_length=128] code verifier length, between 43 and 128 characters https://tools.ietf.org/html/rfc7636#section-4.1
-   * @param {String} [options.pkce.code_challange_method='S256'] code challange method, use `S256` or `plain`
+   * @class
+   * @param {object} options configuration options for AccountsSDK
+   * @param {string} options.client_id registered client ID
+   * @param {string} options.organization_id organization ID
+   * @param {string} [options.prompt] use `consent` to force consent prompt in popup and redirect flows
+   * @param {string} [options.response_type] OAuth response type, use `token` or `code` (default: `token`)
+   * @param {string} [options.popup_flow] `auto` - close popup when not required, `manual` - always show popup (default: `auto`)
+   * @param {string} [options.state] OAuth state param (default: empty string)
+   * @param {boolean} [options.verify_state] check if state matches after redirect (default: `true`)
+   * @param {string} [options.scope] request exact scopes - must be configured for a given client id (default: `null`)
+   * @param {string} [options.redirect_uri] OAuth redirect uri - default current location (default: empty string)
+   * @param {string} [options.email_hint] fill in email in forms (default: `null`)
+   * @param {string} [options.server_url] authorization server url (default: `https://accounts.livechat.com`)
+   * @param {string} [options.path] option to provide a path when loading accounts, for example '/signup' (default: empty string)
+   * @param {object} [options.tracking] tracking querystring params
+   * @param {object} [options.transaction] options for transaction manager
+   * @param {string} [options.transaction.namespace] transaction keys prefix (default: `com.livechat.accounts`)
+   * @param {number} [options.transaction.key_length] transaction random state length (default: `32`)
+   * @param {boolean} [options.transaction.force_local_storage] try to use local storage instead of cookies (default: `false`)
+   * @param {object} [options.pkce] PKCE configuration
+   * @param {boolean} [options.pkce.enabled] Oauth 2.1 PKCE extension enabled (default: `true`)
+   * @param {string} [options.pkce.code_verifier] override auto generated code verifier
+   * @param {number} [options.pkce.code_verifier_length] code verifier length, between 43 and 128 characters
+   *   https://tools.ietf.org/html/rfc7636#section-4.1 (default: `128`)
+   * @param {string} [options.pkce.code_challange_method] code challange method, use `S256` or `plain` (default: `S256`)
    */
   constructor(options = {}) {
     if (options.client_id == null) {
@@ -83,8 +83,8 @@ export default class AccountsSDK {
 
   /**
    * use iframe for authorization
-   * @param {Object} options for overriding defaults
-   * @return {Iframe} instance of an iframe flow
+   * @param {object} options for overriding defaults
+   * @returns {Iframe} instance of an iframe flow
    */
   iframe(options = {}) {
     const localOptions = Object.assign({}, this.options, options);
@@ -93,8 +93,8 @@ export default class AccountsSDK {
 
   /**
    * use popup for authorization
-   * @param {Object} options for overriding defaults
-   * @return {Popup} instance of a popup flow
+   * @param {object} options for overriding defaults
+   * @returns {Popup} instance of a popup flow
    */
   popup(options = {}) {
     const localOptions = Object.assign({}, this.options, options);
@@ -103,8 +103,8 @@ export default class AccountsSDK {
 
   /**
    * use redirect for authorization
-   * @param {Object} options for overriding defaults
-   * @return {Redirect} instance of a redirect flow
+   * @param {object} options for overriding defaults
+   * @returns {Redirect} instance of a redirect flow
    */
   redirect(options = {}) {
     const localOptions = Object.assign({}, this.options, options);
@@ -113,9 +113,9 @@ export default class AccountsSDK {
 
   /**
    * create authorization url
-   * @param {Object} options for overriding defaults
-   * @param {String} flow set 'button' for popup and iframe
-   * @return {string} generated url
+   * @param {object} options for overriding defaults
+   * @param {string} flow set 'button' for popup and iframe
+   * @returns {string} generated url
    */
   authorizeURL(options = {}, flow = '') {
     const localOptions = Object.assign({}, this.options, options);
@@ -167,7 +167,7 @@ export default class AccountsSDK {
         random.string(localOptions.pkce.code_verifier_length);
 
       switch (localOptions.pkce.code_challange_method) {
-        case 'S256':
+        case 'S256': {
           const codeChallenge = sjcl.hash.sha256.hash(codeVerifier);
           Object.assign(params, {
             code_verifier: codeVerifier,
@@ -175,6 +175,7 @@ export default class AccountsSDK {
             code_challenge_method: localOptions.pkce.code_challange_method,
           });
           break;
+        }
 
         default:
           Object.assign(params, {
@@ -195,8 +196,8 @@ export default class AccountsSDK {
 
   /**
    * This function verifies if redirect transaction params are valid.
-   * @param {Object} authorizeData authorize data to validate and return transaction state - redirect state, pkce code verifier
-   * @return {Object} transaction state if valid, null otherwise
+   * @param {object} authorizeData authorize data to validate and return transaction state - redirect state, pkce code verifier
+   * @returns {object | null} transaction state if valid, null otherwise
    */
   verify(authorizeData) {
     const transactionData = this.transaction.get(authorizeData.state);

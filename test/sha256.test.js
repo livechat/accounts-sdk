@@ -1,4 +1,6 @@
+import { describe, it } from 'mocha';
 import expect from 'expect.js';
+
 import sjcl from '../src/vendor/sjcl';
 
 describe('custom sjcl build', function () {

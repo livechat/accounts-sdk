@@ -197,3 +197,40 @@ To release a new version of the package to npm:
     ```
 
 **Note**: Tagging *after* the PR is merged keeps the tag on the commit that actually landed on the default branch (important when using squash/rebase merges). The `prepare` script will automatically run the build before publishing.
+
+## Beta Release Process
+
+To release a beta version of the package for testing purposes:
+
+1. **Make sure you're logged in to npm**:
+   ```bash
+   npm login
+   npm whoami  # confirm you're logged in
+   ```
+
+2. **Create a beta version** (without committing):
+   ```bash
+   npm version prerelease --preid=beta --no-git-tag-version
+   ```
+
+   This will bump the version to something like `2.1.4-beta.0`. For subsequent beta iterations:
+   ```bash
+   npm version prerelease --no-git-tag-version  # increments to beta.1, beta.2, etc.
+   ```
+
+3. **Build the package**:
+   ```bash
+   npm run build
+   ```
+
+4. **Run tests** to ensure everything works:
+   ```bash
+   npm test
+   ```
+
+5. **Publish to npm with the beta tag**:
+   ```bash
+   npm publish --tag beta
+   ```
+
+**Note**: The `--tag beta` flag ensures that this version is not installed by default. Users must explicitly install it with `npm install @livechat/accounts-sdk@beta`. You can view all published beta versions with `npm view @livechat/accounts-sdk versions`.

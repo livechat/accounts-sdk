@@ -1,8 +1,8 @@
-/** @fileOverview Javascript cryptography implementation.
+/**
  *
+ * @file Javascript cryptography implementation.
  * Crush to remove comments, shorten variable names and
  * generally reduce transmission size.
- *
  * @author Emily Stark
  * @author Mike Hamburg
  * @author Dan Boneh
@@ -50,7 +50,6 @@ var sjcl = {
   /**
    * Bit array encoders and decoders.
    * @namespace
-   *
    * @description
    * The members of this namespace are functions which translate between
    * SJCL's bitArrays and other objects (usually strings).  Because it
@@ -66,7 +65,7 @@ var sjcl = {
   exception: {
     /**
      * Ciphertext is corrupt.
-     * @constructor
+     * @param {string} message Error message describing the corruption.
      */
     corrupt: function (message) {
       this.toString = function () {
@@ -77,7 +76,7 @@ var sjcl = {
 
     /**
      * Invalid parameter.
-     * @constructor
+     * @param {string} message Error message describing the invalid parameter.
      */
     invalid: function (message) {
       this.toString = function () {
@@ -88,7 +87,7 @@ var sjcl = {
 
     /**
      * Bug or missing feature in SJCL.
-     * @constructor
+     * @param {string} message Error message describing the bug or missing feature.
      */
     bug: function (message) {
       this.toString = function () {
@@ -99,7 +98,7 @@ var sjcl = {
 
     /**
      * Something isn't ready.
-     * @constructor
+     * @param {string} message Error message describing what is not ready.
      */
     notReady: function (message) {
       this.toString = function () {
@@ -109,8 +108,10 @@ var sjcl = {
     },
   },
 };
-/** @fileOverview Arrays of bits, encoded as arrays of Numbers.
+
+/**
  *
+ * @file Arrays of bits, encoded as arrays of Numbers.
  * @author Emily Stark
  * @author Mike Hamburg
  * @author Dan Boneh
@@ -140,14 +141,17 @@ var sjcl = {
  * to ciphers like AES which want arrays of words.
  * </p>
  */
+/**
+ * @typedef {number[]} bitArray
+ */
 sjcl.bitArray = {
   /**
    * Array slices in units of bits.
    * @param {bitArray} a The array to slice.
-   * @param {Number} bstart The offset to the start of the slice, in bits.
-   * @param {Number} bend The offset to the end of the slice, in bits.  If this is undefined,
+   * @param {number} bstart The offset to the start of the slice, in bits.
+   * @param {number} [bend] The offset to the end of the slice, in bits.  If this is undefined,
    * slice until the end of the array.
-   * @return {bitArray} The requested slice.
+   * @returns {bitArray} The requested slice.
    */
   bitSlice: function (a, bstart, bend) {
     a = sjcl.bitArray
@@ -159,9 +163,9 @@ sjcl.bitArray = {
   /**
    * Extract a number packed into a bit array.
    * @param {bitArray} a The array to slice.
-   * @param {Number} bstart The offset to the start of the slice, in bits.
-   * @param {Number} blength The length of the number to extract.
-   * @return {Number} The requested slice.
+   * @param {number} bstart The offset to the start of the slice, in bits.
+   * @param {number} blength The length of the number to extract.
+   * @returns {number} The requested slice.
    */
   extract: function (a, bstart, blength) {
     // FIXME: this Math.floor is not necessary at all, but for some reason
@@ -183,7 +187,7 @@ sjcl.bitArray = {
    * Concatenate two bit arrays.
    * @param {bitArray} a1 The first array.
    * @param {bitArray} a2 The second array.
-   * @return {bitArray} The concatenation of a1 and a2.
+   * @returns {bitArray} The concatenation of a1 and a2.
    */
   concat: function (a1, a2) {
     if (a1.length === 0 || a2.length === 0) {
@@ -207,7 +211,7 @@ sjcl.bitArray = {
   /**
    * Find the length of an array of bits.
    * @param {bitArray} a The array.
-   * @return {Number} The length of a, in bits.
+   * @returns {number} The length of a, in bits.
    */
   bitLength: function (a) {
     var l = a.length,
@@ -222,8 +226,8 @@ sjcl.bitArray = {
   /**
    * Truncate an array.
    * @param {bitArray} a The array.
-   * @param {Number} len The length to truncate to, in bits.
-   * @return {bitArray} A new array, truncated to len bits.
+   * @param {number} len The length to truncate to, in bits.
+   * @returns {bitArray} A new array, truncated to len bits.
    */
   clamp: function (a, len) {
     if (a.length * 32 < len) {
@@ -244,10 +248,10 @@ sjcl.bitArray = {
 
   /**
    * Make a partial word for a bit array.
-   * @param {Number} len The number of bits in the word.
-   * @param {Number} x The bits.
-   * @param {Number} [_end=0] Pass 1 if x has already been shifted to the high side.
-   * @return {Number} The partial word.
+   * @param {number} len The number of bits in the word.
+   * @param {number} x The bits.
+   * @param {number} [_end] Pass 1 if x has already been shifted to the high side.
+   * @returns {number} The partial word.
    */
   partial: function (len, x, _end) {
     if (len === 32) {
@@ -258,8 +262,8 @@ sjcl.bitArray = {
 
   /**
    * Get the number of bits used by a partial word.
-   * @param {Number} x The partial word.
-   * @return {Number} The number of bits used by the partial word.
+   * @param {number} x The partial word.
+   * @returns {number} The number of bits used by the partial word.
    */
   getPartial: function (x) {
     return Math.round(x / 0x10000000000) || 32;
@@ -269,7 +273,7 @@ sjcl.bitArray = {
    * Compare two arrays for equality in a predictable amount of time.
    * @param {bitArray} a The first array.
    * @param {bitArray} b The second array.
-   * @return {boolean} true if a == b; false otherwise.
+   * @returns {boolean} true if a == b; false otherwise.
    */
   equal: function (a, b) {
     if (sjcl.bitArray.bitLength(a) !== sjcl.bitArray.bitLength(b)) {
@@ -283,11 +287,13 @@ sjcl.bitArray = {
     return x === 0;
   },
 
-  /** Shift an array right.
+  /**
+   * Shift an array right.
    * @param {bitArray} a The array to shift.
-   * @param {Number} shift The number of bits to shift.
-   * @param {Number} [carry=0] A byte to carry in
-   * @param {bitArray} [out=[]] An array to prepend to the output.
+   * @param {number} shift The number of bits to shift.
+   * @param {number} [carry] A word to carry in (defaults to 0).
+   * @param {bitArray} [out] An array to prepend to the output (defaults to []).
+   * @returns {bitArray} The shifted bitArray.
    * @private
    */
   _shiftRight: function (a, shift, carry, out) {
@@ -322,17 +328,22 @@ sjcl.bitArray = {
     return out;
   },
 
-  /** xor a block of 4 words together.
+  /**
+   * XOR a block of 4 words together.
+   * @param {bitArray} x The first 4-word block.
+   * @param {bitArray} y The second 4-word block.
+   * @returns {bitArray} The XOR result as a 4-word block.
    * @private
    */
   _xor4: function (x, y) {
     return [x[0] ^ y[0], x[1] ^ y[1], x[2] ^ y[2], x[3] ^ y[3]];
   },
 
-  /** byteswap a word array inplace.
+  /**
+   * byteswap a word array inplace.
    * (does not handle partial words)
    * @param {sjcl.bitArray} a word array
-   * @return {sjcl.bitArray} byteswapped array
+   * @returns {sjcl.bitArray} byteswapped array
    */
   byteswapM: function (a) {
     var i,
@@ -345,11 +356,12 @@ sjcl.bitArray = {
     return a;
   },
 };
-/** @fileOverview Bit array codec implementations.
+/**
  *
+ * @file Bit array codec implementations.
  * @author Emily Stark
  * @author Mike Hamburg
- * @author Dan Boneh
+ * @author Dan Boneh  
  */
 
 /**
@@ -357,7 +369,11 @@ sjcl.bitArray = {
  * @namespace
  */
 sjcl.codec.utf8String = {
-  /** Convert from a bitArray to a UTF-8 string. */
+  /**
+   * Convert from a bitArray to a UTF-8 string.
+   * @param {bitArray} arr The input bitArray to decode.
+   * @returns {string} The decoded UTF-8 string.
+   */
   fromBits: function (arr) {
     var out = '',
       bl = sjcl.bitArray.bitLength(arr),
@@ -373,7 +389,11 @@ sjcl.codec.utf8String = {
     return decodeURIComponent(escape(out));
   },
 
-  /** Convert from a UTF-8 string to a bitArray. */
+  /**
+   * Convert from a UTF-8 string to a bitArray.
+   * @param {string} str UTF-8 string to encode.
+   * @returns {bitArray} The encoded bitArray.
+   */
   toBits: function (str) {
     str = unescape(encodeURIComponent(str));
     var out = [],
@@ -392,16 +412,15 @@ sjcl.codec.utf8String = {
     return out;
   },
 };
-/** @fileOverview Javascript SHA-256 implementation.
+/**
  *
+ * @file Javascript SHA-256 implementation.
  * An older version of this implementation is available in the public
  * domain, but this one is (c) Emily Stark, Mike Hamburg, Dan Boneh,
  * Stanford University 2008-2010 and BSD-licensed for liability
  * reasons.
- *
  * Special thanks to Aldo Cortesi for pointing out several bugs in
  * this code.
- *
  * @author Emily Stark
  * @author Mike Hamburg
  * @author Dan Boneh
@@ -409,7 +428,7 @@ sjcl.codec.utf8String = {
 
 /**
  * Context for a SHA-256 operation in progress.
- * @constructor
+ * @param {sjcl.hash.sha256} [hash] Optional hash to initialize from.
  */
 sjcl.hash.sha256 = function (hash) {
   if (!this._key[0]) {
@@ -427,8 +446,8 @@ sjcl.hash.sha256 = function (hash) {
 /**
  * Hash a string or an array of words.
  * @static
- * @param {bitArray|String} data the data to hash.
- * @return {bitArray} The hash value, an array of 16 big-endian words.
+ * @param {bitArray | string} data the data to hash.
+ * @returns {bitArray} The hash value, an array of 16 big-endian words.
  */
 sjcl.hash.sha256.hash = function (data) {
   return new sjcl.hash.sha256().update(data).finalize();
@@ -443,7 +462,7 @@ sjcl.hash.sha256.prototype = {
 
   /**
    * Reset the hash state.
-   * @return this
+   * @returns {sjcl.hash.sha256} this
    */
   reset: function () {
     this._h = this._init.slice(0);
@@ -454,8 +473,8 @@ sjcl.hash.sha256.prototype = {
 
   /**
    * Input several words to the hash.
-   * @param {bitArray|String} data the data to hash.
-   * @return this
+   * @param {bitArray | string} data the data to hash.
+   * @returns {sjcl.hash.sha256} this
    */
   update: function (data) {
     if (typeof data === 'string') {
@@ -487,7 +506,7 @@ sjcl.hash.sha256.prototype = {
 
   /**
    * Complete hashing and output the hash value.
-   * @return {bitArray} The hash value, an array of 8 big-endian words.
+   * @returns {bitArray} The hash value, an array of 8 big-endian words.
    */
   finalize: function () {
     var i,
@@ -550,6 +569,11 @@ sjcl.hash.sha256.prototype = {
       factor,
       isPrime;
 
+    /**
+     * Get the fractional part of x scaled to a 32-bit word.
+     * @param {number} x Input number.
+     * @returns {number} A signed 32-bit integer representing the scaled fractional part.
+     */
     function frac(x) {
       return ((x - Math.floor(x)) * 0x100000000) | 0;
     }

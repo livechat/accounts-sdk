@@ -1,16 +1,21 @@
-/* eslint-disable require-jsdoc */
-
-/** @fileOverview
+/**
+ * @file
  * @author Auth0 https://github.com/auth0/auth0.js
  * @license MIT
  */
 
+/**
+ * Generates a random string of the specified length using characters from a defined set.
+ * @param {number} length The length of the random string to generate.
+ * @returns {string} The generated random string.
+ */
 function string(length) {
   const charset =
     '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._~';
   const charsetLength = charset.length;
   const cryptoObj = window.crypto || window.msCrypto;
-  const hasCrypto = cryptoObj && typeof cryptoObj.getRandomValues === 'function';
+  const hasCrypto =
+    cryptoObj && typeof cryptoObj.getRandomValues === 'function';
 
   if (!hasCrypto) {
     return generateWithMathRandom(length, charset, charsetLength);
@@ -41,6 +46,13 @@ function string(length) {
   return result.join('');
 }
 
+/**
+ * Generates a random string using `Math.random()` as a fallback when the Web Crypto API is unavailable.
+ * @param {number} length The length of the random string to generate.
+ * @param {string} charset The set of characters to choose from.
+ * @param {number} charsetLength The length of the provided character set.
+ * @returns {string} The generated random string.
+ */
 function generateWithMathRandom(length, charset, charsetLength) {
   let output = '';
   for (let i = 0; i < length; i++) {

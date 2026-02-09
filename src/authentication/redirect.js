@@ -2,9 +2,7 @@ import errors from '../helpers/errors';
 import qs from 'qs';
 import {pick} from '../helpers/object';
 
-// eslint-disable-next-line require-jsdoc
 export default class Redirect {
-  // eslint-disable-next-line require-jsdoc
   constructor(sdk, options) {
     this.options = options;
     this.sdk = sdk;
@@ -20,7 +18,7 @@ export default class Redirect {
 
   /**
    * this function checks if the current origin was redirected to with authorize data
-   * @return {Promise} promise that resolves to authorize data or error
+   * @returns {Promise} promise that resolves to authorize data or error
    */
   authorizeData() {
     return new Promise((resolve, reject) => {
@@ -42,7 +40,7 @@ export default class Redirect {
 
           if (
             !requiredFields.every((field) =>
-              authorizeData.hasOwnProperty(field)
+              Object.prototype.hasOwnProperty.call(authorizeData, field)
             )
           ) {
             reject(errors.extend({identity_exception: 'unauthorized'}));
@@ -62,7 +60,7 @@ export default class Redirect {
 
           if (
             !requiredFields.every((field) =>
-              authorizeData.hasOwnProperty(field)
+              Object.prototype.hasOwnProperty.call(authorizeData, field)
             )
           ) {
             reject(errors.extend({identity_exception: 'unauthorized'}));

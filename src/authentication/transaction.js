@@ -1,4 +1,3 @@
-/* eslint-disable require-jsdoc */
 /* internal file */
 import Storage from '../helpers/storage';
 

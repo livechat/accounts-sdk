@@ -3,7 +3,6 @@ import Listener from '../helpers/listener';
  * Class for authentication using popup.
  */
 export default class Popup {
-  // eslint-disable-next-line require-jsdoc
   constructor(sdk, options) {
     this.options = options;
     this.sdk = sdk;
@@ -11,7 +10,7 @@ export default class Popup {
 
   /**
    * run popup authorization flow, should be called in a click handler to avoid beeing blocked
-   * @return {Promise} promise that resolves to authorize data or error
+   * @returns {Promise} promise that resolves to authorize data or error
    */
   authorize() {
     return new Promise((resolve, reject) => {
@@ -30,7 +29,7 @@ export default class Popup {
         resolve(authorizeData);
       });
 
-      var open = function () {
+      const open = function () {
         window.open(
           url,
           'livechat-login-popup',
@@ -39,7 +38,7 @@ export default class Popup {
       };
 
       if (document.requestStorageAccess) {
-        var promise = document.requestStorageAccess();
+        const promise = document.requestStorageAccess();
         promise.then(open, open);
       } else {
         open();

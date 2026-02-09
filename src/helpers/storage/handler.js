@@ -1,6 +1,5 @@
-/* eslint-disable require-jsdoc */
-
-/** @fileOverview
+/**
+ * @file
  * @author Auth0 https://github.com/auth0/auth0.js
  * @license MIT
  */
@@ -8,6 +7,13 @@
 import DummyStorage from './dummy';
 import CookieStorage from './cookie';
 
+/**
+ * A handler that manages the underlying storage mechanism, providing failover capabilities between localStorage, CookieStorage, and DummyStorage.
+ * It attempts to use localStorage by default, but falls back to CookieStorage if localStorage is unavailable or throws an error.
+ * If both localStorage and CookieStorage fail, it falls back to DummyStorage, which does not persist data.
+ * The handler provides methods to get, set, and remove items from the storage, with automatic failover in case of errors.
+ * @param {object} options Storage configuration options passed to the underlying StorageHandler.
+ */
 function StorageHandler(options) {
   this.storage = new CookieStorage();
   if (options.force_local_storage !== true) {

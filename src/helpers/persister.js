@@ -1,6 +1,5 @@
-/* eslint-disable require-jsdoc */
-
-/** @fileOverview
+/**
+ * @file
  * @author Auth0 https://github.com/auth0/auth0.js
  * @license MIT
  */
