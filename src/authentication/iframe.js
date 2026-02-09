@@ -11,7 +11,7 @@ export default class Iframe {
 
   /**
    * run iframe authorization flow, not recommended because of ITP 2.0
-   * @return {Promise} promise that resolves to authorize data or error
+   * @returns {Promise} promise that resolves to authorize data or error
    */
   authorize() {
     return new Promise((resolve, reject) => {

@@ -18,7 +18,7 @@ export default class Redirect {
 
   /**
    * this function checks if the current origin was redirected to with authorize data
-   * @return {Promise} promise that resolves to authorize data or error
+   * @returns {Promise} promise that resolves to authorize data or error
    */
   authorizeData() {
     return new Promise((resolve, reject) => {

@@ -10,7 +10,7 @@ export default class Popup {
 
   /**
    * run popup authorization flow, should be called in a click handler to avoid beeing blocked
-   * @return {Promise} promise that resolves to authorize data or error
+   * @returns {Promise} promise that resolves to authorize data or error
    */
   authorize() {
     return new Promise((resolve, reject) => {

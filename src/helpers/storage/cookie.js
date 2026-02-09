@@ -1,9 +1,14 @@
-/** @fileOverview
+/**
+ * @file
  * @author Auth0 https://github.com/auth0/auth0.js
  * @license MIT
  */
 
 import Cookie from 'js-cookie';
+
+/**
+ * A storage mechanism that uses cookies to store data. It provides methods to get, set, and remove items from cookies.
+ */
 function CookieStorage() {}
 
 CookieStorage.prototype.getItem = function (key) {

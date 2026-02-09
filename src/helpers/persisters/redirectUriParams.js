@@ -1,4 +1,5 @@
-/** @fileOverview
+/**
+ * @file
  * @author Auth0 https://github.com/auth0/auth0.js
  * @license MIT
  */
@@ -14,7 +15,8 @@ export default class RedirectUriParamsPersister {
 
   /**
    * Clears query and hash params from redirect_uri and persists them in storage
-   * @param {Object} params
+   * @param {object} params Params used to persist and normalize the redirect URI.
+   * @param {string} params.redirect_uri The redirect URI containing query and hash params to persist.
    */
   persist(params) {
     const redirectUrl = new URL(params.redirect_uri);
@@ -32,7 +34,7 @@ export default class RedirectUriParamsPersister {
   /**
    * Retrieves persisted query and hash params from storage and updates current location accordingly.
    * Params returned by global accounts overrides persisted params in case of duplications.
-   * @param {Object} state
+   * @param {object} state Storage key used to retrieve persisted redirect URI params.
    */
   retrieve(state) {
     const redirectUriParams = this.persister.get(state, false);
