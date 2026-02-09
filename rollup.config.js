@@ -1,11 +1,14 @@
-import pkg from './package.json'
+import {createRequire} from 'module';
 import resolve from '@rollup/plugin-node-resolve';
 import {babel} from '@rollup/plugin-babel';
 import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import serve from 'rollup-plugin-serve';
 
-const external = Object.keys(pkg.dependencies);
+const require = createRequire(import.meta.url);
+const pkg = require('./package.json');
+
+const external = Object.keys(pkg.dependencies || {});
 
 export default [
   {
