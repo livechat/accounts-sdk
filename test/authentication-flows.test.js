@@ -117,22 +117,15 @@ describe('Authentication Flows', function () {
       expect(result).to.be.a(Promise);
     });
 
-    it('should reject when required token fields are missing', function (done) {
+    it('should reject when required token fields are missing', async function () {
       window.location.hash = '#state=xyz'; // Missing access_token
 
       const redirect = sdk.redirect();
-      redirect
-        .authorizeData()
-        .then(() => {
-          done(new Error('Should have rejected'));
-        })
-        .catch((err) => {
-          expect(err.identity_exception).to.be('unauthorized');
-          done();
-        });
+      const error = await redirect.authorizeData().catch((e) => e);
+      expect(error.identity_exception).to.be('unauthorized');
     });
 
-    it('should reject when code is missing for code response type', function (done) {
+    it('should reject when code is missing for code response type', async function () {
       window.location.search = '?state=xyz'; // Missing code
 
       sdk = new SDK({
@@ -141,15 +134,8 @@ describe('Authentication Flows', function () {
       });
 
       const redirect = sdk.redirect();
-      redirect
-        .authorizeData()
-        .then(() => {
-          done(new Error('Should have rejected'));
-        })
-        .catch((err) => {
-          expect(err.identity_exception).to.be('unauthorized');
-          done();
-        });
+      const error = await redirect.authorizeData().catch((e) => e);
+      expect(error.identity_exception).to.be('unauthorized');
     });
   });
 });

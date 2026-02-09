@@ -25,8 +25,7 @@ export default {
       'Client not found, not provided or incorectly configured.',
 
     access_denied:
-      'Probably this application is installed on a different account ' +
-      'and you do not have access to it.',
+      'Probably this application is installed on a different account and you do not have access to it.',
 
     unsupported_response_type:
       'Provided response type is incorrect or unavailable for a given client.',
