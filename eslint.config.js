@@ -47,6 +47,15 @@ export default [
     },
   },
   {
+    // Jest globals for test files
+    files: ['test/**/*.test.js'],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
+  },
+  {
     // Relax rules for vendor files
     files: ['src/vendor/**/*.js'],
     rules: {

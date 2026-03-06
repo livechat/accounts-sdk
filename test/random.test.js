@@ -1,6 +1,3 @@
-import expect from 'expect.js';
-import { afterEach, beforeEach, describe, it } from 'mocha';
-
 import random from '../src/helpers/random';
 
 describe('helpers/random', function () {
@@ -36,7 +33,6 @@ describe('helpers/random', function () {
     }
   });
 
-  
   it('uses window.crypto without introducing modulo bias', function () {
     const sequence = [0, 196, 64, 250, 120, 194];
     let cursor = 0;
@@ -64,7 +60,7 @@ describe('helpers/random', function () {
     const expected = '0~u~';
     const result = random.string(requestedLength);
 
-    expect(result).to.be(expected);
+    expect(result).toBe(expected);
   });
 
   it('requests extra crypto bytes when rejection happens repeatedly', function () {
@@ -93,8 +89,8 @@ describe('helpers/random', function () {
     const expected = '0~u~';
     const result = random.string(expected.length);
 
-    expect(cursor).to.be.greaterThan(expected.length);
-    expect(result).to.be(expected);
+    expect(cursor).toBeGreaterThan(expected.length);
+    expect(result).toBe(expected);
   });
 
   it('falls back to Math.random when crypto is unavailable', function () {
@@ -120,6 +116,6 @@ describe('helpers/random', function () {
     const expected = '01246';
     const result = random.string(samples.length);
 
-    expect(result).to.be(expected);
+    expect(result).toBe(expected);
   });
 });

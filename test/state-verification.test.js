@@ -1,6 +1,3 @@
-import expect from 'expect.js';
-import { describe, it, beforeEach } from 'mocha';
-
 import SDK from '../src/sdk';
 
 describe('State Verification', function () {
@@ -15,7 +12,7 @@ describe('State Verification', function () {
 
   it('should return null for non-matching state', function () {
     const result = sdk.verify({ state: 'invalid-state' });
-    expect(result).to.be(null);
+    expect(result).toBeNull();
   });
 
   it('should skip verification when verify_state is false', function () {
@@ -26,6 +23,6 @@ describe('State Verification', function () {
 
     // Even without generating a transaction, verification should pass
     const result = sdk.verify({ state: 'any-state' });
-    expect(result).to.be.ok();
+    expect(result).toBeTruthy();
   });
 });

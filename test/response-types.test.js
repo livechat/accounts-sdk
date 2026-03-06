@@ -1,7 +1,5 @@
 import url from 'url';
-import expect from 'expect.js';
 import qs from 'qs';
-import { describe, it } from 'mocha';
 
 import SDK from '../src/sdk';
 
@@ -16,8 +14,8 @@ describe('Response Type Variations', function () {
     const authUrl = sdk.authorizeURL({ state: 'test-state' });
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.response_type).to.be('token');
-    expect(query.code_challenge).to.be(undefined);
+    expect(query.response_type).toBe('token');
+    expect(query.code_challenge).toBeUndefined();
   });
 
   it('should handle code response type', function () {
@@ -35,8 +33,8 @@ describe('Response Type Variations', function () {
     const authUrl = sdk.authorizeURL({ state: 'test-state' });
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.response_type).to.be('code');
-    expect(query.code_challenge).to.be.ok();
+    expect(query.response_type).toBe('code');
+    expect(query.code_challenge).toBeTruthy();
   });
 
   it('should allow overriding response type per request', function () {
@@ -57,7 +55,7 @@ describe('Response Type Variations', function () {
     });
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.response_type).to.be('code');
-    expect(query.code_challenge).to.be.ok();
+    expect(query.response_type).toBe('code');
+    expect(query.code_challenge).toBeTruthy();
   });
 });

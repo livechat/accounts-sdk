@@ -1,7 +1,5 @@
 import url from 'url';
-import expect from 'expect.js';
 import qs from 'qs';
-import { describe, it } from 'mocha';
 
 import SDK from '../src/sdk';
 
@@ -21,9 +19,9 @@ describe('PKCE Flow', function () {
     const authUrl = sdk.authorizeURL({ state: 'test-state' });
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.code_challenge).to.be('test-verifier-1234567890-abcdefghijklmnopqrstuvwxyz-plain-method');
-    expect(query.code_challenge_method).to.be('plain');
-    expect(query.code_verifier).to.be(undefined); // Should not be in URL
+    expect(query.code_challenge).toBe('test-verifier-1234567890-abcdefghijklmnopqrstuvwxyz-plain-method');
+    expect(query.code_challenge_method).toBe('plain');
+    expect(query.code_verifier).toBeUndefined(); // Should not be in URL
   });
 
   it('should not include PKCE parameters for token response type', function () {
@@ -35,8 +33,8 @@ describe('PKCE Flow', function () {
     const authUrl = sdk.authorizeURL();
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.code_challenge).to.be(undefined);
-    expect(query.code_challenge_method).to.be(undefined);
+    expect(query.code_challenge).toBeUndefined();
+    expect(query.code_challenge_method).toBeUndefined();
   });
 
   it('should use plain method when specified', function () {
@@ -54,8 +52,8 @@ describe('PKCE Flow', function () {
     const authUrl = sdk.authorizeURL({ state: 'test-state' });
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.code_challenge).to.be('test-plain-verifier-1234567890-abcdefghijklmnopqrstuvwxyz');
-    expect(query.code_challenge_method).to.be('plain');
+    expect(query.code_challenge).toBe('test-plain-verifier-1234567890-abcdefghijklmnopqrstuvwxyz');
+    expect(query.code_challenge_method).toBe('plain');
   });
 
   it('should use custom code verifier when provided', function () {
@@ -75,8 +73,8 @@ describe('PKCE Flow', function () {
     const authUrl = sdk.authorizeURL({ state: 'test-state' });
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.code_challenge).to.be(customVerifier);
-    expect(query.code_verifier).to.be(undefined); // Should not be in URL
+    expect(query.code_challenge).toBe(customVerifier);
+    expect(query.code_verifier).toBeUndefined(); // Should not be in URL
   });
 
   it('should not include PKCE when disabled', function () {
@@ -91,7 +89,7 @@ describe('PKCE Flow', function () {
     const authUrl = sdk.authorizeURL();
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.code_challenge).to.be(undefined);
-    expect(query.code_challenge_method).to.be(undefined);
+    expect(query.code_challenge).toBeUndefined();
+    expect(query.code_challenge_method).toBeUndefined();
   });
 });

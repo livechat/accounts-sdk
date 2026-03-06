@@ -1,34 +1,31 @@
-import expect from 'expect.js';
-import { describe, it } from 'mocha';
-
 import SDK from '../src/sdk';
 
 describe('SDK Initialization', function () {
   it('should throw error when client_id is missing', function () {
-    expect(() => new SDK()).to.throwError(/client id not provided/);
-    expect(() => new SDK({})).to.throwError(/client id not provided/);
-    expect(() => new SDK({ client_id: null })).to.throwError(
+    expect(() => new SDK()).toThrow(/client id not provided/);
+    expect(() => new SDK({})).toThrow(/client id not provided/);
+    expect(() => new SDK({ client_id: null })).toThrow(
       /client id not provided/
     );
   });
 
   it('should initialize with required client_id', function () {
     const sdk = new SDK({ client_id: 'test-client-id' });
-    expect(sdk).to.be.an('object');
-    expect(sdk.options.client_id).to.be('test-client-id');
+    expect(typeof sdk).toBe('object');
+    expect(sdk.options.client_id).toBe('test-client-id');
   });
 
   it('should use default options when not provided', function () {
     const sdk = new SDK({ client_id: 'test-client-id' });
 
-    expect(sdk.options.response_type).to.be('token');
-    expect(sdk.options.popup_flow).to.be('auto');
-    expect(sdk.options.verify_state).to.be(true);
-    expect(sdk.options.server_url).to.be('https://accounts.livechat.com');
-    expect(sdk.options.organization_id).to.be('');
-    expect(sdk.options.prompt).to.be('');
-    expect(sdk.options.state).to.be('');
-    expect(sdk.options.redirect_uri).to.be('');
+    expect(sdk.options.response_type).toBe('token');
+    expect(sdk.options.popup_flow).toBe('auto');
+    expect(sdk.options.verify_state).toBe(true);
+    expect(sdk.options.server_url).toBe('https://accounts.livechat.com');
+    expect(sdk.options.organization_id).toBe('');
+    expect(sdk.options.prompt).toBe('');
+    expect(sdk.options.state).toBe('');
+    expect(sdk.options.redirect_uri).toBe('');
   });
 
   it('should merge custom options with defaults', function () {
@@ -40,21 +37,21 @@ describe('SDK Initialization', function () {
       prompt: 'consent',
     });
 
-    expect(sdk.options.client_id).to.be('test-client-id');
-    expect(sdk.options.organization_id).to.be('org-123');
-    expect(sdk.options.response_type).to.be('code');
-    expect(sdk.options.server_url).to.be('https://custom.server.com');
-    expect(sdk.options.prompt).to.be('consent');
+    expect(sdk.options.client_id).toBe('test-client-id');
+    expect(sdk.options.organization_id).toBe('org-123');
+    expect(sdk.options.response_type).toBe('code');
+    expect(sdk.options.server_url).toBe('https://custom.server.com');
+    expect(sdk.options.prompt).toBe('consent');
     // Defaults should still be present
-    expect(sdk.options.popup_flow).to.be('auto');
+    expect(sdk.options.popup_flow).toBe('auto');
   });
 
   it('should initialize with PKCE enabled by default', function () {
     const sdk = new SDK({ client_id: 'test-client-id' });
 
-    expect(sdk.options.pkce.enabled).to.be(true);
-    expect(sdk.options.pkce.code_verifier_length).to.be(128);
-    expect(sdk.options.pkce.code_challange_method).to.be('S256');
+    expect(sdk.options.pkce.enabled).toBe(true);
+    expect(sdk.options.pkce.code_verifier_length).toBe(128);
+    expect(sdk.options.pkce.code_challange_method).toBe('S256');
   });
 
   it('should allow custom PKCE configuration', function () {
@@ -67,18 +64,18 @@ describe('SDK Initialization', function () {
       },
     });
 
-    expect(sdk.options.pkce.enabled).to.be(false);
-    expect(sdk.options.pkce.code_verifier_length).to.be(64);
-    expect(sdk.options.pkce.code_challange_method).to.be('plain');
+    expect(sdk.options.pkce.enabled).toBe(false);
+    expect(sdk.options.pkce.code_verifier_length).toBe(64);
+    expect(sdk.options.pkce.code_challange_method).toBe('plain');
   });
 
   it('should initialize transaction manager', function () {
     const sdk = new SDK({ client_id: 'test-client-id' });
-    expect(sdk.transaction).to.be.an('object');
+    expect(typeof sdk.transaction).toBe('object');
   });
 
   it('should initialize redirect URI params persister', function () {
     const sdk = new SDK({ client_id: 'test-client-id' });
-    expect(sdk.redirectUriParamsPersister).to.be.an('object');
+    expect(typeof sdk.redirectUriParamsPersister).toBe('object');
   });
 });

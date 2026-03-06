@@ -1,6 +1,3 @@
-import expect from 'expect.js';
-import { describe, it, beforeEach } from 'mocha';
-
 import SDK from '../src/sdk';
 
 describe('Transaction Management', function () {
@@ -18,7 +15,7 @@ describe('Transaction Management', function () {
   });
 
   it('should initialize transaction manager with correct namespace', function () {
-    expect(sdk.transaction).to.be.ok();
-    expect(sdk.transaction.options.namespace).to.be('test.namespace');
+    expect(sdk.transaction).toBeTruthy();
+    expect(sdk.transaction.options.namespace).toBe('test.namespace');
   });
 });

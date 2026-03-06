@@ -1,17 +1,15 @@
 import url from 'url';
-import expect from 'expect.js';
 import qs from 'qs';
-import { describe, it } from 'mocha';
 
 import SDK from '../src/sdk';
 
 describe('Edge Cases and Error Handling', function () {
   it('should handle empty options object', function () {
-    expect(() => new SDK({})).to.throwError();
+    expect(() => new SDK({})).toThrow();
   });
 
   it('should handle undefined options', function () {
-    expect(() => new SDK()).to.throwError();
+    expect(() => new SDK()).toThrow();
   });
 
   it('should handle null scope correctly', function () {
@@ -23,7 +21,7 @@ describe('Edge Cases and Error Handling', function () {
     const authUrl = sdk.authorizeURL();
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.scope).to.be(undefined);
+    expect(query.scope).toBeUndefined();
   });
 
   it('should handle empty string values', function () {
@@ -34,9 +32,9 @@ describe('Edge Cases and Error Handling', function () {
       state: '',
     });
 
-    expect(sdk.options.organization_id).to.be('');
-    expect(sdk.options.prompt).to.be('');
-    expect(sdk.options.state).to.be('');
+    expect(sdk.options.organization_id).toBe('');
+    expect(sdk.options.prompt).toBe('');
+    expect(sdk.options.state).toBe('');
   });
 
   it('should generate different states for concurrent authorization URLs', function () {
@@ -53,9 +51,9 @@ describe('Edge Cases and Error Handling', function () {
     const state2 = qs.parse(url.parse(authUrl2).query).state;
     const state3 = qs.parse(url.parse(authUrl3).query).state;
 
-    expect(state1).not.to.be(state2);
-    expect(state2).not.to.be(state3);
-    expect(state1).not.to.be(state3);
+    expect(state1).not.toBe(state2);
+    expect(state2).not.toBe(state3);
+    expect(state1).not.toBe(state3);
   });
 
   it('should handle very long custom state', function () {
@@ -65,7 +63,7 @@ describe('Edge Cases and Error Handling', function () {
     const authUrl = sdk.authorizeURL({ state: longState });
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.state).to.be(longState);
+    expect(query.state).toBe(longState);
   });
 
   it('should handle special characters in parameters', function () {
@@ -77,6 +75,6 @@ describe('Edge Cases and Error Handling', function () {
     const authUrl = sdk.authorizeURL();
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.email).to.be('user+test@example.com');
+    expect(query.email).toBe('user+test@example.com');
   });
 });

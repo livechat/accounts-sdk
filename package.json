@@ -20,26 +20,32 @@
     "build": "npm run clean && rollup -c",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src rollup.config.js eslint.config.js",
-    "test": "mocha --require @babel/register --require jsdom-global/register test/**/*.test.js --exit",
-    "test:dev": "mocha --require @babel/register --require jsdom-global/register test/**/*.test.js --watch"
+    "test": "jest",
+    "test:dev": "jest --watch"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testMatch": [
+      "**/test/**/*.test.js"
+    ],
+    "setupFiles": [
+      "./jest.setup.js"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@babel/preset-env": "^7.29.0",
-    "@babel/register": "^7.28.6",
     "@eslint/js": "^9.39.2",
     "@rollup/plugin-babel": "^6.1.0",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-terser": "^1.0.0",
     "browserslist": "^4.28.1",
     "eslint": "^10.0.2",
     "eslint-plugin-jsdoc": "^62.5.2",
-    "expect.js": "^0.3.1",
     "globals": "^17.3.0",
-    "jsdom": "^28.0.0",
-    "jsdom-global": "^3.0.2",
-    "mocha": "^11.3.0",
+    "jest": "^29.0.0",
+    "jest-environment-jsdom": "^30.2.0",
     "rollup": "^4.57.1",
     "rollup-plugin-serve": "^3.0.0"
   },
