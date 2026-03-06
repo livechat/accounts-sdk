@@ -27,9 +27,6 @@
     "testEnvironment": "jsdom",
     "testMatch": [
       "**/test/**/*.test.js"
-    ],
-    "setupFilesAfterEnv": [
-      "./jest.setup.js"
     ]
   },
   "devDependencies": {
