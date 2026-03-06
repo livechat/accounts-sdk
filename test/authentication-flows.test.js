@@ -1,6 +1,3 @@
-import expect from 'expect.js';
-import { describe, it, beforeEach, afterEach } from 'mocha';
-
 import SDK from '../src/sdk';
 
 describe('Authentication Flows', function () {
@@ -8,6 +5,8 @@ describe('Authentication Flows', function () {
   let originalOpen;
 
   beforeEach(function () {
+    jest.useFakeTimers();
+
     // Save original values
     originalOpen = window.open;
 
@@ -36,6 +35,8 @@ describe('Authentication Flows', function () {
   });
 
   afterEach(function () {
+    jest.useRealTimers();
+
     // Restore originals
     if (originalOpen) {
       window.open = originalOpen;
@@ -48,8 +49,8 @@ describe('Authentication Flows', function () {
   describe('Popup Flow', function () {
     it('should create popup instance', function () {
       const popup = sdk.popup();
-      expect(popup).to.be.an('object');
-      expect(popup.authorize).to.be.a('function');
+      expect(typeof popup).toBe('object');
+      expect(typeof popup.authorize).toBe('function');
     });
 
     it('should allow option overrides in popup', function () {
@@ -58,22 +59,23 @@ describe('Authentication Flows', function () {
         prompt: 'consent',
       });
 
-      expect(popup.options.organization_id).to.be('org-override');
-      expect(popup.options.prompt).to.be('consent');
+      expect(popup.options.organization_id).toBe('org-override');
+      expect(popup.options.prompt).toBe('consent');
     });
 
     it('should return promise from popup authorize', function () {
       const popup = sdk.popup();
       const result = popup.authorize();
-      expect(result).to.be.a(Promise);
+      result.catch(() => {});
+      expect(result).toBeInstanceOf(Promise);
     });
   });
 
   describe('Iframe Flow', function () {
     it('should create iframe instance', function () {
       const iframe = sdk.iframe();
-      expect(iframe).to.be.an('object');
-      expect(iframe.authorize).to.be.a('function');
+      expect(typeof iframe).toBe('object');
+      expect(typeof iframe.authorize).toBe('function');
     });
 
     it('should allow option overrides in iframe', function () {
@@ -82,23 +84,24 @@ describe('Authentication Flows', function () {
         email_hint: 'test@example.com',
       });
 
-      expect(iframe.options.organization_id).to.be('org-override');
-      expect(iframe.options.email_hint).to.be('test@example.com');
+      expect(iframe.options.organization_id).toBe('org-override');
+      expect(iframe.options.email_hint).toBe('test@example.com');
     });
 
     it('should return promise from iframe authorize', function () {
       const iframe = sdk.iframe();
       const result = iframe.authorize();
-      expect(result).to.be.a(Promise);
+      result.catch(() => {});
+      expect(result).toBeInstanceOf(Promise);
     });
   });
 
   describe('Redirect Flow', function () {
     it('should create redirect instance', function () {
       const redirect = sdk.redirect();
-      expect(redirect).to.be.an('object');
-      expect(redirect.authorize).to.be.a('function');
-      expect(redirect.authorizeData).to.be.a('function');
+      expect(typeof redirect).toBe('object');
+      expect(typeof redirect.authorize).toBe('function');
+      expect(typeof redirect.authorizeData).toBe('function');
     });
 
     it('should allow option overrides in redirect', function () {
@@ -107,14 +110,15 @@ describe('Authentication Flows', function () {
         scope: 'read write',
       });
 
-      expect(redirect.options.response_type).to.be('code');
-      expect(redirect.options.scope).to.be('read write');
+      expect(redirect.options.response_type).toBe('code');
+      expect(redirect.options.scope).toBe('read write');
     });
 
     it('should return promise from redirect authorizeData', function () {
       const redirect = sdk.redirect();
       const result = redirect.authorizeData();
-      expect(result).to.be.a(Promise);
+      result.catch(() => {});
+      expect(result).toBeInstanceOf(Promise);
     });
 
     it('should reject when required token fields are missing', async function () {
@@ -122,7 +126,7 @@ describe('Authentication Flows', function () {
 
       const redirect = sdk.redirect();
       const error = await redirect.authorizeData().catch((e) => e);
-      expect(error.identity_exception).to.be('unauthorized');
+      expect(error.identity_exception).toBe('unauthorized');
     });
 
     it('should reject when code is missing for code response type', async function () {
@@ -135,7 +139,7 @@ describe('Authentication Flows', function () {
 
       const redirect = sdk.redirect();
       const error = await redirect.authorizeData().catch((e) => e);
-      expect(error.identity_exception).to.be('unauthorized');
+      expect(error.identity_exception).toBe('unauthorized');
     });
   });
 });

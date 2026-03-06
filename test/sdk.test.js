@@ -1,7 +1,5 @@
 import url from 'url';
-import expect from 'expect.js';
 import qs from 'qs';
-import { describe, it } from 'mocha';
 
 import SDK from '../src/sdk';
 
@@ -19,9 +17,9 @@ describe('Real-world Usage Scenarios', function () {
 
     // Verify URL contains expected parameters
     const query = qs.parse(url.parse(authUrl).query);
-    expect(query.client_id).to.be('my-app-client-id');
-    expect(query.organization_id).to.be('my-org');
-    expect(query.flow).to.be('button');
+    expect(query.client_id).toBe('my-app-client-id');
+    expect(query.organization_id).toBe('my-org');
+    expect(query.flow).toBe('button');
   });
 
   it('should handle complete redirect flow with code grant', function () {
@@ -43,10 +41,10 @@ describe('Real-world Usage Scenarios', function () {
     const query = qs.parse(url.parse(authUrl).query);
 
     // Verify PKCE is included
-    expect(query.response_type).to.be('code');
-    expect(query.code_challenge).to.be.ok();
-    expect(query.code_challenge_method).to.be('plain');
-    expect(query.redirect_uri).to.be('https://myapp.com/callback');
+    expect(query.response_type).toBe('code');
+    expect(query.code_challenge).toBeTruthy();
+    expect(query.code_challenge_method).toBe('plain');
+    expect(query.redirect_uri).toBe('https://myapp.com/callback');
   });
 
   it('should handle signup flow with email hint', function () {
@@ -60,8 +58,8 @@ describe('Real-world Usage Scenarios', function () {
     const parsed = url.parse(authUrl);
     const query = qs.parse(parsed.query);
 
-    expect(parsed.pathname).to.be('/signup');
-    expect(query.email).to.be('user@example.com');
+    expect(parsed.pathname).toBe('/signup');
+    expect(query.email).toBe('user@example.com');
   });
 
   it('should handle force consent prompt', function () {
@@ -73,7 +71,7 @@ describe('Real-world Usage Scenarios', function () {
     const authUrl = sdk.authorizeURL();
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.prompt).to.be('consent');
+    expect(query.prompt).toBe('consent');
   });
 
   it('should handle custom scopes', function () {
@@ -85,7 +83,7 @@ describe('Real-world Usage Scenarios', function () {
     const authUrl = sdk.authorizeURL();
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.scope).to.be('accounts--all:ro chats--all:rw');
+    expect(query.scope).toBe('accounts--all:ro chats--all:rw');
   });
 
   it('should handle custom tracking parameters for analytics', function () {
@@ -102,10 +100,10 @@ describe('Real-world Usage Scenarios', function () {
     const authUrl = sdk.authorizeURL();
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.utm_source).to.be('my-website');
-    expect(query.utm_medium).to.be('banner');
-    expect(query.utm_campaign).to.be('summer-2024');
-    expect(query.custom_param).to.be('custom-value');
+    expect(query.utm_source).toBe('my-website');
+    expect(query.utm_medium).toBe('banner');
+    expect(query.utm_campaign).toBe('summer-2024');
+    expect(query.custom_param).toBe('custom-value');
   });
 
   it('should handle organization-specific authentication', function () {
@@ -117,7 +115,7 @@ describe('Real-world Usage Scenarios', function () {
     const authUrl = sdk.authorizeURL();
     const query = qs.parse(url.parse(authUrl).query);
 
-    expect(query.organization_id).to.be('acme-corp-123');
+    expect(query.organization_id).toBe('acme-corp-123');
   });
 
   it('should allow dynamic option overrides per authentication', function () {
@@ -129,11 +127,11 @@ describe('Real-world Usage Scenarios', function () {
     // First authentication with default org
     const authUrl1 = sdk.authorizeURL();
     const query1 = qs.parse(url.parse(authUrl1).query);
-    expect(query1.organization_id).to.be('default-org');
+    expect(query1.organization_id).toBe('default-org');
 
     // Second authentication with different org
     const authUrl2 = sdk.authorizeURL({ organization_id: 'other-org' });
     const query2 = qs.parse(url.parse(authUrl2).query);
-    expect(query2.organization_id).to.be('other-org');
+    expect(query2.organization_id).toBe('other-org');
   });
 });
