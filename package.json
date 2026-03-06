@@ -28,7 +28,7 @@
     "testMatch": [
       "**/test/**/*.test.js"
     ],
-    "setupFiles": [
+    "setupFilesAfterEnv": [
       "./jest.setup.js"
     ]
   },
