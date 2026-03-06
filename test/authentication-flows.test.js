@@ -5,6 +5,8 @@ describe('Authentication Flows', function () {
   let originalOpen;
 
   beforeEach(function () {
+    jest.useFakeTimers();
+
     // Save original values
     originalOpen = window.open;
 
@@ -33,6 +35,8 @@ describe('Authentication Flows', function () {
   });
 
   afterEach(function () {
+    jest.useRealTimers();
+
     // Restore originals
     if (originalOpen) {
       window.open = originalOpen;
