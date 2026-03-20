@@ -9,7 +9,7 @@ on:
 
 jobs:
   lint-and-build:
-    runs-on: ubuntu-latest
+    runs-on: default
     permissions:
       contents: read
 
