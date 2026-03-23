@@ -1,6 +1,6 @@
 # accountsSDK
 
-[![license](https://img.shields.io/npm/l/@livechat/accounts-sdk)](LICENSE)
+[![license](https://img.shields.io/npm/l/@livechat/accounts-sdk)](https://github.com/livechat/accounts-sdk/blob/master/LICENSE)
 [![version](https://img.shields.io/npm/v/@livechat/accounts-sdk)](https://www.npmjs.com/package/@livechat/accounts-sdk)
 [![CI](https://github.com/livechat/accounts-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/livechat/accounts-sdk/actions/workflows/ci.yml)
 
