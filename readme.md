@@ -1,5 +1,9 @@
 # accountsSDK
 
+[![license](https://img.shields.io/npm/l/@livechat/accounts-sdk)](LICENSE)
+[![version](https://img.shields.io/npm/v/@livechat/accounts-sdk)](https://www.npmjs.com/package/@livechat/accounts-sdk)
+[![CI](https://github.com/livechat/accounts-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/livechat/accounts-sdk/actions/workflows/ci.yml)
+
 `accountsSDK` is a small library that installs the "Sign in with LiveChat" button on any website or app. It also wraps OAuth flow in an easy-to-use API.
 
 ## Installation
@@ -97,158 +101,10 @@ sdk.redirect().authorizeData().then((authorizeData)=>{
 - `pkce.code_verifier_length=128` **number** code verifier length, between 43 and 128 characters https://tools.ietf.org/html/rfc7636#section-4.1
 - `pkce.code_challange_method='S256'` **string** code challange method, use `S256` or `plain`
 
-## SJCL
+## Changelog
 
-One of components uses crypto library called SJCL. We include a custom build in `src/vendor/sjcl.js` that only includes the pieces we need and avoids bundler errors caused by Node requires in standard version.
+See [CHANGELOG.md](https://github.com/livechat/accounts-sdk/blob/master/CHANGELOG.md) for release history.
 
-To do this build yourself and verify code integrity, do the following:
+## Contributing
 
-1. Clone [the SJCL repo](https://github.com/bitwiseshiftleft/sjcl).
-2. Check out a `1.0.8` version.
-3. Run `./configure --without-all --with-sha256 --compress=none` to configure our build.
-4. Run `make sjcl.js` to build the file.
-5. Compare newly created `sjcl.js` with the one included in `src/vendor`.
-
-
-## Release
-
-To release a new version of the package to npm:
-
-1. **Make sure you're logged in**:
-   ```bash
-   npm login
-   ```
-
-   This will prompt you for your npm username, password, and 2FA code (if enabled).
-   You can confirm you're logged in with:
-
-   ```bash
-   npm whoami
-   ```
-
-2. **Verify you have publish permissions**:
-   ```bash
-   npm publish --dry-run
-   ```
-   This will simulate publishing without actually publishing. If you don't have permission, you'll see:
-   ```
-   403 Forbidden - You do not have permission to publish to this organization
-   ```
-   
-   You can also check your permissions with:
-   ```bash
-   npm access list collaborators @livechat/accounts-sdk | grep "$(npm whoami)"
-   ```
-   
-   Or list all collaborators with write permission:
-   ```bash
-   npm access list collaborators @livechat/accounts-sdk | grep write
-   ```
-
-3. **Create a new branch** for the release:
-   ```bash
-   git checkout -b release-v2.0.11  # use the appropriate version number
-   ```
-
-4. **Update the version** in `package.json` following [semantic versioning](https://semver.org/):
-   ```bash
-   npm version patch --no-git-tag-version  # for bug fixes (2.0.10 -> 2.0.11)
-   npm version minor --no-git-tag-version  # for new features (2.0.10 -> 2.1.0)
-   npm version major --no-git-tag-version  # for breaking changes (2.0.10 -> 3.0.0)
-   ```
-
-5. **Update the CHANGELOG.md**:
-   - Move all items from the `[Unreleased]` section to a new version section with the release version number and date
-   - Ensure the changes are categorized properly (Added, Changed, Fixed, Security, Documentation)
-   - Add a new empty `[Unreleased]` section at the top
-   - Update the version comparison links at the bottom of the file
-
-   Example:
-   ```markdown
-   ## [Unreleased]
-
-
-   ## [2.0.11] - 2026-02-09
-
-   ### Fixed
-   - Fix issue with authentication flow
-   ```
-
-   Then commit both changes:
-   ```bash
-   git add package.json package-lock.json CHANGELOG.md
-   git commit -m "Bump version to 2.0.11"
-   ```
-
-6. **Build the package**:
-   ```bash
-   npm run build
-   ```
-
-7. **Run tests** to ensure everything works:
-   ```bash
-   npm test
-   ```
-
-8. **Push the branch**:
-   ```bash
-   git push origin release-v2.0.11
-   ```
-
-9. **Create a pull request** with the version update and get it reviewed and merged.
-
-10. **After the PR is merged**, checkout the default branch and pull the latest changes:
-    ```bash
-    git checkout master
-    git pull
-    ```
-
-11. **Create and push the git tag on the merged commit**:
-    ```bash
-    git tag v2.0.11
-    git push origin v2.0.11
-    ```
-
-12. **Publish to npm**:
-    ```bash
-    npm publish
-    ```
-
-**Note**: Tagging *after* the PR is merged keeps the tag on the commit that actually landed on the default branch (important when using squash/rebase merges). The `prepare` script will automatically run the build before publishing.
-
-## Beta Release Process
-
-To release a beta version of the package for testing purposes:
-
-1. **Make sure you're logged in to npm**:
-   ```bash
-   npm login
-   npm whoami  # confirm you're logged in
-   ```
-
-2. **Create a beta version** (without committing):
-   ```bash
-   npm version prerelease --preid=beta --no-git-tag-version
-   ```
-
-   This will bump the version to something like `2.1.4-beta.0`. For subsequent beta iterations:
-   ```bash
-   npm version prerelease --no-git-tag-version  # increments to beta.1, beta.2, etc.
-   ```
-
-3. **Build the package**:
-   ```bash
-   npm run build
-   ```
-
-4. **Run tests** to ensure everything works:
-   ```bash
-   npm test
-   ```
-
-5. **Publish to npm with the beta tag**:
-   ```bash
-   npm publish --tag beta
-   ```
-
-**Note**: The `--tag beta` flag ensures that this version is not installed by default. Users must explicitly install it with `npm install @livechat/accounts-sdk@beta`. You can view all published beta versions with `npm view @livechat/accounts-sdk versions`.
+For internal development notes (SJCL vendor build, release process, beta releases), see the [docs/](docs/) directory.
