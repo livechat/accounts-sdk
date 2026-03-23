@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.3] - 2026-03-23
+
+### Security
+- Security patch
+
 ## [2.2.2] - 2026-03-11
 
 ### Changed
@@ -130,7 +135,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Updated readme with new features and usage
 
-[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v2.2.3...HEAD
+[2.2.3]: https://github.com/livechat/accounts-sdk/compare/v2.2.2...v2.2.3
+[2.2.2]: https://github.com/livechat/accounts-sdk/compare/v2.2.1...v2.2.2
+[2.2.1]: https://github.com/livechat/accounts-sdk/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/livechat/accounts-sdk/compare/v2.1.3...v2.2.0
 [2.1.3]: https://github.com/livechat/accounts-sdk/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/livechat/accounts-sdk/compare/v2.1.1...v2.1.2
