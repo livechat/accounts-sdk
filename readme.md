@@ -103,8 +103,8 @@ sdk.redirect().authorizeData().then((authorizeData)=>{
 
 ## Changelog
 
-See [CHANGELOG.md](https://github.com/livechat/accounts-sdk/blob/master/CHANGELOG.md) for release history.
+See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## Contributing
 
-For internal development notes (SJCL vendor build, release process, beta releases), see the [docs/](https://github.com/livechat/accounts-sdk/tree/master/docs) directory.
+For internal development notes (SJCL vendor build, release process, beta releases), see the [docs/](docs/) directory.
