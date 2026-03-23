@@ -103,7 +103,7 @@ sdk.redirect().authorizeData().then((authorizeData)=>{
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for release history.
+See [CHANGELOG.md](https://github.com/livechat/accounts-sdk/blob/master/CHANGELOG.md) for release history.
 
 ## Contributing
 
