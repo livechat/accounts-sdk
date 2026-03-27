@@ -22,7 +22,7 @@
     "lint:fix": "eslint --fix ./src rollup.config.js eslint.config.js",
     "test": "jest",
     "test:dev": "jest --watch",
-    "test:coverage": "jest --coverage --coverageThreshold={\"global\":{\"statements\":90,\"branches\":90,\"functions\":90,\"lines\":90}}"
+    "test:coverage": "jest --coverage"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -36,7 +36,15 @@
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/vendor/**"
-    ]
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 90,
+        "branches": 90,
+        "functions": 90,
+        "lines": 90
+      }
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
