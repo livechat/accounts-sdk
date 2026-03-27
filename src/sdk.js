@@ -168,10 +168,12 @@ export default class AccountsSDK {
 
       switch (localOptions.pkce.code_challange_method) {
         case 'S256': {
-          const codeChallenge = sjcl.hash.sha256.hash(codeVerifier);
+          const hashBits = sjcl.hash.sha256.hash(codeVerifier);
+          const hashBytes = hashBits.reduce((s, w) =>
+            s + String.fromCharCode((w >>> 24) & 0xff, (w >>> 16) & 0xff, (w >>> 8) & 0xff, w & 0xff), '');
           Object.assign(params, {
             code_verifier: codeVerifier,
-            code_challenge: encoding.base64URLEncode(codeChallenge),
+            code_challenge: encoding.base64URLEncode(hashBytes),
             code_challenge_method: localOptions.pkce.code_challange_method,
           });
           break;

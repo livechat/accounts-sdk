@@ -215,6 +215,22 @@ describe('sdk.authorizeURL()', function () {
       expect(query.code_verifier).toBeUndefined();
     });
 
+    it('produces correct S256 code_challenge for RFC 7636 known vector', function () {
+      // RFC 7636 Appendix B: verifier → SHA-256 → base64url = known challenge
+      sdk = new SDK({
+        client_id: 'test-client-id',
+        response_type: 'code',
+        pkce: {
+          enabled: true,
+          code_verifier: 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk',
+          code_challange_method: 'S256',
+        },
+      });
+      const query = parseQuery(sdk.authorizeURL({ state: 'test-state' }));
+      expect(query.code_challenge).toBe('E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM');
+      expect(query.code_challenge_method).toBe('S256');
+    });
+
     it('omits PKCE when disabled', function () {
       sdk = new SDK({ client_id: 'test-client-id', response_type: 'code', pkce: { enabled: false } });
       const query = parseQuery(sdk.authorizeURL());
