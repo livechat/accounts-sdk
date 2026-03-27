@@ -1,4 +1,4 @@
-import SDK from '../src/sdk';
+import SDK from '../sdk';
 
 describe('Transaction Management', function () {
   let sdk;

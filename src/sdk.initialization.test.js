@@ -1,4 +1,4 @@
-import SDK from '../src/sdk';
+import SDK from './sdk';
 
 describe('SDK Initialization', function () {
   it('should throw error when client_id is missing', function () {
@@ -42,7 +42,6 @@ describe('SDK Initialization', function () {
     expect(sdk.options.response_type).toBe('code');
     expect(sdk.options.server_url).toBe('https://custom.server.com');
     expect(sdk.options.prompt).toBe('consent');
-    // Defaults should still be present
     expect(sdk.options.popup_flow).toBe('auto');
   });
 
