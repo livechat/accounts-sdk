@@ -118,9 +118,13 @@ describe('helpers/persisters/RedirectUriParamsPersister', function () {
 
     it('calls replaceState with current URL when state has no stored params', function () {
       // persister.get() always returns {} (never null), so retrieve() always calls replaceState.
-      // When no params were stored the result is a URL update with only current location params.
+      // When no params were stored, queryParams and hashParams are empty objects — qs.stringify({})
+      // returns '' but the if-checks are truthy, so the source appends bare '?' and '#'.
+      // This documents current behaviour; ideally the source would guard on stringify output.
       persister.retrieve('unknown-state');
       expect(replaceStateSpy).toHaveBeenCalledTimes(1);
+      const newUrl = replaceStateSpy.mock.calls[0][2];
+      expect(newUrl).not.toContain('foo');
     });
 
     it('returns early without calling replaceState when inner persister returns falsy', function () {

@@ -35,7 +35,8 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.js",
-      "!src/vendor/**"
+      "!src/vendor/**",
+      "!src/**/*.test.js"
     ],
     "coverageThreshold": {
       "global": {
