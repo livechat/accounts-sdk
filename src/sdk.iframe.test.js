@@ -1,10 +1,21 @@
 import SDK from './sdk';
+import Listener from './helpers/listener';
+
+jest.mock('./helpers/listener');
 
 describe('Iframe Flow', function () {
   let sdk;
+  let capturedCallback;
 
   beforeEach(function () {
     jest.useFakeTimers();
+    // Capture the callback so tests can fire it manually after the iframe is in the DOM
+    Listener.mockImplementation(function () {
+      this.start = jest.fn((_timeout, cb) => {
+        capturedCallback = cb;
+      });
+      this.stop = jest.fn();
+    });
     sdk = new SDK({
       client_id: 'test-client-id',
       redirect_uri: 'https://example.com/app',
@@ -13,6 +24,8 @@ describe('Iframe Flow', function () {
 
   afterEach(function () {
     jest.useRealTimers();
+    capturedCallback = undefined;
+    document.body.innerHTML = '';
   });
 
   it('should create iframe instance', function () {
@@ -36,5 +49,42 @@ describe('Iframe Flow', function () {
     const result = iframe.authorize();
     result.catch(() => {});
     expect(result).toBeInstanceOf(Promise);
+  });
+
+  it('resolves with token data when listener calls back with success', async function () {
+    const iframe = sdk.iframe();
+    const promise = iframe.authorize();
+    capturedCallback(null, { access_token: 'tok123', token_type: 'Bearer' });
+    const result = await promise;
+    expect(result.access_token).toBe('tok123');
+  });
+
+  it('rejects with error when listener calls back with an error', async function () {
+    const error = { identity_exception: 'unauthorized' };
+    const iframe = sdk.iframe();
+    const promise = iframe.authorize();
+    capturedCallback(error, null);
+    await expect(promise).rejects.toEqual(error);
+  });
+
+  it('appends an iframe to document.body on authorize', function () {
+    const iframe = sdk.iframe();
+    iframe.authorize().catch(() => {});
+    expect(document.getElementById(iframe.iframeID())).not.toBeNull();
+  });
+
+  it('removes the iframe from the DOM after callback fires', async function () {
+    const iframe = sdk.iframe();
+    const iframeID = iframe.iframeID();
+    const promise = iframe.authorize();
+    expect(document.getElementById(iframeID)).not.toBeNull();
+    capturedCallback(null, { access_token: 'tok' });
+    await promise;
+    expect(document.getElementById(iframeID)).toBeNull();
+  });
+
+  it('removeIframe is a no-op when element is not in the DOM', function () {
+    const iframe = sdk.iframe();
+    expect(() => iframe.removeIframe()).not.toThrow();
   });
 });
