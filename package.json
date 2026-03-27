@@ -22,7 +22,7 @@
     "lint:fix": "eslint --fix ./src rollup.config.js eslint.config.js",
     "test": "jest",
     "test:dev": "jest --watch",
-    "test:coverage": "jest --coverage --coverageThreshold={\"global\":{\"statements\":70,\"branches\":55,\"functions\":70,\"lines\":70}}"
+    "test:coverage": "jest --coverage --coverageThreshold={\"global\":{\"statements\":90,\"branches\":80,\"functions\":90,\"lines\":90}}"
   },
   "jest": {
     "testEnvironment": "jsdom",
