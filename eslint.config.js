@@ -48,11 +48,14 @@ export default [
   },
   {
     // Jest globals for test files
-    files: ['test/**/*.test.js'],
+    files: ['src/**/*.test.js'],
     languageOptions: {
       globals: {
         ...globals.jest,
       },
+    },
+    rules: {
+      'jsdoc/require-jsdoc': 'off',
     },
   },
   {

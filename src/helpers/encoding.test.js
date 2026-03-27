@@ -24,7 +24,6 @@ describe('helpers/encoding', function () {
 
     it('encodes a known PKCE verifier to the expected challenge (plain method)', function () {
       // For plain method, code_challenge === code_verifier — just round-trips through base64url
-      const verifier = 'abc123';
       // base64("abc123") = "YWJjMTIz" (no padding)
       expect(encoding.base64URLEncode('abc123')).toBe('YWJjMTIz');
     });
