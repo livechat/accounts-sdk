@@ -122,5 +122,13 @@ describe('helpers/persisters/RedirectUriParamsPersister', function () {
       persister.retrieve('unknown-state');
       expect(replaceStateSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('returns early without calling replaceState when inner persister returns falsy', function () {
+      // Persister.get() currently always returns data||{}, so this branch is defensive.
+      // Test it by mocking the inner persister directly.
+      jest.spyOn(persister.persister, 'get').mockReturnValue(null);
+      persister.retrieve('any-state');
+      expect(replaceStateSpy).not.toHaveBeenCalled();
+    });
   });
 });
