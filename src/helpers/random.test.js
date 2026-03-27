@@ -1,4 +1,4 @@
-import random from '../src/helpers/random';
+import random from './random';
 
 describe('helpers/random', function () {
   let originalCryptoDescriptor;
@@ -6,14 +6,8 @@ describe('helpers/random', function () {
   let originalMathRandom;
 
   beforeEach(function () {
-    originalCryptoDescriptor = Object.getOwnPropertyDescriptor(
-      window,
-      'crypto'
-    );
-    originalMsCryptoDescriptor = Object.getOwnPropertyDescriptor(
-      window,
-      'msCrypto'
-    );
+    originalCryptoDescriptor = Object.getOwnPropertyDescriptor(window, 'crypto');
+    originalMsCryptoDescriptor = Object.getOwnPropertyDescriptor(window, 'msCrypto');
     originalMathRandom = Math.random;
   });
 
