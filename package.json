@@ -21,12 +21,21 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src rollup.config.js eslint.config.js",
     "test": "jest",
-    "test:dev": "jest --watch"
+    "test:dev": "jest --watch",
+    "test:coverage": "jest --coverage --coverageThreshold={\"global\":{\"statements\":70,\"branches\":55,\"functions\":70,\"lines\":70}}"
   },
   "jest": {
     "testEnvironment": "jsdom",
     "testMatch": [
-      "**/test/**/*.test.js"
+      "**/*.test.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/vendor/**"
     ]
   },
   "devDependencies": {
