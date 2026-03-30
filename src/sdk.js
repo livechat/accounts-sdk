@@ -9,6 +9,11 @@ import encoding from './helpers/encoding';
 import RedirectUriParamsPersister from './helpers/persisters/redirectUriParams';
 import random from './helpers/random';
 
+/**
+ * Normalize PKCE options, support deprecated code_challange_method option
+ * @param {object} pkce PKCE options
+ * @returns {object} normalized PKCE options
+ */
 function normalizePkce(pkce) {
   if (!pkce || pkce.code_challange_method === undefined) {
     return pkce;
