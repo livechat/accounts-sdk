@@ -9,12 +9,4 @@ npm test        # run tests
 npm run lint    # lint source
 ```
 
-For active development with file watching:
-
-```bash
-npm start
-```
-
-## Docs
-
-- [Release process & beta releases](docs/releasing.md)
+To test changes in your application, publish a beta release and install it. See [Release process & beta releases](docs/releasing.md).
