@@ -107,4 +107,4 @@ See [CHANGELOG.md](https://github.com/livechat/accounts-sdk/blob/master/CHANGELO
 
 ## Contributing
 
-For internal development notes (SJCL vendor build, release process, beta releases), see the [docs/](docs/) directory.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
