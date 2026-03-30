@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-03-30
+
+### Added
+- Add `code_challenge_method` parameter and deprecate `code_challange_method` (typo fix) (#70)
+- Add Node 24 support; CI now tests against both Node 22 and Node 24 (#72)
+
+### Changed
+- Comprehensive test suite overhaul (#68)
+- Update development dependencies (#71)
+
+### Security
+- Bump serialize-javascript from 7.0.4 to 7.0.5 (#69)
+- Bump picomatch from 2.3.1 to 2.3.2 (#67)
+
+### Documentation
+- Move internal docs to `docs/` and add badges to readme (#66)
+
 ## [2.2.3] - 2026-03-23
 
 ### Security
@@ -135,7 +152,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Updated readme with new features and usage
 
-[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v2.2.3...HEAD
+[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/livechat/accounts-sdk/compare/v2.2.3...v2.3.0
 [2.2.3]: https://github.com/livechat/accounts-sdk/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.com/livechat/accounts-sdk/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/livechat/accounts-sdk/compare/v2.2.0...v2.2.1
