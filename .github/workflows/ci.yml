@@ -13,6 +13,10 @@ jobs:
     permissions:
       contents: read
 
+    strategy:
+      matrix:
+        node-version: ['22', '24']
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -20,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version-file: '.nvmrc'
+          node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
       - name: Install dependencies
