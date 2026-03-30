@@ -50,10 +50,11 @@ describe('SDK Initialization', function () {
 
     expect(sdk.options.pkce.enabled).toBe(true);
     expect(sdk.options.pkce.code_verifier_length).toBe(128);
-    expect(sdk.options.pkce.code_challange_method).toBe('S256');
+    expect(sdk.options.pkce.code_challenge_method).toBe('S256');
   });
 
   it('should allow custom PKCE configuration', function () {
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     const sdk = new SDK({
       client_id: 'test-client-id',
       pkce: {
@@ -65,7 +66,8 @@ describe('SDK Initialization', function () {
 
     expect(sdk.options.pkce.enabled).toBe(false);
     expect(sdk.options.pkce.code_verifier_length).toBe(64);
-    expect(sdk.options.pkce.code_challange_method).toBe('plain');
+    expect(sdk.options.pkce.code_challenge_method).toBe('plain');
+    warnSpy.mockRestore();
   });
 
   it('should initialize transaction manager', function () {

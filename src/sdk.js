@@ -7,8 +7,8 @@ import sjcl from './vendor/sjcl';
 import {pick} from './helpers/object';
 import encoding from './helpers/encoding';
 import RedirectUriParamsPersister from './helpers/persisters/redirectUriParams';
-
 import random from './helpers/random';
+
 /**
  * Accounts SDK main class
  */
@@ -39,7 +39,8 @@ export default class AccountsSDK {
    * @param {string} [options.pkce.code_verifier] override auto generated code verifier
    * @param {number} [options.pkce.code_verifier_length] code verifier length, between 43 and 128 characters
    *   https://tools.ietf.org/html/rfc7636#section-4.1 (default: `128`)
-   * @param {string} [options.pkce.code_challange_method] code challange method, use `S256` or `plain` (default: `S256`)
+   * @param {string} [options.pkce.code_challenge_method] code challenge method, use `S256` or `plain` (default: `S256`)
+   * @param {string} [options.pkce.code_challange_method] **Deprecated.** Use `code_challenge_method` instead.
    */
   constructor(options = {}) {
     if (options.client_id == null) {
@@ -70,11 +71,23 @@ export default class AccountsSDK {
       pkce: {
         enabled: true,
         code_verifier_length: 128,
-        code_challange_method: 'S256',
+        code_challenge_method: 'S256',
       },
     };
 
     this.options = Object.assign({}, defaultOptions, options);
+
+    if (this.options.pkce && this.options.pkce.code_challange_method !== undefined) {
+      console.warn(
+        // eslint-disable-next-line max-len
+        '[accounts-sdk] pkce.code_challange_method is deprecated and will be removed in v3.0.0. Use code_challenge_method instead.'
+      );
+      if (this.options.pkce.code_challenge_method === undefined) {
+        this.options.pkce.code_challenge_method = this.options.pkce.code_challange_method;
+      }
+      delete this.options.pkce.code_challange_method;
+    }
+
     this.transaction = new Transaction(this.options);
     this.redirectUriParamsPersister = new RedirectUriParamsPersister(
       this.options
@@ -166,7 +179,7 @@ export default class AccountsSDK {
         localOptions.pkce.code_verifier ||
         random.string(localOptions.pkce.code_verifier_length);
 
-      switch (localOptions.pkce.code_challange_method) {
+      switch (localOptions.pkce.code_challenge_method) {
         case 'S256': {
           const hashBits = sjcl.hash.sha256.hash(codeVerifier);
           const hashBytes = hashBits.reduce((s, w) =>
@@ -174,7 +187,7 @@ export default class AccountsSDK {
           Object.assign(params, {
             code_verifier: codeVerifier,
             code_challenge: encoding.base64URLEncode(hashBytes),
-            code_challenge_method: localOptions.pkce.code_challange_method,
+            code_challenge_method: localOptions.pkce.code_challenge_method,
           });
           break;
         }
@@ -183,7 +196,7 @@ export default class AccountsSDK {
           Object.assign(params, {
             code_verifier: codeVerifier,
             code_challenge: codeVerifier,
-            code_challenge_method: localOptions.pkce.code_challange_method,
+            code_challenge_method: localOptions.pkce.code_challenge_method,
           });
       }
     }
