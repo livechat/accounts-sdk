@@ -275,6 +275,27 @@ describe('sdk.authorizeURL()', function () {
         );
         warnSpy.mockRestore();
       });
+
+      it('accepts code_challange_method as a per-call override to authorizeURL', function () {
+        const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        sdk = new SDK({ client_id: 'test-client-id', response_type: 'code' });
+        const query = parseQuery(
+          sdk.authorizeURL({
+            state: 'test-state',
+            pkce: {
+              enabled: true,
+              code_verifier: 'test-verifier-1234567890-abcdefghijklmnopqrstuvwxyz-plain-method',
+              code_challange_method: 'plain',
+            },
+          })
+        );
+        expect(query.code_challenge_method).toBe('plain');
+        expect(warnSpy).toHaveBeenCalledWith(
+          // eslint-disable-next-line max-len
+          '[accounts-sdk] pkce.code_challange_method is deprecated and will be removed in v3.0.0. Use code_challenge_method instead.'
+        );
+        warnSpy.mockRestore();
+      });
     });
   });
 

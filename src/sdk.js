@@ -9,6 +9,20 @@ import encoding from './helpers/encoding';
 import RedirectUriParamsPersister from './helpers/persisters/redirectUriParams';
 import random from './helpers/random';
 
+function normalizePkce(pkce) {
+  if (!pkce || pkce.code_challange_method === undefined) {
+    return pkce;
+  }
+  const normalized = Object.assign({}, pkce);
+  // eslint-disable-next-line max-len
+  console.warn('[accounts-sdk] pkce.code_challange_method is deprecated and will be removed in v3.0.0. Use code_challenge_method instead.');
+  if (normalized.code_challenge_method === undefined) {
+    normalized.code_challenge_method = normalized.code_challange_method;
+  }
+  delete normalized.code_challange_method;
+  return normalized;
+}
+
 /**
  * Accounts SDK main class
  */
@@ -76,18 +90,7 @@ export default class AccountsSDK {
     };
 
     this.options = Object.assign({}, defaultOptions, options);
-
-    if (this.options.pkce && this.options.pkce.code_challange_method !== undefined) {
-      console.warn(
-        // eslint-disable-next-line max-len
-        '[accounts-sdk] pkce.code_challange_method is deprecated and will be removed in v3.0.0. Use code_challenge_method instead.'
-      );
-      if (this.options.pkce.code_challenge_method === undefined) {
-        this.options.pkce.code_challenge_method = this.options.pkce.code_challange_method;
-      }
-      delete this.options.pkce.code_challange_method;
-    }
-
+    this.options.pkce = normalizePkce(this.options.pkce);
     this.transaction = new Transaction(this.options);
     this.redirectUriParamsPersister = new RedirectUriParamsPersister(
       this.options
@@ -132,6 +135,7 @@ export default class AccountsSDK {
    */
   authorizeURL(options = {}, flow = '') {
     const localOptions = Object.assign({}, this.options, options);
+    localOptions.pkce = normalizePkce(localOptions.pkce);
 
     if (!localOptions.state) {
       localOptions.state = random.string(localOptions.key_length);
