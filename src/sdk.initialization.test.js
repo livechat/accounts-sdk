@@ -1,6 +1,10 @@
 import SDK from './sdk';
 
 describe('SDK Initialization', function () {
+  afterEach(function () {
+    jest.restoreAllMocks();
+  });
+
   it('should throw error when client_id is missing', function () {
     expect(() => new SDK()).toThrow(/client id not provided/);
     expect(() => new SDK({})).toThrow(/client id not provided/);
@@ -50,10 +54,11 @@ describe('SDK Initialization', function () {
 
     expect(sdk.options.pkce.enabled).toBe(true);
     expect(sdk.options.pkce.code_verifier_length).toBe(128);
-    expect(sdk.options.pkce.code_challange_method).toBe('S256');
+    expect(sdk.options.pkce.code_challenge_method).toBe('S256');
   });
 
   it('should allow custom PKCE configuration', function () {
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
     const sdk = new SDK({
       client_id: 'test-client-id',
       pkce: {
@@ -65,7 +70,7 @@ describe('SDK Initialization', function () {
 
     expect(sdk.options.pkce.enabled).toBe(false);
     expect(sdk.options.pkce.code_verifier_length).toBe(64);
-    expect(sdk.options.pkce.code_challange_method).toBe('plain');
+    expect(sdk.options.pkce.code_challenge_method).toBe('plain');
   });
 
   it('should initialize transaction manager', function () {
