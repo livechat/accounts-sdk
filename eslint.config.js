@@ -1,6 +1,8 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import jsdoc from 'eslint-plugin-jsdoc';
+import tsParser from '@typescript-eslint/parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 
 export default [
   {
@@ -9,6 +11,7 @@ export default [
   js.configs.recommended,
   jsdoc.configs['flat/recommended'],
   {
+    files: ['**/*.js'],
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: 'module',
@@ -47,8 +50,44 @@ export default [
     },
   },
   {
+    // TypeScript files
+    files: ['**/*.ts'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: './tsconfig.eslint.json',
+        ecmaVersion: 2020,
+        sourceType: 'module',
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    },
+    rules: {
+      ...tsPlugin.configs['recommended'].rules,
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_', varsIgnorePattern: '^_'}],
+      'no-var': 'error',
+      'prefer-rest-params': 'error',
+      'prefer-spread': 'error',
+      'max-len': ['error', {code: 120, comments: 160}],
+      'indent': 'off',
+      'jsdoc/require-jsdoc': 'off',
+      // TypeScript types make JSDoc type annotations redundant
+      'jsdoc/require-param': 'off',
+      'jsdoc/require-returns': 'off',
+      'jsdoc/require-param-type': 'off',
+      'jsdoc/require-returns-type': 'off',
+      'jsdoc/check-param-names': 'off',
+    },
+  },
+  {
     // Jest globals for test files
-    files: ['src/**/*.test.js'],
+    files: ['src/**/*.test.js', 'src/**/*.test.ts'],
     languageOptions: {
       globals: {
         ...globals.jest,
@@ -56,6 +95,7 @@ export default [
     },
     rules: {
       'jsdoc/require-jsdoc': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
   {

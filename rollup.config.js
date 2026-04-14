@@ -1,8 +1,8 @@
 import {createRequire} from 'module';
 import resolve from '@rollup/plugin-node-resolve';
-import {babel} from '@rollup/plugin-babel';
 import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
+import typescript from '@rollup/plugin-typescript';
 import serve from 'rollup-plugin-serve';
 
 const require = createRequire(import.meta.url);
@@ -12,7 +12,7 @@ const external = Object.keys(pkg.dependencies || {});
 
 export default [
   {
-    input: 'src/sdk.js',
+    input: 'src/sdk.ts',
     output: [
       {
         name: 'AccountsSDK',
@@ -35,14 +35,14 @@ export default [
       },
     ],
     plugins: [
-      resolve(),
+      resolve({extensions: ['.ts', '.js']}),
       commonjs(),
-      babel({presets: ['@babel/preset-env'], babelHelpers: 'bundled'}),
+      typescript({tsconfig: './tsconfig.build.json', outDir: './dist', rootDir: './src'}),
       process.env.ROLLUP_WATCH && serve('dist'),
     ],
   },
   {
-    input: 'src/sdk.js',
+    input: 'src/sdk.ts',
     external: external,
     output: [
       {
@@ -57,6 +57,18 @@ export default [
         sourcemap: true,
         exports: 'named',
       },
+    ],
+    plugins: [
+      resolve({extensions: ['.ts', '.js']}),
+      commonjs(),
+      typescript({
+        tsconfig: './tsconfig.build.json',
+        outDir: './dist',
+        declaration: true,
+        declarationDir: './dist',
+        rootDir: './src',
+        exclude: ['src/**/*.test.ts'],
+      }),
     ],
   },
 ];
