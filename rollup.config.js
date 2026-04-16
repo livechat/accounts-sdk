@@ -42,7 +42,7 @@ export default [
     ],
   },
   {
-    input: 'src/sdk.ts',
+    input: 'src/index.ts',
     external: external,
     output: [
       {

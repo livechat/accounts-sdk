@@ -7,7 +7,7 @@
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
   "unpkg": "./dist/accounts-sdk.min.js",
-  "types": "./dist/sdk.d.ts",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -19,7 +19,7 @@
     "start": "npm run clean && rollup -c --watch",
     "prepare": "npm run build",
     "build": "npm run clean && rollup -c",
-    "type-check": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src rollup.config.js eslint.config.js",
     "test": "jest",
