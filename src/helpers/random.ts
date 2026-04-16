@@ -5,27 +5,16 @@
  */
 
 /**
- * Generates a random string using `Math.random()` as a fallback when the Web Crypto API is unavailable.
- */
-function generateWithMathRandom(length: number, charset: string, charsetLength: number): string {
-  let output = '';
-  for (let i = 0; i < length; i++) {
-    const index = Math.floor(Math.random() * charsetLength);
-    output += charset.charAt(index);
-  }
-  return output;
-}
-
-/**
- * Generates a cryptographically-secure random string of the specified length.
- * Falls back to Math.random when the Web Crypto API is unavailable.
+ * Generates a random string of the specified length using characters from a defined set.
+ * @param {number} length The length of the random string to generate.
+ * @returns {string} The generated random string.
  */
 function string(length: number): string {
   const charset =
     '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._~';
   const charsetLength = charset.length;
-  // Cast to allow undefined in environments where window.crypto is overridden (e.g. tests).
-  const cryptoObj = window.crypto as Crypto | undefined;
+  const cryptoObj =
+    window.crypto || (window as Window & {msCrypto?: Crypto}).msCrypto;
   const hasCrypto =
     cryptoObj && typeof cryptoObj.getRandomValues === 'function';
 
@@ -56,6 +45,26 @@ function string(length: number): string {
   }
 
   return result.join('');
+}
+
+/**
+ * Generates a random string using `Math.random()` as a fallback when the Web Crypto API is unavailable.
+ * @param {number} length The length of the random string to generate.
+ * @param {string} charset The set of characters to choose from.
+ * @param {number} charsetLength The length of the provided character set.
+ * @returns {string} The generated random string.
+ */
+function generateWithMathRandom(
+  length: number,
+  charset: string,
+  charsetLength: number,
+): string {
+  let output = '';
+  for (let i = 0; i < length; i++) {
+    const index = Math.floor(Math.random() * charsetLength);
+    output += charset.charAt(index);
+  }
+  return output;
 }
 
 export default {
