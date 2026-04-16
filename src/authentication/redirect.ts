@@ -1,18 +1,8 @@
 import errors from '../helpers/errors';
 import qs from 'qs';
 import {pick} from '../helpers/object';
-
-interface RedirectSDK {
-  authorizeURL(options: Record<string, unknown>): string;
-  redirectUriParamsPersister: {
-    retrieve(state: string): void;
-  };
-}
-
-interface RedirectOptions {
-  response_type?: string;
-  [key: string]: unknown;
-}
+import {type AuthorizeResponse} from '../types/auth';
+import {type RedirectSDK, type RedirectOptions} from '../types/authentication';
 
 export default class Redirect {
   options: RedirectOptions;
@@ -35,7 +25,7 @@ export default class Redirect {
    * Check if the current origin was redirected with authorize data.
    * @returns Promise that resolves to authorize data or rejects with an error.
    */
-  authorizeData(): Promise<Record<string, unknown>> {
+  authorizeData(): Promise<AuthorizeResponse> {
     return new Promise((resolve, reject) => {
       let authorizeData: Record<string, unknown> = {};
       let requiredFields: string[] = [];
@@ -55,14 +45,16 @@ export default class Redirect {
 
           if (
             !requiredFields.every((field) =>
-              Object.prototype.hasOwnProperty.call(authorizeData, field)
+              Object.prototype.hasOwnProperty.call(authorizeData, field),
             )
           ) {
             reject(errors.extend({identity_exception: 'unauthorized'}));
             return;
           }
 
-          authorizeData.expires_in = parseInt(authorizeData.expires_in as string);
+          authorizeData.expires_in = parseInt(
+            authorizeData.expires_in as string,
+          );
           break;
 
         case 'code':
@@ -75,7 +67,7 @@ export default class Redirect {
 
           if (
             !requiredFields.every((field) =>
-              Object.prototype.hasOwnProperty.call(authorizeData, field)
+              Object.prototype.hasOwnProperty.call(authorizeData, field),
             )
           ) {
             reject(errors.extend({identity_exception: 'unauthorized'}));
@@ -83,9 +75,11 @@ export default class Redirect {
           }
       }
 
-      this.sdk.redirectUriParamsPersister.retrieve(authorizeData.state as string);
+      this.sdk.redirectUriParamsPersister.retrieve(
+        authorizeData.state as string,
+      );
 
-      resolve(authorizeData);
+      resolve(authorizeData as unknown as AuthorizeResponse);
     });
   }
 }

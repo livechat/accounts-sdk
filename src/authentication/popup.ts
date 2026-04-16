@@ -1,13 +1,6 @@
 import Listener from '../helpers/listener';
-
-interface PopupSDK {
-  authorizeURL(options: Record<string, unknown>, flow: string): string;
-}
-
-interface PopupOptions {
-  server_url?: string;
-  [key: string]: unknown;
-}
+import {type TokenFlowResponse} from '../types/auth';
+import {type PopupSDK, type PopupOptions} from '../types/authentication';
 
 /**
  * Authentication using a popup window.
@@ -22,7 +15,7 @@ export default class Popup {
     this.sdk = sdk;
   }
 
-  authorize(): Promise<Record<string, unknown> | null> {
+  authorize(): Promise<TokenFlowResponse | null> {
     return new Promise((resolve, reject) => {
       const url = this.sdk.authorizeURL(this.options, 'button');
 
@@ -43,7 +36,7 @@ export default class Popup {
         window.open(
           url,
           'livechat-login-popup',
-          `resizable,scrollbars,width=${w},height=${h},left=${left},top=${top}`
+          `resizable,scrollbars,width=${w},height=${h},left=${left},top=${top}`,
         );
       };
 
