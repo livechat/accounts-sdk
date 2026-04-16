@@ -1,26 +1,11 @@
 import Storage from '../helpers/storage';
+import {
+  type TransactionConfig,
+  type TransactionSDKOptions,
+  type TransactionParams,
+  type TransactionData,
+} from '../types/transaction';
 
-interface TransactionConfig {
-  namespace: string;
-  key_length?: number;
-  force_local_storage?: boolean;
-  [key: string]: unknown;
-}
-
-export interface TransactionSDKOptions {
-  transaction: TransactionConfig;
-}
-
-export interface TransactionParams {
-  state: string;
-  code_verifier?: string;
-  [key: string]: unknown;
-}
-
-export interface TransactionData {
-  state?: string;
-  code_verifier?: string;
-}
 
 export default class Transaction {
   options: TransactionConfig;
