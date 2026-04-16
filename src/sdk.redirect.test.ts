@@ -1,4 +1,5 @@
 import SDK from './sdk';
+import {type TokenFlowResponse, type CodeFlowResponse} from './types/auth';
 
 describe('Redirect Flow', function () {
   let sdk: InstanceType<typeof SDK>;
@@ -74,7 +75,7 @@ describe('Redirect Flow', function () {
       '#access_token=tok123&token_type=Bearer&expires_in=28800&scope=read&state=somestate';
 
     const redirect = sdk.redirect();
-    const data = await redirect.authorizeData() as Record<string, unknown>;
+    const data = await redirect.authorizeData() as TokenFlowResponse;
     expect(data.access_token).toBe('tok123');
     expect(data.token_type).toBe('Bearer');
   });
@@ -89,7 +90,7 @@ describe('Redirect Flow', function () {
     window.history.pushState(null, '', '?code=authcode123&state=somestate');
 
     const redirect = sdk.redirect();
-    const data = await redirect.authorizeData() as Record<string, unknown>;
+    const data = await redirect.authorizeData() as CodeFlowResponse;
     expect(data.code).toBe('authcode123');
   });
 

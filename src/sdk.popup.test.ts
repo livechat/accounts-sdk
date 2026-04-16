@@ -61,7 +61,7 @@ describe('Popup Flow', function () {
     const promise = popup.authorize();
     capturedCallback!(null, { access_token: 'tok123', token_type: 'Bearer' });
     const result = await promise;
-    expect((result as Record<string, unknown>).access_token).toBe('tok123');
+    expect(result?.access_token).toBe('tok123');
   });
 
   it('rejects with error when listener calls back with an error', async function () {

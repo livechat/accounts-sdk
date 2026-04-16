@@ -1,5 +1,6 @@
 import SDK from './sdk';
-import Listener, {ListenerCallback} from './helpers/listener';
+import Listener from './helpers/listener';
+import {type ListenerCallback} from './types/listener';
 
 jest.mock('./helpers/listener');
 
@@ -56,7 +57,7 @@ describe('Iframe Flow', function () {
     const promise = iframe.authorize();
     capturedCallback!(null, {access_token: 'tok123', token_type: 'Bearer'});
     const result = await promise;
-    expect((result as Record<string, unknown>).access_token).toBe('tok123');
+    expect(result?.access_token).toBe('tok123');
   });
 
   it('rejects with error when listener calls back with an error', async function () {
@@ -78,7 +79,7 @@ describe('Iframe Flow', function () {
     const iframeID = iframe.iframeID();
     const promise = iframe.authorize();
     expect(document.getElementById(iframeID)).not.toBeNull();
-    capturedCallback!(null, {access_token: 'tok'});
+    capturedCallback!(null, {access_token: 'tok', token_type: 'Bearer'});
     await promise;
     expect(document.getElementById(iframeID)).toBeNull();
   });
