@@ -1,4 +1,5 @@
 import errors from './errors';
+import {type AuthError} from '../types/errors';
 
 describe('helpers/errors', function () {
   describe('extend — oauth_exception', function () {
@@ -41,7 +42,7 @@ describe('helpers/errors', function () {
 
   describe('extend — no matching exception', function () {
     it('returns error unchanged when no exception field is present', function () {
-      const error = {message: 'something went wrong'};
+      const error = {message: 'something went wrong'} as AuthError;
       const result = errors.extend(error);
       expect(result).toBe(error);
       expect(result.description).toBeUndefined();

@@ -1,10 +1,5 @@
-import errors, {type AuthError} from './errors';
-
-export type ListenerCallback = (error: AuthError | string | null, data: Record<string, unknown> | null) => void;
-
-interface ListenerOptions {
-  server_url?: string;
-}
+import errors from './errors';
+import {type ListenerCallback, type ListenerOptions} from '../types/listener';
 
 export default class Listener {
   private options: ListenerOptions;

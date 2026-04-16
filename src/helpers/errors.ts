@@ -1,9 +1,4 @@
-export interface AuthError {
-  oauth_exception?: string;
-  identity_exception?: string;
-  description?: string;
-  [key: string]: unknown;
-}
+import {type AuthError} from '../types/errors';
 
 const errors = {
   extend(error: AuthError): AuthError {

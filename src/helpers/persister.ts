@@ -5,18 +5,13 @@
  */
 
 import Storage from './storage';
-
-interface PersisterSDKOptions {
-  transaction: {
-    namespace: string;
-  };
-}
+import {type PersisterOptions, type PersisterConfig} from '../types/persister';
 
 export default class Persister {
-  options: {namespace: string};
+  options: PersisterConfig;
   storage: Storage;
 
-  constructor(options: PersisterSDKOptions, type: string) {
+  constructor(options: PersisterOptions, type: string) {
     this.options = {
       namespace: options.transaction.namespace + type,
     };
@@ -24,14 +19,14 @@ export default class Persister {
     this.storage = new Storage({});
   }
 
-  set(state: string, data: unknown): void {
-    this.storage.setItem(this.options.namespace + state, data, {expires: 1 / 48});
+  set<T>(state: string, data: T): void {
+    this.storage.setItem<T>(this.options.namespace + state, data, {expires: 1 / 48});
   }
 
-  get(state: string): unknown {
-    const data = this.storage.getItem(this.options.namespace + state);
+  get<T>(state: string): T {
+    const data = this.storage.getItem<T>(this.options.namespace + state);
     this.clear(state);
-    return data || {};
+    return (data || {}) as T;
   }
 
   clear(state: string): void {
