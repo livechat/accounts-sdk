@@ -7,27 +7,16 @@
 import qs from 'qs';
 
 import Persister from '../persister';
-
-interface PersistParams {
-  redirect_uri: string;
-  state: string;
-}
-
-interface RedirectUriParamsData {
-  query_params?: Record<string, unknown>;
-  hash_params?: Record<string, unknown>;
-}
-
-interface RedirectUriParamsPersisterOptions {
-  transaction: {
-    namespace: string;
-  };
-}
+import {
+  type PersisterOptions,
+  type PersistParams,
+  type RedirectUriParamsData,
+} from '../../types/persister';
 
 export default class RedirectUriParamsPersister {
   persister: Persister;
 
-  constructor(options: RedirectUriParamsPersisterOptions) {
+  constructor(options: PersisterOptions) {
     this.persister = new Persister(options, 'redirect_uri_params');
   }
 
@@ -52,7 +41,7 @@ export default class RedirectUriParamsPersister {
    * Params returned by global accounts overrides persisted params in case of duplications.
    */
   retrieve(state: string): void {
-    const redirectUriParams = this.persister.get(state) as RedirectUriParamsData | null;
+    const redirectUriParams = this.persister.get<RedirectUriParamsData>(state);
 
     if (!redirectUriParams) {
       return;

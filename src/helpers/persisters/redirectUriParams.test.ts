@@ -7,10 +7,7 @@ function makePersister() {
     transaction: {namespace: 'test.ns'},
   });
   // Override inner persister's storage to use localStorage
-  persister.persister.storage = new Storage({
-    namespace: persister.persister.options.namespace,
-    force_local_storage: true,
-  });
+  persister.persister.storage = new Storage({force_local_storage: true});
   return persister;
 }
 

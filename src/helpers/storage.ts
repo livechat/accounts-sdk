@@ -4,7 +4,8 @@
  * @license MIT
  */
 
-import StorageHandler, {type StorageHandlerOptions} from './storage/handler';
+import StorageHandler from './storage/handler';
+import {type StorageHandlerOptions} from '../types/storage';
 import Cookies from 'js-cookie';
 
 /**
@@ -17,12 +18,12 @@ export default class Storage {
     this.handler = new StorageHandler(options);
   }
 
-  getItem(key: string): unknown {
+  getItem<T>(key: string): T | null {
     const value = this.handler.getItem(key);
     try {
-      return JSON.parse(value as string);
+      return JSON.parse(value as string) as T | null;
     } catch {
-      return value;
+      return value as unknown as T | null;
     }
   }
 
@@ -30,7 +31,7 @@ export default class Storage {
     return this.handler.removeItem(key);
   }
 
-  setItem(key: string, value: unknown, options?: Cookies.CookieAttributes): void {
+  setItem<T>(key: string, value: T, options?: Cookies.CookieAttributes): void {
     const json = JSON.stringify(value);
     return this.handler.setItem(key, json, options);
   }

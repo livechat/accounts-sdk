@@ -4,21 +4,10 @@
  * @license MIT
  */
 
+import type Cookies from 'js-cookie';
 import DummyStorage from './dummy';
 import CookieStorage from './cookie';
-import Cookies from 'js-cookie';
-
-export interface StorageHandlerOptions {
-  force_local_storage?: boolean;
-  [key: string]: unknown;
-}
-
-// Common interface for all storage backends.
-interface StorageBackend {
-  getItem(key: string): string | null | undefined;
-  removeItem(key: string): void;
-  setItem(key: string, value: string, options?: Cookies.CookieAttributes): void;
-}
+import {type StorageHandlerOptions, type StorageBackend} from '../../types/storage';
 
 /**
  * Manages the underlying storage with failover: localStorage → CookieStorage → DummyStorage.
