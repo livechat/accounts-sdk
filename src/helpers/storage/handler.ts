@@ -7,7 +7,10 @@
 import type Cookies from 'js-cookie';
 import DummyStorage from './dummy';
 import CookieStorage from './cookie';
-import {type StorageHandlerOptions, type StorageBackend} from '../../types/storage';
+import {
+  type StorageHandlerOptions,
+  type StorageBackend,
+} from '../../types/storage';
 
 /**
  * Manages the underlying storage with failover: localStorage → CookieStorage → DummyStorage.
@@ -25,7 +28,7 @@ export default class StorageHandler {
       // when localStorage is disabled.
       const ls = window.localStorage;
       if (ls) {
-        this.storage = ls as unknown as StorageBackend;
+        this.storage = ls;
       }
     } catch (e) {
       console.warn(e);
@@ -66,7 +69,11 @@ export default class StorageHandler {
     }
   }
 
-  setItem(key: string, value: string, options?: Cookies.CookieAttributes): void {
+  setItem(
+    key: string,
+    value: string,
+    options?: Cookies.CookieAttributes,
+  ): void {
     try {
       return this.storage.setItem(key, value, options);
     } catch (e) {

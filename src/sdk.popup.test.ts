@@ -3,6 +3,8 @@ import Listener from './helpers/listener';
 
 jest.mock('./helpers/listener');
 
+type DocWithStorageAccess = Document & { requestStorageAccess?: () => Promise<void> };
+
 describe('Popup Flow', function () {
   let sdk: InstanceType<typeof SDK>;
   let capturedCallback: ((error: unknown, data: unknown) => void) | undefined;
@@ -12,14 +14,17 @@ describe('Popup Flow', function () {
     jest.useFakeTimers();
     originalOpen = window.open;
     window.open = jest.fn() as typeof window.open;
-    delete (document as any).requestStorageAccess;
+    delete (document as { requestStorageAccess?: () => Promise<void> }).requestStorageAccess;
 
-    (Listener as any).mockImplementation(function (this: Record<string, unknown>) {
-      this.start = jest.fn((_timeout: number, cb: (error: unknown, data: unknown) => void) => {
-        capturedCallback = cb;
-      });
-      this.stop = jest.fn();
-    });
+    jest.mocked(Listener).mockImplementation(
+      // @ts-expect-error — constructor-style function satisfies the mock contract at runtime
+      function (this: Record<string, unknown>) {
+        this.start = jest.fn((_timeout: number, cb: (error: unknown, data: unknown) => void) => {
+          capturedCallback = cb;
+        });
+        this.stop = jest.fn();
+      },
+    );
 
     sdk = new SDK({
       client_id: 'test-client-id',
@@ -83,7 +88,7 @@ describe('Popup Flow', function () {
   });
 
   it('opens a popup window after requestStorageAccess resolves', async function () {
-    (document as any).requestStorageAccess = jest.fn(() => Promise.resolve());
+    (document as DocWithStorageAccess).requestStorageAccess = jest.fn(() => Promise.resolve());
     const popup = sdk.popup();
     popup.authorize().catch(() => {});
     await Promise.resolve();
@@ -92,7 +97,7 @@ describe('Popup Flow', function () {
   });
 
   it('opens a popup window even when requestStorageAccess rejects', async function () {
-    (document as any).requestStorageAccess = jest.fn(() => Promise.reject(new Error('denied')));
+    (document as DocWithStorageAccess).requestStorageAccess = jest.fn(() => Promise.reject(new Error('denied')));
     const popup = sdk.popup();
     popup.authorize().catch(() => {});
     await Promise.resolve();

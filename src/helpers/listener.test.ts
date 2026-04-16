@@ -3,7 +3,7 @@ import Listener from './listener';
 const SERVER_URL = 'https://accounts.livechat.com';
 
 function makeEvent(origin: string, data: unknown): MessageEvent {
-  return {origin, data} as unknown as MessageEvent;
+  return new MessageEvent('message', {origin, data});
 }
 
 describe('helpers/Listener', function () {

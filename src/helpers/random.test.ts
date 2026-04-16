@@ -6,8 +6,14 @@ describe('helpers/random', function () {
   let originalMathRandom: typeof Math.random;
 
   beforeEach(function () {
-    originalCryptoDescriptor = Object.getOwnPropertyDescriptor(window, 'crypto');
-    originalMsCryptoDescriptor = Object.getOwnPropertyDescriptor(window, 'msCrypto');
+    originalCryptoDescriptor = Object.getOwnPropertyDescriptor(
+      window,
+      'crypto',
+    );
+    originalMsCryptoDescriptor = Object.getOwnPropertyDescriptor(
+      window,
+      'msCrypto',
+    );
     originalMathRandom = Math.random;
   });
 
@@ -17,13 +23,13 @@ describe('helpers/random', function () {
     if (originalCryptoDescriptor) {
       Object.defineProperty(window, 'crypto', originalCryptoDescriptor);
     } else {
-      delete (window as any).crypto;
+      delete (window as {crypto?: Crypto}).crypto;
     }
 
     if (originalMsCryptoDescriptor) {
       Object.defineProperty(window, 'msCrypto', originalMsCryptoDescriptor);
     } else {
-      delete (window as any).msCrypto;
+      delete (window as {msCrypto?: unknown}).msCrypto;
     }
   });
 

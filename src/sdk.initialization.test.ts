@@ -6,12 +6,13 @@ describe('SDK Initialization', function () {
   });
 
   it('should throw error when client_id is missing', function () {
-    // Intentionally test invalid inputs — cast to bypass TypeScript's argument checks
-    expect(() => new (SDK as unknown as new() => SDK)()).toThrow(/client id not provided/);
-    expect(() => new SDK({} as unknown as {client_id: string})).toThrow(/client id not provided/);
-    expect(() => new SDK({client_id: null as unknown as string})).toThrow(
-      /client id not provided/
-    );
+    // Intentionally test invalid inputs — @ts-expect-error bypasses TypeScript's argument checks
+    // @ts-expect-error — testing runtime validation with missing args
+    expect(() => new SDK()).toThrow(/client id not provided/);
+    // @ts-expect-error — testing runtime validation with empty object
+    expect(() => new SDK({})).toThrow(/client id not provided/);
+    // @ts-expect-error — testing runtime validation with null client_id
+    expect(() => new SDK({client_id: null})).toThrow(/client id not provided/);
   });
 
   it('should initialize with required client_id', function () {
