@@ -1,7 +1,8 @@
 import errors from '../helpers/errors';
 import qs from 'qs';
-import {type AuthorizeResponse, type TokenFlowResponse, type CodeFlowResponse} from '../types/auth';
+import {pick} from '../helpers/object';
 import {type RedirectSDK, type RedirectOptions} from '../types/authentication';
+import {type AuthorizeResponse} from '../types/auth';
 
 export default class Redirect {
   options: RedirectOptions;
@@ -13,7 +14,7 @@ export default class Redirect {
   }
 
   /**
-   * Run the default authorization flow by redirecting the page.
+   * run default authorization flow
    */
   authorize(): void {
     const url = this.sdk.authorizeURL(this.options);
@@ -21,51 +22,60 @@ export default class Redirect {
   }
 
   /**
-   * Check if the current origin was redirected with authorize data.
-   * @returns Promise that resolves to authorize data or rejects with an error.
+   * this function checks if the current origin was redirected to with authorize data
+   * @returns {Promise} promise that resolves to authorize data or error
    */
   authorizeData(): Promise<AuthorizeResponse> {
     return new Promise((resolve, reject) => {
+      let authorizeData: Record<string, unknown> = {};
+      let requiredFields: string[] = [];
+
       switch (this.options.response_type) {
-        case 'token': {
-          const parsed = qs.parse(window.location.hash.substring(1));
+        case 'token':
+          requiredFields = ['access_token', 'expires_in', 'token_type'];
+
+          authorizeData = qs.parse(window.location.hash.substring(1));
+          authorizeData = pick(authorizeData, [
+            'access_token',
+            'expires_in',
+            'state',
+            'scope',
+            'token_type',
+          ]);
+
           if (
-            !['access_token', 'expires_in', 'token_type'].every((f) =>
-              Object.prototype.hasOwnProperty.call(parsed, f),
+            !requiredFields.every((field) =>
+              Object.prototype.hasOwnProperty.call(authorizeData, field),
             )
           ) {
             reject(errors.extend({identity_exception: 'unauthorized'}));
             return;
           }
-          const tokenResponse: TokenFlowResponse = {
-            access_token: parsed.access_token as string,
-            expires_in: parseInt(parsed.expires_in as string),
-            token_type: parsed.token_type as string,
-            ...(parsed.state && {state: parsed.state as string}),
-            ...(parsed.scope && {scope: parsed.scope as string}),
-          };
-          this.sdk.redirectUriParamsPersister.retrieve(tokenResponse.state ?? '');
-          resolve(tokenResponse);
-          return;
-        }
 
-        case 'code': {
-          const parsed = qs.parse(window.location.search, {
+          authorizeData.expires_in = parseInt(authorizeData.expires_in as string);
+          break;
+
+        case 'code':
+          requiredFields = ['code'];
+
+          authorizeData = qs.parse(window.location.search, {
             ignoreQueryPrefix: true,
           });
-          if (!Object.prototype.hasOwnProperty.call(parsed, 'code')) {
+          authorizeData = pick(authorizeData, ['state', 'code']);
+
+          if (
+            !requiredFields.every((field) =>
+              Object.prototype.hasOwnProperty.call(authorizeData, field),
+            )
+          ) {
             reject(errors.extend({identity_exception: 'unauthorized'}));
             return;
           }
-          const codeResponse: CodeFlowResponse = {
-            code: parsed.code as string,
-            ...(parsed.state && {state: parsed.state as string}),
-          };
-          this.sdk.redirectUriParamsPersister.retrieve(codeResponse.state ?? '');
-          resolve(codeResponse);
-          return;
-        }
       }
+
+      this.sdk.redirectUriParamsPersister.retrieve(authorizeData.state as string);
+
+      resolve(authorizeData as unknown as AuthorizeResponse);
     });
   }
 }
