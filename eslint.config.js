@@ -95,7 +95,7 @@ export default [
     },
     rules: {
       'jsdoc/require-jsdoc': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
   {

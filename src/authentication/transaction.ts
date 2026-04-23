@@ -6,7 +6,6 @@ import {
   type TransactionData,
 } from '../types/transaction';
 
-
 export default class Transaction {
   options: TransactionConfig;
   private storage: Storage;

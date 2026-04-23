@@ -17,7 +17,6 @@ import {
 import {type PersistParams} from './types/persister';
 import {type PopupSDK, type IframeSDK, type RedirectSDK} from './types/authentication';
 
-
 /**
  * Normalize PKCE options, support deprecated code_challange_method option.
  */
