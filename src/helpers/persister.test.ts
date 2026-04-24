@@ -23,7 +23,7 @@ describe('helpers/Persister', function () {
 
   it('stores and retrieves data by state key', function () {
     persister.set('state1', {access_token: 'tok'});
-    const result = persister.get('state1') as {access_token: string};
+    const result = persister.get<{access_token: string}>('state1');
     expect(result.access_token).toBe('tok');
   });
 
@@ -51,7 +51,7 @@ describe('helpers/Persister', function () {
     persister.set('stateA', {token: 'a'});
     persister.set('stateB', {token: 'b'});
 
-    expect((persister.get('stateA') as {token: string}).token).toBe('a');
-    expect((persister.get('stateB') as {token: string}).token).toBe('b');
+    expect(persister.get<{token: string}>('stateA').token).toBe('a');
+    expect(persister.get<{token: string}>('stateB').token).toBe('b');
   });
 });
