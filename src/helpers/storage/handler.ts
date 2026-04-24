@@ -13,7 +13,8 @@ import {
 } from '../../types/storage';
 
 /**
- * Manages the underlying storage with failover: localStorage → CookieStorage → DummyStorage.
+ * Manages the underlying storage. Defaults to CookieStorage; uses localStorage when
+ * force_local_storage is set. Failover chain: localStorage → CookieStorage → DummyStorage.
  */
 export default class StorageHandler {
   storage: StorageBackend;
