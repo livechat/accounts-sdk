@@ -42,7 +42,7 @@ describe('helpers/random', function () {
       value: {
         getRandomValues: function (array: Uint8Array) {
           for (let i = 0; i < array.length; i++) {
-            const value = sequence[cursor] !== undefined ? sequence[cursor] : 0;
+            const value = sequence[cursor] ?? 0;
             cursor += 1;
             array[i] = value;
           }
@@ -72,7 +72,7 @@ describe('helpers/random', function () {
       value: {
         getRandomValues: function (array: Uint8Array) {
           for (let i = 0; i < array.length; i++) {
-            const value = sequence[cursor] !== undefined ? sequence[cursor] : 0;
+            const value = sequence[cursor] ?? 0;
             cursor += 1;
             array[i] = value;
           }

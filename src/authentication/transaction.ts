@@ -27,7 +27,7 @@ export default class Transaction {
   get(state: string): TransactionData {
     const transactionData = this.storage.getItem(this.options.namespace + state);
     this.clear(state);
-    return (transactionData || {}) as TransactionData;
+    return (transactionData ?? {}) as TransactionData;
   }
 
   clear(state: string): void {

@@ -29,7 +29,7 @@ import {
  * Normalize PKCE options, support deprecated code_challange_method option.
  */
 function normalizePkce(pkce: PKCEOptions | undefined): PKCEOptions | undefined {
-  if (!pkce || pkce.code_challange_method === undefined) {
+  if (pkce?.code_challange_method === undefined) {
     return pkce;
   }
   const normalized = Object.assign({}, pkce);
@@ -38,9 +38,7 @@ function normalizePkce(pkce: PKCEOptions | undefined): PKCEOptions | undefined {
     // eslint-disable-next-line max-len
     '[accounts-sdk] pkce.code_challange_method is deprecated and will be removed in v3.0.0. Use code_challenge_method instead.',
   );
-  if (normalized.code_challenge_method === undefined) {
-    normalized.code_challenge_method = normalized.code_challange_method;
-  }
+  normalized.code_challenge_method ??= normalized.code_challange_method;
   delete normalized.code_challange_method;
   return normalized;
 }
@@ -175,7 +173,7 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
 
     if (localOptions.response_type === 'code' && localOptions.pkce?.enabled) {
       const codeVerifier =
-        localOptions.pkce.code_verifier ||
+        localOptions.pkce.code_verifier ??
         random.string(localOptions.pkce.code_verifier_length ?? 128);
 
       switch (localOptions.pkce.code_challenge_method) {
@@ -226,7 +224,7 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
     const transactionData = this.transaction.get(authorizeData.state ?? '');
 
     if (authorizeData.state && this.options.verify_state) {
-      if (transactionData.state != authorizeData.state) {
+      if (transactionData.state !== authorizeData.state) {
         return null;
       }
     }

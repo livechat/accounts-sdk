@@ -26,7 +26,7 @@ export default class Persister {
   get<T>(state: string): T {
     const data = this.storage.getItem<T>(this.options.namespace + state);
     this.clear(state);
-    return (data || {}) as T;
+    return (data ?? {}) as T;
   }
 
   clear(state: string): void {

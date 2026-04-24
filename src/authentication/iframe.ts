@@ -54,7 +54,7 @@ export default class Iframe {
 
   removeIframe(): void {
     const ref = document.getElementById(this.iframeID());
-    if (ref && ref.parentNode) {
+    if (ref?.parentNode) {
       ref.parentNode.removeChild(ref);
     }
   }

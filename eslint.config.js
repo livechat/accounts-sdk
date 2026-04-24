@@ -23,17 +23,16 @@ export default [
     rules: {
       // Google style guide rules
       'arrow-parens': ['error', 'always'],
-      'constructor-super': 'error',
       'generator-star-spacing': ['error', 'after'],
-      'no-new-symbol': 'error',
-      'no-this-before-super': 'error',
       'no-var': 'error',
+      'prefer-const': 'error',
       'prefer-rest-params': 'error',
       'prefer-spread': 'error',
       'rest-spread-spacing': 'error',
       'yield-star-spacing': ['error', 'after'],
 
       // Custom rules from original config
+      'eqeqeq': ['error', 'always', {'null': 'ignore'}],
       'max-len': ['error', {code: 120, comments: 160}],
       'indent': 'off',
       'space-before-function-paren': [
@@ -45,8 +44,7 @@ export default [
         },
       ],
 
-      // Turn off JSDoc requirement (legacy code has inline disables)
-      'jsdoc/require-jsdoc': 'warn',
+      'jsdoc/require-jsdoc': 'off',
     },
   },
   {
@@ -54,10 +52,10 @@ export default [
     files: ['**/*.ts'],
     languageOptions: {
       parser: tsParser,
+      ecmaVersion: 2020,
+      sourceType: 'module',
       parserOptions: {
         project: './tsconfig.eslint.json',
-        ecmaVersion: 2020,
-        sourceType: 'module',
       },
       globals: {
         ...globals.browser,
@@ -69,6 +67,7 @@ export default [
     },
     rules: {
       ...tsPlugin.configs['recommended'].rules,
+      'no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_', varsIgnorePattern: '^_'}],
       'no-var': 'error',
@@ -83,6 +82,13 @@ export default [
       'jsdoc/require-param-type': 'off',
       'jsdoc/require-returns-type': 'off',
       'jsdoc/check-param-names': 'off',
+      'eqeqeq': ['error', 'always', {'null': 'ignore'}],
+      'prefer-const': 'error',
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/await-thenable': 'error',
+      '@typescript-eslint/prefer-nullish-coalescing': 'error',
+      '@typescript-eslint/prefer-optional-chain': 'error',
     },
   },
   {
@@ -92,10 +98,6 @@ export default [
       globals: {
         ...globals.jest,
       },
-    },
-    rules: {
-      'jsdoc/require-jsdoc': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
   {
