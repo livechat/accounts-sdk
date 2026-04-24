@@ -2,8 +2,7 @@ import {type AuthError} from './errors';
 import {type TokenFlowResponse} from './auth';
 
 /**
- * Callback invoked when the `window.postMessage` listener receives a result
- * from the LiveChat accounts popup or iframe.
+ * Callback invoked with the result of a popup or iframe authorization flow.
  *
  * Follows the Node.js error-first convention:
  * - On success: `error` is `null`, `data` contains the token response.

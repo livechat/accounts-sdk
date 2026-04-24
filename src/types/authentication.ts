@@ -47,9 +47,9 @@ export type IframeOptions = {
 };
 
 /**
- * Structural interface for the redirect-URI params persister dependency of `Redirect`.
- * Any object that implements `retrieve` satisfies this contract, enabling
- * isolated testing of the `Redirect` class without `RedirectUriParamsPersister`.
+ * Interface for a custom redirect-URI params persister.
+ * Implement this to provide your own mechanism for restoring query and hash
+ * params to the redirect URI after authorization completes.
  */
 export interface RedirectUriParamsPersisterLike {
   retrieve(state: string): void;

@@ -23,12 +23,8 @@ export type PKCEOptions = {
 };
 
 /**
- * Configuration for the state/PKCE transaction storage used across
- * authorization redirects. The SDK stores a short-lived entry keyed by
- * `namespace + state` so it can verify the callback and retrieve the
- * code verifier after the redirect.
- * @see `TransactionConfig` in `types/transaction.ts` for the resolved (defaults-applied) counterpart
- * used internally by the `Transaction` class.
+ * Configuration for the short-lived transaction storage used to carry
+ * state and PKCE data across authorization redirects.
  */
 export type TransactionOptions = {
   /**
@@ -56,12 +52,8 @@ export type TrackingOptions = {
 };
 
 /**
- * User-facing configuration passed to `new AccountsSDK(options)`.
+ * Configuration passed to `new AccountsSDK(options)`.
  * Only `client_id` is required; all other fields have sensible defaults.
- *
- * After construction, the SDK merges these options with its defaults to
- * produce a {@link ResolvedOptions} object that is used internally. You
- * never interact with `ResolvedOptions` directly.
  */
 export type SDKOptions = {
   /** OAuth2 client ID registered in the LiveChat Developer Console. */

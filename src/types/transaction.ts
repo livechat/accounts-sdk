@@ -44,7 +44,6 @@ export type TransactionParams = {
 /**
  * Data retrieved from storage during the authorization callback.
  * All fields are optional because the entry may have expired or never existed.
- * @see {@link TransactionParams} for the corresponding write-path type.
  */
 export type TransactionData = {
   /** The `state` that was stored when the request was initiated. */
