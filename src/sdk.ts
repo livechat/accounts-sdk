@@ -2,7 +2,11 @@ import Popup from './authentication/popup';
 import Redirect from './authentication/redirect';
 import Iframe from './authentication/iframe';
 import Transaction from './authentication/transaction';
-import {type TransactionParams, type TransactionData, type VerifyInput} from './types/transaction';
+import {
+  type TransactionParams,
+  type TransactionData,
+  type VerifyInput,
+} from './types/transaction';
 import qs from 'qs';
 import sjcl from './vendor/sjcl';
 import {pick} from './helpers/object';
@@ -15,7 +19,11 @@ import {
   type ResolvedOptions,
 } from './types/sdk';
 import {type PersistParams} from './types/persister';
-import {type PopupSDK, type IframeSDK, type RedirectSDK} from './types/authentication';
+import {
+  type PopupSDK,
+  type IframeSDK,
+  type RedirectSDK,
+} from './types/authentication';
 
 /**
  * Normalize PKCE options, support deprecated code_challange_method option.

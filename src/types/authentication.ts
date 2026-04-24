@@ -39,7 +39,7 @@ export interface IframeSDK {
 export type IframeOptions = {
   /** Used to build the unique iframe element ID via `client_id + response_type`. */
   client_id?: string;
-  response_type?: string;
+  response_type?: 'token' | 'code';
   /** Base URL of the accounts server, used for postMessage origin validation. */
   server_url?: string;
   organization_id?: string;
@@ -72,6 +72,6 @@ export interface RedirectSDK {
  */
 export type RedirectOptions = {
   /** Determines which part of the callback URL to parse: hash (`'token'`) or query (`'code'`). */
-  response_type?: string;
+  response_type?: 'token' | 'code';
   scope?: string | null;
 };

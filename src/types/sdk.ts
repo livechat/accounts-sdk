@@ -71,7 +71,7 @@ export type SDKOptions = {
   /** OAuth2 `prompt` parameter (e.g. `'consent'`, `'select_account'`). */
   prompt?: string;
   /** OAuth2 response type: `'token'` (implicit) or `'code'` (PKCE). Defaults to `'token'`. */
-  response_type?: string;
+  response_type?: 'token' | 'code';
   /**
    * Controls the popup window behavior.
    * `'auto'` (default) — opens a popup; `'manual'` — redirects to `/signin`.
@@ -126,7 +126,7 @@ export interface ResolvedOptions extends SDKOptions {
   client_id: string;
   organization_id: string;
   prompt: string;
-  response_type: string;
+  response_type: 'token' | 'code';
   popup_flow: string;
   state: string;
   verify_state: boolean;
