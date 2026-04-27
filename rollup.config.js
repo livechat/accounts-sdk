@@ -35,7 +35,7 @@ export default [
       },
     ],
     plugins: [
-      resolve({extensions: ['.ts', '.js']}),
+      resolve({extensions: ['.ts', '.js'], browser: true}),
       commonjs(),
       typescript({tsconfig: './tsconfig.build.json', outDir: './dist', rootDir: './src'}),
       process.env.ROLLUP_WATCH && serve('dist'),
