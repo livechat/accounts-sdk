@@ -193,5 +193,11 @@ describe('helpers/Listener', function () {
 
       expect(listener.listening).toBe(false);
     });
+
+    it('throws when receiveMessage is called without start', function () {
+      const bare = new Listener({server_url: SERVER_URL});
+      const event = makeEvent(SERVER_URL, {data: {access_token: 'x'}});
+      expect(() => bare.receiveMessage(event)).toThrow('Listener callback is not set');
+    });
   });
 });

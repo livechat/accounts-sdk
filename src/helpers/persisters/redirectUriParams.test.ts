@@ -127,5 +127,11 @@ describe('helpers/persisters/RedirectUriParamsPersister', function () {
       persister.retrieve('any-state');
       expect(replaceStateSpy).not.toHaveBeenCalled();
     });
+
+    it('calls replaceState without trailing ? or # when all params are empty', function () {
+      persister.retrieve('unknown-state');
+      const newUrl = replaceStateSpy.mock.calls[0][2] as string;
+      expect(newUrl).not.toMatch(/[?#]/);
+    });
   });
 });

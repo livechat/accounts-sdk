@@ -23,10 +23,6 @@ function string(length: number): string {
   }
 
   const maxByte = Math.floor(256 / charsetLength) * charsetLength;
-  if (maxByte === 0) {
-    return generateWithMathRandom(length, charset, charsetLength);
-  }
-
   const result: string[] = [];
 
   while (result.length < length) {

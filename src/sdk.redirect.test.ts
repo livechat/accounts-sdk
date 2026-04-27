@@ -104,4 +104,32 @@ describe('Redirect Flow', function () {
     const error = await redirect.authorizeData().catch((e) => e);
     expect(error.identity_exception).toBe('unauthorized');
   });
+
+  it('should resolve with undefined scope and state when absent from hash', async function () {
+    sdk = new SDK({
+      client_id: 'test-client-id',
+      verify_state: false,
+    });
+
+    window.location.hash = '#access_token=tok&token_type=Bearer&expires_in=3600';
+
+    const redirect = sdk.redirect();
+    const data = await redirect.authorizeData() as TokenFlowResponse;
+    expect(data.scope).toBeUndefined();
+    expect(data.state).toBeUndefined();
+  });
+
+  it('should resolve with undefined state when absent from code flow query', async function () {
+    sdk = new SDK({
+      client_id: 'test-client-id',
+      response_type: 'code',
+      verify_state: false,
+    });
+
+    window.history.pushState(null, '', '?code=authcode');
+
+    const redirect = sdk.redirect();
+    const data = await redirect.authorizeData() as CodeFlowResponse;
+    expect(data.state).toBeUndefined();
+  });
 });

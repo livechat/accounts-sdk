@@ -1,4 +1,5 @@
 import SDK from './sdk';
+import Iframe from './authentication/iframe';
 import Listener from './helpers/listener';
 import {type ListenerCallback} from './types/listener';
 
@@ -87,5 +88,11 @@ describe('Iframe Flow', function () {
   it('removeIframe is a no-op when element is not in the DOM', function () {
     const iframe = sdk.iframe();
     expect(() => iframe.removeIframe()).not.toThrow();
+  });
+
+  it('iframeID falls back to empty strings for undefined client_id and response_type', function () {
+    const fakeSDK = {} as ConstructorParameters<typeof Iframe>[0];
+    const iframe = new Iframe(fakeSDK, {});
+    expect(iframe.iframeID()).toBe('');
   });
 });

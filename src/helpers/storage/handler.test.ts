@@ -14,6 +14,21 @@ describe('helpers/storage/StorageHandler', function () {
       expect(handler.storage).toBe(window.localStorage);
     });
 
+    it('falls back to CookieStorage when localStorage is null (falsy)', function () {
+      const originalDescriptor = Object.getOwnPropertyDescriptor(window, 'localStorage')!;
+      Object.defineProperty(window, 'localStorage', {
+        configurable: true,
+        get() {
+          return null;
+        },
+      });
+
+      const handler = new StorageHandler({force_local_storage: true});
+      expect(handler.storage).toBeInstanceOf(CookieStorage);
+
+      Object.defineProperty(window, 'localStorage', originalDescriptor);
+    });
+
     it('falls back to CookieStorage when force_local_storage is true but localStorage throws', function () {
       const originalDescriptor = Object.getOwnPropertyDescriptor(window, 'localStorage');
 
