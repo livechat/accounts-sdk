@@ -1,6 +1,10 @@
 /**
  * Response received after a successful OAuth2 implicit (token) flow authorization.
  * Returned when `response_type` is `'token'`.
+ *
+ * Fields beyond `access_token` and `token_type` are optional because the redirect
+ * flow only captures URL fragment params, while popup/iframe flows receive the full
+ * server response via `window.postMessage`.
  */
 export type TokenFlowResponse = {
   /** Short-lived OAuth2 bearer token to use in API calls. */
@@ -16,6 +20,14 @@ export type TokenFlowResponse = {
    * Used to match the response to the initiating request.
    */
   state?: string;
+  /** Refresh token that can be used to obtain a new access token. `null` when not issued. */
+  refresh_token?: string | null;
+  /** UUID of the authenticated account. */
+  account_id?: string;
+  /** UUID of the organization the token belongs to. */
+  organization_id?: string;
+  /** OAuth2 client ID of the application that requested the token. */
+  client_id?: string;
 };
 
 /**

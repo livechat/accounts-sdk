@@ -10,12 +10,26 @@ import {
 
 function parseTokenResponse(hash: string): TokenFlowResponse | null {
   const raw = qs.parse(hash.substring(1));
-  const {access_token, expires_in, token_type, scope, state} = pick(raw, [
+  const {
+    access_token,
+    expires_in,
+    token_type,
+    scope,
+    state,
+    refresh_token,
+    account_id,
+    organization_id,
+    client_id,
+  } = pick(raw, [
     'access_token',
     'expires_in',
     'state',
     'scope',
     'token_type',
+    'refresh_token',
+    'account_id',
+    'organization_id',
+    'client_id',
   ]);
 
   if (
@@ -32,6 +46,12 @@ function parseTokenResponse(hash: string): TokenFlowResponse | null {
     expires_in: parseInt(expires_in, 10),
     scope: typeof scope === 'string' ? scope : undefined,
     state: typeof state === 'string' ? state : undefined,
+    refresh_token:
+      typeof refresh_token === 'string' ? refresh_token : undefined,
+    account_id: typeof account_id === 'string' ? account_id : undefined,
+    organization_id:
+      typeof organization_id === 'string' ? organization_id : undefined,
+    client_id: typeof client_id === 'string' ? client_id : undefined,
   };
 }
 
