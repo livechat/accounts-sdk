@@ -1,74 +1,60 @@
 /**
- * Contract describing the subset of `AccountsSDK` that the `Popup` class depends on.
- *
- * Kept as `interface` to communicate that this is a protocol `AccountsSDK`
- * must satisfy. Using a structural interface (rather than importing `AccountsSDK`
- * directly) breaks the circular dependency and makes `Popup` independently
- * testable with any object that satisfies this contract.
+ * Minimal contract for the popup authorization flow.
  */
-export interface PopupSDK {
+export type PopupSDK = {
   authorizeURL(options: Partial<PopupOptions>, flow: string): string;
-}
+};
 
 /**
- * Options relevant to the popup authorization flow.
- * A narrowed projection of `SDKOptions` containing only the fields
- * that `Popup` reads. The full `SDKOptions` object (merged with defaults)
- * satisfies this type and is passed in by `AccountsSDK.popup()`.
+ * Options for the popup authorization flow.
  */
 export type PopupOptions = {
-  /** Base URL of the accounts server, used for postMessage origin validation. */
+  /** Base URL of the accounts server (e.g. `'https://accounts.livechat.com'`). */
   server_url?: string;
   organization_id?: string;
   prompt?: string;
 };
 
 /**
- * Contract describing the subset of `AccountsSDK` that the `Iframe` class depends on.
- * @see {@link PopupSDK} for the same pattern applied to the popup flow.
+ * Minimal contract for the iframe authorization flow.
  */
-export interface IframeSDK {
+export type IframeSDK = {
   authorizeURL(options: IframeOptions, flow: string): string;
-}
+};
 
 /**
- * Options relevant to the iframe authorization flow.
- * A narrowed projection of `SDKOptions` containing only the fields
- * that `Iframe` reads.
+ * Options for the iframe authorization flow.
  */
 export type IframeOptions = {
-  /** Used to build the unique iframe element ID via `client_id + response_type`. */
+  /** OAuth2 client ID registered in the LiveChat Developer Console. */
   client_id?: string;
   response_type?: 'token' | 'code';
-  /** Base URL of the accounts server, used for postMessage origin validation. */
+  /** Base URL of the accounts server (e.g. `'https://accounts.livechat.com'`). */
   server_url?: string;
   organization_id?: string;
   email_hint?: string | null;
 };
 
 /**
- * Interface for a custom redirect-URI params persister.
+ * Custom redirect-URI params persister.
  * Implement this to provide your own mechanism for restoring query and hash
  * params to the redirect URI after authorization completes.
  */
-export interface RedirectUriParamsPersisterLike {
+export type RedirectUriParamsPersisterLike = {
   retrieve(state: string): void;
-}
+};
 
 /**
- * Contract describing the subset of `AccountsSDK` that the `Redirect` class depends on.
- * @see {@link PopupSDK} for the same pattern applied to the popup flow.
+ * Minimal contract for the redirect authorization flow.
  */
-export interface RedirectSDK {
+export type RedirectSDK = {
   authorizeURL(options: Partial<RedirectOptions>): string;
-  /** Used to restore query/hash params to `window.location` after the callback. */
+  /** Persister for redirect URI query and hash params. */
   redirectUriParamsPersister: RedirectUriParamsPersisterLike;
-}
+};
 
 /**
- * Options relevant to the redirect authorization flow.
- * A narrowed projection of `SDKOptions` containing only the fields
- * that `Redirect` reads when parsing the callback URL.
+ * Options for the redirect authorization flow.
  */
 export type RedirectOptions = {
   /** Determines which part of the callback URL to parse: hash (`'token'`) or query (`'code'`). */

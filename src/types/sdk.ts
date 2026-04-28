@@ -100,21 +100,9 @@ export type SDKOptions = {
 };
 
 /**
- * Internal representation of SDK options after merging user-supplied
- * {@link SDKOptions} with the built-in defaults in the `AccountsSDK` constructor.
- *
- * **Relationship to `SDKOptions`:**
- * `ResolvedOptions` extends `SDKOptions` and narrows every optional field to
- * required, guaranteeing that downstream code never has to deal with `undefined`.
- * It also adds three internal fields (`flow`, `email`, `code_verifier`) that are
- * only populated during an authorization URL build and are never exposed to callers.
- *
- * This type is internal to the SDK and is not part of the public API.
- *
- * Kept as `interface extends` (rather than a type intersection) so that the
- * narrowing of optional → required fields is expressed clearly through inheritance.
+ * SDK options with all defaults applied. Not part of the public API.
  */
-export interface ResolvedOptions extends SDKOptions {
+export type ResolvedOptions = SDKOptions & {
   organization_id: string;
   prompt: string;
   response_type: 'token' | 'code';
@@ -127,14 +115,10 @@ export interface ResolvedOptions extends SDKOptions {
   email_hint: string | null;
   server_url: string;
   tracking: TrackingOptions;
-  /** All transaction fields are required after defaults are applied. */
   transaction: Required<TransactionOptions>;
   pkce: PKCEOptions;
   key_length: number;
-  /** Authorization flow identifier appended to the URL (e.g. `'button'` for popup/iframe). */
   flow?: string;
-  /** Resolved value of `email_hint`, passed as the `email` query param. */
   email?: string;
-  /** PKCE code verifier, present during URL generation but stripped before the redirect. */
   code_verifier?: string;
-}
+};

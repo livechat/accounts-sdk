@@ -12,9 +12,7 @@ import {type TokenFlowResponse} from './auth';
 export type ListenerCallback = (error: AuthError | string | null, data: TokenFlowResponse | null) => void;
 
 /**
- * Options for the `Listener` class.
- * Used to validate the `origin` of incoming `postMessage` events so that
- * messages from other origins are silently ignored.
+ * Options for the authorization flow listener.
  */
 export type ListenerOptions = {
   /** Expected origin of the accounts server (e.g. `'https://accounts.livechat.com'`). */
