@@ -81,7 +81,7 @@ export type SDKOptions = {
    * authorization data before resolving.
    */
   verify_callback?: boolean;
-  /** Space-separated OAuth2 scopes to request. `null` omits the parameter. */
+  /** OAuth2 scopes to request. `null` omits the parameter. */
   scope?: string | null;
   /** URL to redirect back to after authorization. Defaults to `window.location.href`. */
   redirect_uri?: string;

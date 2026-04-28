@@ -9,7 +9,7 @@ export type TokenFlowResponse = {
   token_type: string;
   /** Token lifetime in seconds. */
   expires_in?: number;
-  /** Space-separated list of granted scopes. */
+  /** List of granted scopes. */
   scope?: string;
   /**
    * The `state` value that was passed to the authorization request.
