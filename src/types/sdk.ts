@@ -117,7 +117,6 @@ export type ResolvedOptions = SDKOptions & {
   tracking: TrackingOptions;
   transaction: Required<TransactionOptions>;
   pkce: PKCEOptions;
-  key_length: number;
   flow?: string;
   email?: string;
   code_verifier?: string;

@@ -5,12 +5,12 @@
 export function pick<T extends object, K extends PropertyKey>(
   object: T,
   keys: K[],
-): Pick<T, Extract<K, keyof T>> {
+): Partial<Pick<T, Extract<K, keyof T>>> {
   return keys.reduce<Partial<T>>((prev, key) => {
     const val = (object as Record<PropertyKey, unknown>)[key];
     if (val) {
       (prev as Record<PropertyKey, unknown>)[key] = val;
     }
     return prev;
-  }, {}) as Pick<T, Extract<K, keyof T>>;
+  }, {}) as Partial<Pick<T, Extract<K, keyof T>>>;
 }

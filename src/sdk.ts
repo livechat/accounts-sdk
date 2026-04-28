@@ -82,7 +82,6 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
         code_verifier_length: 128,
         code_challenge_method: 'S256',
       },
-      key_length: 32,
     };
 
     this.options = Object.assign({}, defaultOptions, options);
