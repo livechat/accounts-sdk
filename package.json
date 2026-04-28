@@ -28,10 +28,6 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "testMatch": [
-      "**/*.test.ts",
-      "**/*.test.js"
-    ],
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/dist/"

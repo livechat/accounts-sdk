@@ -45,10 +45,8 @@ describe('helpers/Listener', function () {
     it('does not register listener twice if start called again', function () {
       const spy = jest.spyOn(window, 'addEventListener');
       listener.start(null, () => {});
-      // Simulate already-inited (set _listenerInited as the code checks it)
-      listener._listenerInited = true;
+      expect(listener.listening).toBe(true);
       listener.start(null, () => {});
-      // addEventListener should only have been called once
       const calls = spy.mock.calls.filter(([evt]) => evt === 'message');
       expect(calls.length).toBe(1);
       spy.mockRestore();
@@ -86,7 +84,9 @@ describe('helpers/Listener', function () {
       const callback = jest.fn();
       listener.start(null, callback);
 
-      listener.receiveMessage(makeEvent('https://evil.com', {data: {access_token: 'x'}}));
+      listener.receiveMessage(
+        makeEvent('https://evil.com', {data: {access_token: 'x'}}),
+      );
 
       expect(callback).not.toHaveBeenCalled();
     });
@@ -96,10 +96,15 @@ describe('helpers/Listener', function () {
       listener.start(null, callback);
 
       listener.receiveMessage(
-        makeEvent(SERVER_URL, {data: {access_token: 'tok', token_type: 'Bearer', scope: 'read'}})
+        makeEvent(SERVER_URL, {
+          data: {access_token: 'tok', token_type: 'Bearer', scope: 'read'},
+        }),
       );
 
-      expect(callback).toHaveBeenCalledWith(null, expect.objectContaining({access_token: 'tok'}));
+      expect(callback).toHaveBeenCalledWith(
+        null,
+        expect.objectContaining({access_token: 'tok'}),
+      );
     });
 
     it('accepts messages from the livechatinc.com variant of the origin', function () {
@@ -109,10 +114,13 @@ describe('helpers/Listener', function () {
       listener.receiveMessage(
         makeEvent('https://accounts.livechatinc.com', {
           data: {access_token: 'tok2', token_type: 'Bearer'},
-        })
+        }),
       );
 
-      expect(callback).toHaveBeenCalledWith(null, expect.objectContaining({access_token: 'tok2'}));
+      expect(callback).toHaveBeenCalledWith(
+        null,
+        expect.objectContaining({access_token: 'tok2'}),
+      );
     });
   });
 
@@ -131,12 +139,12 @@ describe('helpers/Listener', function () {
       listener.start(null, callback);
 
       listener.receiveMessage(
-        makeEvent(SERVER_URL, {error: {identity_exception: 'unauthorized'}})
+        makeEvent(SERVER_URL, {error: {identity_exception: 'unauthorized'}}),
       );
 
       expect(callback).toHaveBeenCalledWith(
         expect.objectContaining({identity_exception: 'unauthorized'}),
-        null
+        null,
       );
     });
 
@@ -147,7 +155,7 @@ describe('helpers/Listener', function () {
       listener.receiveMessage(
         makeEvent(SERVER_URL, {
           data: {access_token: 'tok', scopes: 'read write'},
-        })
+        }),
       );
 
       const [, result] = callback.mock.calls[0];
@@ -162,7 +170,7 @@ describe('helpers/Listener', function () {
       listener.receiveMessage(
         makeEvent(SERVER_URL, {
           data: {access_token: 'tok', expires_in: '28800'},
-        })
+        }),
       );
 
       const [, result] = callback.mock.calls[0];
@@ -177,7 +185,7 @@ describe('helpers/Listener', function () {
       listener.receiveMessage(
         makeEvent(SERVER_URL, {
           data: {access_token: 'tok', expires_in: 'not-a-number'},
-        })
+        }),
       );
 
       const [, result] = callback.mock.calls[0];
@@ -188,7 +196,7 @@ describe('helpers/Listener', function () {
       listener.start(null, () => {});
 
       listener.receiveMessage(
-        makeEvent(SERVER_URL, {data: {access_token: 'tok'}})
+        makeEvent(SERVER_URL, {data: {access_token: 'tok'}}),
       );
 
       expect(listener.listening).toBe(false);
@@ -197,7 +205,9 @@ describe('helpers/Listener', function () {
     it('throws when receiveMessage is called without start', function () {
       const bare = new Listener({server_url: SERVER_URL});
       const event = makeEvent(SERVER_URL, {data: {access_token: 'x'}});
-      expect(() => bare.receiveMessage(event)).toThrow('Listener callback is not set');
+      expect(() => bare.receiveMessage(event)).toThrow(
+        'Listener callback is not set',
+      );
     });
   });
 });

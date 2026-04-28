@@ -33,7 +33,7 @@ export default class StorageHandler {
       }
     } catch (e) {
       console.warn(e);
-      console.warn('Cant use localStorage. Using CookieStorage instead.');
+      console.warn("Can't use localStorage. Using CookieStorage instead.");
     }
   }
 

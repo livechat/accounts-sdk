@@ -6,7 +6,6 @@ export default class Listener {
   listening: boolean;
   private callback?: ListenerCallback;
   private tid?: ReturnType<typeof setTimeout>;
-  _listenerInited?: boolean;
 
   constructor(options: ListenerOptions = {}) {
     this.options = options;
@@ -16,7 +15,7 @@ export default class Listener {
   }
 
   start(timeout: number | null, callback: ListenerCallback): void {
-    if (this._listenerInited) {
+    if (this.listening) {
       return;
     }
     this.listening = true;

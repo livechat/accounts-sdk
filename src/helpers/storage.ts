@@ -20,8 +20,9 @@ export default class Storage {
 
   getItem<T>(key: string): T | null {
     const value = this.handler.getItem(key);
+    if (value == null) return null;
     try {
-      return JSON.parse(value as string) as T | null;
+      return JSON.parse(value) as T | null;
     } catch {
       return value as unknown as T | null;
     }

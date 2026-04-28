@@ -24,7 +24,7 @@ export default class CookieStorage {
         expires: 1, // 1 day
 
         // After august 2020 chrome changed iframe cookie policy and without
-        // those parameters cookies wont we stored properly if document is inside iframe.
+        // those parameters cookies won't be stored properly if document is inside iframe.
         sameSite: 'none',
         secure: true,
       },

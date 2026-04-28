@@ -115,7 +115,6 @@ export type SDKOptions = {
  * narrowing of optional → required fields is expressed clearly through inheritance.
  */
 export interface ResolvedOptions extends SDKOptions {
-  client_id: string;
   organization_id: string;
   prompt: string;
   response_type: 'token' | 'code';
