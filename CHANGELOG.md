@@ -22,6 +22,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Remove deprecated `pkce.code_challange_method` option — use `pkce.code_challenge_method` instead
 
+## [3.0.0] - 2026-04-29
+
+### Added
+- Ship TypeScript declaration files (`.d.ts`) in `dist/`; `package.json` now sets `"types": "./dist/index.d.ts"` (#77)
+- Export named TypeScript types from the package entry point: `SDKOptions`, `PKCEOptions`, `TransactionOptions`, `TokenFlowResponse`, `CodeFlowResponse`, `AuthorizeResponse`, `AuthError`, `ListenerCallback`, `TransactionData`, `VerifyInput`, `RedirectUriParamsPersisterLike` (#77)
+
+### Changed
+- Migrate entire source and test suite from JavaScript to TypeScript (#77)
+- Narrow `response_type` option type from `string` to `'token' | 'code'` literal union (#77)
+- Replace Babel (`@rollup/plugin-babel`) with `@rollup/plugin-typescript`; replace `babel-jest` with `ts-jest` (#77)
+
 ## [2.3.0] - 2026-03-30
 
 ### Added
@@ -167,7 +178,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Updated readme with new features and usage
 
-[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/livechat/accounts-sdk/compare/v2.3.0...v3.0.0
 [2.3.0]: https://github.com/livechat/accounts-sdk/compare/v2.2.3...v2.3.0
 [2.2.3]: https://github.com/livechat/accounts-sdk/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.com/livechat/accounts-sdk/compare/v2.2.1...v2.2.2
