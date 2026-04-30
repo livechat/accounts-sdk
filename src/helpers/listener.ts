@@ -64,7 +64,8 @@ export default class Listener {
         delete event.data.data.scopes;
       }
       if (event.data.data.expires_in) {
-        event.data.data.expires_in = parseInt(event.data.data.expires_in) || 0;
+        event.data.data.expires_in =
+          parseInt(event.data.data.expires_in, 10) || 0;
       }
       this.callback(null, event.data.data);
     }

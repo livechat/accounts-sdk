@@ -1,6 +1,6 @@
 import SDK from './sdk';
 import Listener from './helpers/listener';
-
+import {TokenFlowResponse} from './types/auth';
 jest.mock('./helpers/listener');
 
 type DocWithStorageAccess = Document & {
@@ -69,18 +69,19 @@ describe('Popup Flow', function () {
   it('resolves with token data when listener calls back with success', async function () {
     const popup = sdk.popup();
     const promise = popup.authorize();
-    capturedCallback!(null, {
+    const tokenData: TokenFlowResponse = {
       access_token: 'tok123',
       token_type: 'Bearer',
       expires_in: 3600,
       scope: 'read,write',
       state: 's',
-      account_id: 'a',
-      organization_id: 'o',
-      client_id: 'c',
-    });
+      account_id: 'acc1',
+      organization_id: 'org1',
+      client_id: 'client1',
+    };
+    capturedCallback!(null, tokenData);
     const result = await promise;
-    expect(result?.access_token).toBe('tok123');
+    expect(result).toEqual(tokenData);
   });
 
   it('rejects with error when listener calls back with an error', async function () {

@@ -41,7 +41,7 @@ function parseTokenResponse(hash: string): TokenFlowResponse | null {
   return {
     access_token,
     token_type,
-    expires_in: parseInt(expires_in, 10),
+    expires_in: parseInt(expires_in, 10) || 0,
     scope: scope as string,
     state: state as string,
     account_id: account_id as string,

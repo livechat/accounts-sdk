@@ -50,7 +50,7 @@ export type CodeFlowResponse = {
 /**
  * Union of all possible successful authorization responses.
  * Which variant is returned depends on the `response_type` SDK option:
- * - `'token'` → {@link TokenFlowResponse}
- * - `'code'`  → {@link CodeFlowResponse}
+ * - `'token'` → {@link TokenFlowResponse} (has `access_token`)
+ * - `'code'`  → {@link CodeFlowResponse} (has `code`)
  */
 export type AuthorizeResponse = TokenFlowResponse | CodeFlowResponse;

@@ -1,5 +1,5 @@
 import Listener from '../helpers/listener';
-import {type TokenFlowResponse} from '../types/auth';
+import {type AuthorizeResponse} from '../types/auth';
 import {type PopupSDK, type PopupOptions} from '../types/authentication';
 
 /**
@@ -15,7 +15,7 @@ export default class Popup {
     this.sdk = sdk;
   }
 
-  authorize(): Promise<TokenFlowResponse | null> {
+  authorize(): Promise<AuthorizeResponse | null> {
     return new Promise((resolve, reject) => {
       const url = this.sdk.authorizeURL(this.options, 'button');
 
