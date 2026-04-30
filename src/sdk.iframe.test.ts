@@ -2,6 +2,7 @@ import SDK from './sdk';
 import Iframe from './authentication/iframe';
 import Listener from './helpers/listener';
 import {type ListenerCallback} from './types/listener';
+import {TokenFlowResponse} from './types/auth';
 
 jest.mock('./helpers/listener');
 
@@ -14,7 +15,7 @@ describe('Iframe Flow', function () {
     // Capture the callback so tests can fire it manually after the iframe is in the DOM
     jest
       .spyOn(Listener.prototype, 'start')
-      .mockImplementation(function (timeout, callback) {
+      .mockImplementation(function (_timeout, callback) {
         capturedCallback = callback;
       });
     jest.spyOn(Listener.prototype, 'stop').mockImplementation(jest.fn());
@@ -56,9 +57,20 @@ describe('Iframe Flow', function () {
   it('resolves with token data when listener calls back with success', async function () {
     const iframe = sdk.iframe();
     const promise = iframe.authorize();
-    capturedCallback!(null, {access_token: 'tok123', token_type: 'Bearer'});
+    const tokenData: TokenFlowResponse = {
+      type: 'token',
+      access_token: 'tok123',
+      token_type: 'Bearer',
+      expires_in: 3600,
+      scope: 'read,write',
+      state: 's',
+      account_id: 'acc1',
+      organization_id: 'org1',
+      client_id: 'client1',
+    };
+    capturedCallback!(null, tokenData);
     const result = await promise;
-    expect(result?.access_token).toBe('tok123');
+    expect(result).toEqual(tokenData);
   });
 
   it('rejects with error when listener calls back with an error', async function () {
@@ -80,7 +92,17 @@ describe('Iframe Flow', function () {
     const iframeID = iframe.iframeID();
     const promise = iframe.authorize();
     expect(document.getElementById(iframeID)).not.toBeNull();
-    capturedCallback!(null, {access_token: 'tok', token_type: 'Bearer'});
+    capturedCallback!(null, {
+      type: 'token',
+      access_token: 'tok',
+      token_type: 'Bearer',
+      expires_in: 3600,
+      scope: 'read,write',
+      state: 's',
+      account_id: 'a',
+      organization_id: 'o',
+      client_id: 'c',
+    });
     await promise;
     expect(document.getElementById(iframeID)).toBeNull();
   });

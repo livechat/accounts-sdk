@@ -97,13 +97,17 @@ describe('helpers/Listener', function () {
 
       listener.receiveMessage(
         makeEvent(SERVER_URL, {
-          data: {access_token: 'tok', token_type: 'Bearer', scope: 'read'},
+          data: {
+            access_token: 'tok',
+            token_type: 'Bearer',
+            scope: 'read,write',
+          },
         }),
       );
 
       expect(callback).toHaveBeenCalledWith(
         null,
-        expect.objectContaining({access_token: 'tok'}),
+        expect.objectContaining({access_token: 'tok', scope: 'read,write'}),
       );
     });
 
@@ -154,12 +158,12 @@ describe('helpers/Listener', function () {
 
       listener.receiveMessage(
         makeEvent(SERVER_URL, {
-          data: {access_token: 'tok', scopes: 'read write'},
+          data: {access_token: 'tok', scopes: 'read,write'},
         }),
       );
 
       const [, result] = callback.mock.calls[0];
-      expect(result.scope).toBe('read write');
+      expect(result.scope).toBe('read,write');
       expect(result.scopes).toBeUndefined();
     });
 
@@ -190,6 +194,34 @@ describe('helpers/Listener', function () {
 
       const [, result] = callback.mock.calls[0];
       expect(result.expires_in).toBe(0);
+    });
+
+    it('sets type to token when access_token is present', function () {
+      const callback = jest.fn();
+      listener.start(null, callback);
+
+      listener.receiveMessage(
+        makeEvent(SERVER_URL, {
+          data: {access_token: 'tok', token_type: 'Bearer'},
+        }),
+      );
+
+      const [, result] = callback.mock.calls[0];
+      expect(result.type).toBe('token');
+    });
+
+    it('sets type to code when only code is present', function () {
+      const callback = jest.fn();
+      listener.start(null, callback);
+
+      listener.receiveMessage(
+        makeEvent(SERVER_URL, {
+          data: {code: 'authcode123', state: 's'},
+        }),
+      );
+
+      const [, result] = callback.mock.calls[0];
+      expect(result.type).toBe('code');
     });
 
     it('stops listening after a valid message is received', function () {

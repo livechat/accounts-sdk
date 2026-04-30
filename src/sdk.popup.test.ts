@@ -1,9 +1,11 @@
 import SDK from './sdk';
 import Listener from './helpers/listener';
-
+import {TokenFlowResponse} from './types/auth';
 jest.mock('./helpers/listener');
 
-type DocWithStorageAccess = Document & { requestStorageAccess?: () => Promise<void> };
+type DocWithStorageAccess = Document & {
+  requestStorageAccess?: () => Promise<void>;
+};
 
 describe('Popup Flow', function () {
   let sdk: InstanceType<typeof SDK>;
@@ -14,14 +16,17 @@ describe('Popup Flow', function () {
     jest.useFakeTimers();
     originalOpen = window.open;
     window.open = jest.fn() as typeof window.open;
-    delete (document as { requestStorageAccess?: () => Promise<void> }).requestStorageAccess;
+    delete (document as {requestStorageAccess?: () => Promise<void>})
+      .requestStorageAccess;
 
     jest.mocked(Listener).mockImplementation(
       // @ts-expect-error — constructor-style function satisfies the mock contract at runtime
       function (this: Record<string, unknown>) {
-        this.start = jest.fn((_timeout: number, cb: (error: unknown, data: unknown) => void) => {
-          capturedCallback = cb;
-        });
+        this.start = jest.fn(
+          (_timeout: number, cb: (error: unknown, data: unknown) => void) => {
+            capturedCallback = cb;
+          },
+        );
         this.stop = jest.fn();
       },
     );
@@ -64,13 +69,24 @@ describe('Popup Flow', function () {
   it('resolves with token data when listener calls back with success', async function () {
     const popup = sdk.popup();
     const promise = popup.authorize();
-    capturedCallback!(null, { access_token: 'tok123', token_type: 'Bearer' });
+    const tokenData: TokenFlowResponse = {
+      type: 'token',
+      access_token: 'tok123',
+      token_type: 'Bearer',
+      expires_in: 3600,
+      scope: 'read,write',
+      state: 's',
+      account_id: 'acc1',
+      organization_id: 'org1',
+      client_id: 'client1',
+    };
+    capturedCallback!(null, tokenData);
     const result = await promise;
-    expect(result?.access_token).toBe('tok123');
+    expect(result).toEqual(tokenData);
   });
 
   it('rejects with error when listener calls back with an error', async function () {
-    const error = { identity_exception: 'unauthorized' };
+    const error = {identity_exception: 'unauthorized'};
     const popup = sdk.popup();
     const promise = popup.authorize();
     capturedCallback!(error, null);
@@ -83,12 +99,14 @@ describe('Popup Flow', function () {
     expect(window.open).toHaveBeenCalledWith(
       expect.stringContaining('accounts.livechat.com'),
       'livechat-login-popup',
-      expect.stringContaining('width=500')
+      expect.stringContaining('width=500'),
     );
   });
 
   it('opens a popup window after requestStorageAccess resolves', async function () {
-    (document as DocWithStorageAccess).requestStorageAccess = jest.fn(() => Promise.resolve());
+    (document as DocWithStorageAccess).requestStorageAccess = jest.fn(() =>
+      Promise.resolve(),
+    );
     const popup = sdk.popup();
     popup.authorize().catch(() => {});
     await Promise.resolve();
@@ -97,7 +115,9 @@ describe('Popup Flow', function () {
   });
 
   it('opens a popup window even when requestStorageAccess rejects', async function () {
-    (document as DocWithStorageAccess).requestStorageAccess = jest.fn(() => Promise.reject(new Error('denied')));
+    (document as DocWithStorageAccess).requestStorageAccess = jest.fn(() =>
+      Promise.reject(new Error('denied')),
+    );
     const popup = sdk.popup();
     popup.authorize().catch(() => {});
     await Promise.resolve();

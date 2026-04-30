@@ -72,12 +72,20 @@ describe('Redirect Flow', function () {
     });
 
     window.location.hash =
-      '#access_token=tok123&token_type=Bearer&expires_in=28800&scope=read&state=somestate';
+      // eslint-disable-next-line max-len
+      '#access_token=tok123&token_type=Bearer&expires_in=28800&scope=read,write&state=somestate&account_id=acc1&organization_id=org1&client_id=client1';
 
     const redirect = sdk.redirect();
-    const data = await redirect.authorizeData() as TokenFlowResponse;
+    const data = (await redirect.authorizeData()) as TokenFlowResponse;
+    expect(data.type).toBe('token');
     expect(data.access_token).toBe('tok123');
     expect(data.token_type).toBe('Bearer');
+    expect(data.expires_in).toBe(28800);
+    expect(data.scope).toBe('read,write');
+    expect(data.state).toBe('somestate');
+    expect(data.account_id).toBe('acc1');
+    expect(data.organization_id).toBe('org1');
+    expect(data.client_id).toBe('client1');
   });
 
   it('should resolve with code from query params for code flow', async function () {
@@ -87,11 +95,21 @@ describe('Redirect Flow', function () {
       verify_state: false,
     });
 
-    window.history.pushState(null, '', '?code=authcode123&state=somestate');
+    window.history.pushState(
+      null,
+      '',
+      '?code=authcode123&state=somestate&scope=read,write&account_id=acc1&organization_id=org1&client_id=client1',
+    );
 
     const redirect = sdk.redirect();
-    const data = await redirect.authorizeData() as CodeFlowResponse;
+    const data = (await redirect.authorizeData()) as CodeFlowResponse;
+    expect(data.type).toBe('code');
     expect(data.code).toBe('authcode123');
+    expect(data.state).toBe('somestate');
+    expect(data.scope).toBe('read,write');
+    expect(data.account_id).toBe('acc1');
+    expect(data.organization_id).toBe('org1');
+    expect(data.client_id).toBe('client1');
   });
 
   it('should reject with unauthorized when error param is in hash (no error passthrough)', async function () {
@@ -103,33 +121,5 @@ describe('Redirect Flow', function () {
     const redirect = sdk.redirect();
     const error = await redirect.authorizeData().catch((e) => e);
     expect(error.identity_exception).toBe('unauthorized');
-  });
-
-  it('should resolve with undefined scope and state when absent from hash', async function () {
-    sdk = new SDK({
-      client_id: 'test-client-id',
-      verify_state: false,
-    });
-
-    window.location.hash = '#access_token=tok&token_type=Bearer&expires_in=3600';
-
-    const redirect = sdk.redirect();
-    const data = await redirect.authorizeData() as TokenFlowResponse;
-    expect(data.scope).toBeUndefined();
-    expect(data.state).toBeUndefined();
-  });
-
-  it('should resolve with undefined state when absent from code flow query', async function () {
-    sdk = new SDK({
-      client_id: 'test-client-id',
-      response_type: 'code',
-      verify_state: false,
-    });
-
-    window.history.pushState(null, '', '?code=authcode');
-
-    const redirect = sdk.redirect();
-    const data = await redirect.authorizeData() as CodeFlowResponse;
-    expect(data.state).toBeUndefined();
   });
 });

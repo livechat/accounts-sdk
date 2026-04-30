@@ -1,5 +1,5 @@
 import Listener from '../helpers/listener';
-import {type TokenFlowResponse} from '../types/auth';
+import {type AuthorizeResponse} from '../types/auth';
 import {type IframeSDK, type IframeOptions} from '../types/authentication';
 
 /**
@@ -14,7 +14,7 @@ export default class Iframe {
     this.sdk = sdk;
   }
 
-  authorize(): Promise<TokenFlowResponse | null> {
+  authorize(): Promise<AuthorizeResponse | null> {
     return new Promise((resolve, reject) => {
       const url = this.sdk.authorizeURL(this.options, 'button');
 
@@ -22,7 +22,7 @@ export default class Iframe {
 
       const cb = (
         err: unknown,
-        authorizeData: TokenFlowResponse | null,
+        authorizeData: AuthorizeResponse | null,
       ) => {
         this.removeIframe();
         if (err) {
