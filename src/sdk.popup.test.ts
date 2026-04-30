@@ -70,6 +70,7 @@ describe('Popup Flow', function () {
     const popup = sdk.popup();
     const promise = popup.authorize();
     const tokenData: TokenFlowResponse = {
+      type: 'token',
       access_token: 'tok123',
       token_type: 'Bearer',
       expires_in: 3600,

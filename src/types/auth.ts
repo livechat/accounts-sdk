@@ -3,6 +3,8 @@
  * Returned when `response_type` is `'token'`.
  */
 export type TokenFlowResponse = {
+  /** Discriminant tag for narrowing {@link AuthorizeResponse}. */
+  type: 'token';
   /** Short-lived OAuth2 bearer token to use in API calls. */
   access_token: string;
   /** Token type returned by the server; always `'Bearer'` for standard OAuth2 access tokens. */
@@ -30,6 +32,8 @@ export type TokenFlowResponse = {
  * The `code` must be exchanged server-side for tokens.
  */
 export type CodeFlowResponse = {
+  /** Discriminant tag for narrowing {@link AuthorizeResponse}. */
+  type: 'code';
   /** Single-use authorization code to exchange for tokens on the server. */
   code: string;
   /**
@@ -45,12 +49,13 @@ export type CodeFlowResponse = {
   account_id: string;
   /** OAuth2 client ID of the application that requested the code. */
   client_id: string;
+  expires_in?: never;
 };
 
 /**
  * Union of all possible successful authorization responses.
  * Which variant is returned depends on the `response_type` SDK option:
- * - `'token'` → {@link TokenFlowResponse} (has `access_token`)
- * - `'code'`  → {@link CodeFlowResponse} (has `code`)
+ * - `'token'` → {@link TokenFlowResponse}
+ * - `'code'`  → {@link CodeFlowResponse}
  */
 export type AuthorizeResponse = TokenFlowResponse | CodeFlowResponse;

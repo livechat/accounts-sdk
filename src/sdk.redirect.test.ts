@@ -77,6 +77,7 @@ describe('Redirect Flow', function () {
 
     const redirect = sdk.redirect();
     const data = (await redirect.authorizeData()) as TokenFlowResponse;
+    expect(data.type).toBe('token');
     expect(data.access_token).toBe('tok123');
     expect(data.token_type).toBe('Bearer');
     expect(data.expires_in).toBe(28800);
@@ -102,6 +103,7 @@ describe('Redirect Flow', function () {
 
     const redirect = sdk.redirect();
     const data = (await redirect.authorizeData()) as CodeFlowResponse;
+    expect(data.type).toBe('code');
     expect(data.code).toBe('authcode123');
     expect(data.state).toBe('somestate');
     expect(data.scope).toBe('read,write');

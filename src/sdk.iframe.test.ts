@@ -58,6 +58,7 @@ describe('Iframe Flow', function () {
     const iframe = sdk.iframe();
     const promise = iframe.authorize();
     const tokenData: TokenFlowResponse = {
+      type: 'token',
       access_token: 'tok123',
       token_type: 'Bearer',
       expires_in: 3600,
@@ -92,6 +93,7 @@ describe('Iframe Flow', function () {
     const promise = iframe.authorize();
     expect(document.getElementById(iframeID)).not.toBeNull();
     capturedCallback!(null, {
+      type: 'token',
       access_token: 'tok',
       token_type: 'Bearer',
       expires_in: 3600,

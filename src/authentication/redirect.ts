@@ -39,6 +39,7 @@ function parseTokenResponse(hash: string): TokenFlowResponse | null {
   }
 
   return {
+    type: 'token' as const,
     access_token,
     token_type,
     expires_in: parseInt(expires_in, 10) || 0,
@@ -61,6 +62,7 @@ function parseCodeResponse(search: string): CodeFlowResponse | null {
   }
 
   return {
+    type: 'code' as const,
     code,
     state: state as string,
     scope: scope as string,
