@@ -56,7 +56,16 @@ describe('Iframe Flow', function () {
   it('resolves with token data when listener calls back with success', async function () {
     const iframe = sdk.iframe();
     const promise = iframe.authorize();
-    capturedCallback!(null, {access_token: 'tok123', token_type: 'Bearer'});
+    capturedCallback!(null, {
+      access_token: 'tok123',
+      token_type: 'Bearer',
+      expires_in: 3600,
+      scope: 'read,write',
+      state: 's',
+      account_id: 'a',
+      organization_id: 'o',
+      client_id: 'c',
+    });
     const result = await promise;
     expect(result?.access_token).toBe('tok123');
   });
@@ -80,7 +89,16 @@ describe('Iframe Flow', function () {
     const iframeID = iframe.iframeID();
     const promise = iframe.authorize();
     expect(document.getElementById(iframeID)).not.toBeNull();
-    capturedCallback!(null, {access_token: 'tok', token_type: 'Bearer'});
+    capturedCallback!(null, {
+      access_token: 'tok',
+      token_type: 'Bearer',
+      expires_in: 3600,
+      scope: 'read,write',
+      state: 's',
+      account_id: 'a',
+      organization_id: 'o',
+      client_id: 'c',
+    });
     await promise;
     expect(document.getElementById(iframeID)).toBeNull();
   });

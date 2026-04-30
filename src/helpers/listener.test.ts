@@ -97,13 +97,17 @@ describe('helpers/Listener', function () {
 
       listener.receiveMessage(
         makeEvent(SERVER_URL, {
-          data: {access_token: 'tok', token_type: 'Bearer', scope: 'read'},
+          data: {
+            access_token: 'tok',
+            token_type: 'Bearer',
+            scope: 'read,write',
+          },
         }),
       );
 
       expect(callback).toHaveBeenCalledWith(
         null,
-        expect.objectContaining({access_token: 'tok'}),
+        expect.objectContaining({access_token: 'tok', scope: 'read,write'}),
       );
     });
 
@@ -154,12 +158,12 @@ describe('helpers/Listener', function () {
 
       listener.receiveMessage(
         makeEvent(SERVER_URL, {
-          data: {access_token: 'tok', scopes: 'read write'},
+          data: {access_token: 'tok', scopes: 'read,write'},
         }),
       );
 
       const [, result] = callback.mock.calls[0];
-      expect(result.scope).toBe('read write');
+      expect(result.scope).toBe('read,write');
       expect(result.scopes).toBeUndefined();
     });
 

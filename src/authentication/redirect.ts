@@ -16,7 +16,6 @@ function parseTokenResponse(hash: string): TokenFlowResponse | null {
     token_type,
     scope,
     state,
-    refresh_token,
     account_id,
     organization_id,
     client_id,
@@ -26,7 +25,6 @@ function parseTokenResponse(hash: string): TokenFlowResponse | null {
     'state',
     'scope',
     'token_type',
-    'refresh_token',
     'account_id',
     'organization_id',
     'client_id',
@@ -44,22 +42,19 @@ function parseTokenResponse(hash: string): TokenFlowResponse | null {
     access_token,
     token_type,
     expires_in: parseInt(expires_in, 10),
-    scope: typeof scope === 'string' ? scope : undefined,
-    state: typeof state === 'string' ? state : undefined,
-    refresh_token:
-      typeof refresh_token === 'string' ? refresh_token : undefined,
-    account_id: typeof account_id === 'string' ? account_id : undefined,
-    organization_id:
-      typeof organization_id === 'string' ? organization_id : undefined,
-    client_id: typeof client_id === 'string' ? client_id : undefined,
+    scope: scope as string,
+    state: state as string,
+    account_id: account_id as string,
+    organization_id: organization_id as string,
+    client_id: client_id as string,
   };
 }
 
 function parseCodeResponse(search: string): CodeFlowResponse | null {
-  const {code, state} = pick(qs.parse(search, {ignoreQueryPrefix: true}), [
-    'state',
-    'code',
-  ]);
+  const {code, state, scope, organization_id, account_id, client_id} = pick(
+    qs.parse(search, {ignoreQueryPrefix: true}),
+    ['code', 'state', 'scope', 'organization_id', 'account_id', 'client_id'],
+  );
 
   if (typeof code !== 'string') {
     return null;
@@ -67,7 +62,11 @@ function parseCodeResponse(search: string): CodeFlowResponse | null {
 
   return {
     code,
-    state: typeof state === 'string' ? state : undefined,
+    state: state as string,
+    scope: scope as string,
+    organization_id: organization_id as string,
+    account_id: account_id as string,
+    client_id: client_id as string,
   };
 }
 
