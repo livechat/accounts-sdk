@@ -14,7 +14,6 @@ import encoding from './helpers/encoding';
 import RedirectUriParamsPersister from './helpers/persisters/redirectUriParams';
 import random from './helpers/random';
 import {
-  type PKCEOptions,
   type SDKOptions,
   type ResolvedOptions,
 } from './types/sdk';
