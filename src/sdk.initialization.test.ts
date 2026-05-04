@@ -66,7 +66,7 @@ describe('SDK Initialization', function () {
       pkce: {
         enabled: false,
         code_verifier_length: 64,
-        code_challange_method: 'plain',
+        code_challenge_method: 'plain',
       },
     });
 

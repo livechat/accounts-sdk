@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+- Remove deprecated `pkce.code_challange_method` option — use `pkce.code_challenge_method` instead
+
 ## [2.3.0] - 2026-03-30
 
 ### Added

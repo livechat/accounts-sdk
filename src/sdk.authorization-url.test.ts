@@ -239,12 +239,7 @@ describe('sdk.authorizeURL()', function () {
     });
 
     describe('code_challenge_method option', function () {
-      afterEach(function () {
-        jest.restoreAllMocks();
-      });
-
       it('uses code_challenge_method when provided', function () {
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
         sdk = new SDK({
           client_id: 'test-client-id',
           response_type: 'code',
@@ -256,63 +251,6 @@ describe('sdk.authorizeURL()', function () {
         });
         const query = parseQuery(sdk.authorizeURL({ state: 'test-state' }));
         expect(query.code_challenge_method).toBe('plain');
-        expect(console.warn).not.toHaveBeenCalled();
-      });
-
-      it('accepts code_challange_method, emits a deprecation warning, and normalises it', function () {
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
-        sdk = new SDK({
-          client_id: 'test-client-id',
-          response_type: 'code',
-          pkce: {
-            enabled: true,
-            code_verifier: 'test-verifier-1234567890-abcdefghijklmnopqrstuvwxyz-plain-method',
-            code_challange_method: 'plain',
-          },
-        });
-        const query = parseQuery(sdk.authorizeURL({ state: 'test-state' }));
-        expect(query.code_challenge_method).toBe('plain');
-        expect(console.warn).toHaveBeenCalledWith(
-          // eslint-disable-next-line max-len
-          '[accounts-sdk] pkce.code_challange_method is deprecated and will be removed in v3.0.0. Use code_challenge_method instead.'
-        );
-      });
-
-      it('code_challenge_method takes precedence over code_challange_method when both are supplied', function () {
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
-        sdk = new SDK({
-          client_id: 'test-client-id',
-          response_type: 'code',
-          pkce: {
-            enabled: true,
-            code_verifier: 'test-verifier-1234567890-abcdefghijklmnopqrstuvwxyz-plain-method',
-            code_challenge_method: 'plain',
-            code_challange_method: 'S256',
-          },
-        });
-        const query = parseQuery(sdk.authorizeURL({ state: 'test-state' }));
-        expect(query.code_challenge_method).toBe('plain');
-        expect(console.warn).toHaveBeenCalled();
-      });
-
-      it('accepts code_challange_method as a per-call override to authorizeURL', function () {
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
-        sdk = new SDK({ client_id: 'test-client-id', response_type: 'code' });
-        const query = parseQuery(
-          sdk.authorizeURL({
-            state: 'test-state',
-            pkce: {
-              enabled: true,
-              code_verifier: 'test-verifier-1234567890-abcdefghijklmnopqrstuvwxyz-plain-method',
-              code_challange_method: 'plain',
-            },
-          })
-        );
-        expect(query.code_challenge_method).toBe('plain');
-        expect(console.warn).toHaveBeenCalledWith(
-          // eslint-disable-next-line max-len
-          '[accounts-sdk] pkce.code_challange_method is deprecated and will be removed in v3.0.0. Use code_challenge_method instead.'
-        );
       });
     });
   });

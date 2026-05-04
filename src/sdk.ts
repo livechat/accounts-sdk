@@ -14,7 +14,6 @@ import encoding from './helpers/encoding';
 import RedirectUriParamsPersister from './helpers/persisters/redirectUriParams';
 import random from './helpers/random';
 import {
-  type PKCEOptions,
   type SDKOptions,
   type ResolvedOptions,
 } from './types/sdk';
@@ -24,24 +23,6 @@ import {
   type IframeSDK,
   type RedirectSDK,
 } from './types/authentication';
-
-/**
- * Normalize PKCE options, support deprecated code_challange_method option.
- */
-function normalizePkce(pkce: PKCEOptions | undefined): PKCEOptions | undefined {
-  if (pkce?.code_challange_method === undefined) {
-    return pkce;
-  }
-  const normalized = Object.assign({}, pkce);
-
-  console.warn(
-    // eslint-disable-next-line max-len
-    '[accounts-sdk] pkce.code_challange_method is deprecated and will be removed in v3.0.0. Use code_challenge_method instead.',
-  );
-  normalized.code_challenge_method ??= normalized.code_challange_method;
-  delete normalized.code_challange_method;
-  return normalized;
-}
 
 /**
  * Accounts SDK main class for "Sign in with LiveChat".
@@ -85,7 +66,6 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
     };
 
     this.options = Object.assign({}, defaultOptions, options);
-    this.options.pkce = normalizePkce(this.options.pkce) as PKCEOptions;
     this.transaction = new Transaction(this.options);
     this.redirectUriParamsPersister = new RedirectUriParamsPersister(
       this.options,
@@ -127,8 +107,6 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
       this.options,
       options,
     );
-    localOptions.pkce = normalizePkce(localOptions.pkce) as PKCEOptions;
-
     if (!localOptions.state) {
       localOptions.state = random.string(localOptions.transaction.key_length);
     }
