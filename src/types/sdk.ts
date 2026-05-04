@@ -18,8 +18,6 @@ export type PKCEOptions = {
    * `'S256'` (SHA-256, recommended) or `'plain'`.
    */
   code_challenge_method?: string;
-  /** @deprecated Use `code_challenge_method` instead. */
-  code_challange_method?: string;
 };
 
 /**

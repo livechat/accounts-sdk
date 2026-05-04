@@ -100,7 +100,6 @@ sdk.redirect().authorizeData().then((authorizeData)=>{
 - `pkce.code_verifier` **string** override auto generated code verifier
 - `pkce.code_verifier_length=128` **number** code verifier length, between 43 and 128 characters https://tools.ietf.org/html/rfc7636#section-4.1
 - `pkce.code_challenge_method='S256'` **string** code challenge method, use `S256` or `plain`
-- `pkce.code_challange_method` **string** **Deprecated.** Use `code_challenge_method` instead. Will be removed in v3.0.0.
 
 ## Changelog
 
