@@ -2,21 +2,14 @@ import Popup from './authentication/popup';
 import Redirect from './authentication/redirect';
 import Iframe from './authentication/iframe';
 import Transaction from './authentication/transaction';
-import {
-  type TransactionParams,
-  type TransactionData,
-  type VerifyInput,
-} from './types/transaction';
+import {type TransactionData, type VerifyInput} from './types/transaction';
 import qs from 'qs';
 import sjcl from './vendor/sjcl';
 import {pick} from './helpers/object';
 import encoding from './helpers/encoding';
 import RedirectUriParamsPersister from './helpers/persisters/redirectUriParams';
 import random from './helpers/random';
-import {
-  type SDKOptions,
-  type ResolvedOptions,
-} from './types/sdk';
+import {type SDKOptions, type ResolvedOptions} from './types/sdk';
 import {type PersistParams} from './types/persister';
 import {
   type PopupSDK,
@@ -184,7 +177,10 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
       }
     }
 
-    this.transaction.generate(params as TransactionParams);
+    this.transaction.generate({
+      state: localOptions.state,
+      code_verifier: params.code_verifier,
+    });
     this.redirectUriParamsPersister.persist(params as PersistParams);
 
     delete params.code_verifier;
