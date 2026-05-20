@@ -1,4 +1,4 @@
-import {deepMerge, pick} from './object';
+import {deepMerge, omitBy, pick} from './object';
 import {type SDKOptions} from '../types/sdk';
 
 describe('helpers/deepMerge', function () {
@@ -115,6 +115,32 @@ describe('helpers/deepMerge', function () {
       deepMerge(target, {tracking: {utm_medium: 'web'}});
       expect(target.tracking).toEqual({utm_source: 'app'});
     });
+  });
+});
+
+describe('helpers/omitBy', function () {
+  it('omits properties where predicate returns true', function () {
+    expect(omitBy({a: '', b: 'hello', c: ''}, (v) => v === '')).toEqual({
+      b: 'hello',
+    });
+  });
+
+  it('keeps all properties when predicate always returns false', function () {
+    expect(omitBy({a: 1, b: 2}, () => false)).toEqual({a: 1, b: 2});
+  });
+
+  it('returns an empty object when predicate always returns true', function () {
+    expect(omitBy({a: 1, b: 2}, () => true)).toEqual({});
+  });
+
+  it('does not mutate the source object', function () {
+    const src = {a: '', b: 'hello'};
+    omitBy(src, (v) => v === '');
+    expect(src).toEqual({a: '', b: 'hello'});
+  });
+
+  it('returns an empty object for an empty input', function () {
+    expect(omitBy({}, () => true)).toEqual({});
   });
 });
 

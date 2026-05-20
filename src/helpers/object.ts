@@ -20,9 +20,7 @@ export function pick<T extends Record<string, unknown>, K extends keyof T>(
 ): Pick<T, K> {
   const result = {} as Pick<T, K>;
 
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-
+  for (const key of keys) {
     if (obj[key] !== undefined) {
       result[key] = obj[key];
     }
@@ -32,7 +30,9 @@ export function pick<T extends Record<string, unknown>, K extends keyof T>(
 }
 
 type DeepPartial<T> = {
-  [K in keyof T]?: T[K] extends Record<string, unknown> ? DeepPartial<T[K]> : T[K];
+  [K in keyof T]?: T[K] extends Record<string, unknown>
+    ? DeepPartial<T[K]>
+    : T[K];
 };
 
 /**
@@ -59,6 +59,30 @@ export function deepMerge<T extends Record<string, unknown>>(
       } else if (sourceValue !== undefined) {
         (result as Record<string, unknown>)[key] = sourceValue;
       }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Creates a new object omitting properties for which the predicate returns true.
+ * @example
+ * omitBy({ a: '', b: 'hello', c: '' }, v => v === '')
+ * // => { b: 'hello' }
+ */
+export function omitBy<T extends Record<string, unknown>>(
+  obj: T,
+  predicate: (value: T[keyof T], key: keyof T) => boolean,
+): Partial<T> {
+  const result: Partial<T> = {};
+
+  for (const key in obj) {
+    if (
+      Object.prototype.hasOwnProperty.call(obj, key) &&
+      !predicate(obj[key], key)
+    ) {
+      result[key] = obj[key];
     }
   }
 
