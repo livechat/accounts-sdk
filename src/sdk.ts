@@ -5,7 +5,7 @@ import Transaction from './authentication/transaction';
 import {type TransactionData, type VerifyInput} from './types/transaction';
 import qs from 'qs';
 import sjcl from './vendor/sjcl';
-import {pick, deepMerge} from './helpers/object';
+import {pick, deepMerge, omitBy} from './helpers/object';
 import encoding from './helpers/encoding';
 import RedirectUriParamsPersister from './helpers/persisters/redirectUriParams';
 import random from './helpers/random';
@@ -105,15 +105,19 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
       localOptions.redirect_uri = window.location.href;
     }
 
-    const params: Partial<ResolvedOptions> = pick(localOptions, [
-      'client_id',
-      'organization_id',
-      'redirect_uri',
-      'state',
-      'response_type',
-      'scope',
-      'prompt',
-    ]);
+    const params: Partial<ResolvedOptions> &
+      Pick<ResolvedOptions, 'redirect_uri' | 'state' | 'code_verifier'> = pick(
+      localOptions,
+      [
+        'client_id',
+        'organization_id',
+        'redirect_uri',
+        'state',
+        'response_type',
+        'scope',
+        'prompt',
+      ],
+    );
 
     Object.assign(params, localOptions.tracking);
 
@@ -174,18 +178,17 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
       }
     }
 
-    this.transaction.generate({
-      state: params.state ?? localOptions.state,
-      code_verifier: params.code_verifier,
-    });
-    this.redirectUriParamsPersister.persist({
-      state: params.state ?? localOptions.state,
-      redirect_uri: params.redirect_uri ?? localOptions.redirect_uri,
-    });
+    this.transaction.generate(params);
+    this.redirectUriParamsPersister.persist(params);
 
     delete params.code_verifier;
 
-    return url + '?' + qs.stringify(params);
+    const cleanedParams = omitBy(
+      params,
+      (value) => value === '' || value === null,
+    );
+
+    return url + '?' + qs.stringify(cleanedParams);
   }
 
   /**
