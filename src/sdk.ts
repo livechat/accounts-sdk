@@ -5,12 +5,11 @@ import Transaction from './authentication/transaction';
 import {type TransactionData, type VerifyInput} from './types/transaction';
 import qs from 'qs';
 import sjcl from './vendor/sjcl';
-import {pick} from './helpers/object';
+import {pick, deepMerge} from './helpers/object';
 import encoding from './helpers/encoding';
 import RedirectUriParamsPersister from './helpers/persisters/redirectUriParams';
 import random from './helpers/random';
 import {type SDKOptions, type ResolvedOptions} from './types/sdk';
-import {type PersistParams} from './types/persister';
 import {
   type PopupSDK,
   type IframeSDK,
@@ -30,7 +29,8 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
       throw new Error('client id not provided');
     }
 
-    const defaultOptions: Omit<ResolvedOptions, 'client_id'> = {
+    const defaultOptions: ResolvedOptions = {
+      client_id: '',
       organization_id: '',
       prompt: '',
       response_type: 'token',
@@ -58,7 +58,7 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
       },
     };
 
-    this.options = Object.assign({}, defaultOptions, options);
+    this.options = deepMerge(defaultOptions, options);
     this.transaction = new Transaction(this.options);
     this.redirectUriParamsPersister = new RedirectUriParamsPersister(
       this.options,
@@ -69,7 +69,7 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
    * Use iframe for authorization. Not recommended due to ITP 2.0.
    */
   iframe(options: Partial<SDKOptions> = {}): Iframe {
-    const localOptions = Object.assign({}, this.options, options);
+    const localOptions = deepMerge(this.options, options);
     return new Iframe(this, localOptions);
   }
 
@@ -77,7 +77,7 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
    * Use popup for authorization. Must be called inside a click handler.
    */
   popup(options: Partial<SDKOptions> = {}): Popup {
-    const localOptions = Object.assign({}, this.options, options);
+    const localOptions = deepMerge(this.options, options);
     return new Popup(this, localOptions);
   }
 
@@ -85,7 +85,7 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
    * Use redirect for authorization.
    */
   redirect(options: Partial<SDKOptions> = {}): Redirect {
-    const localOptions = Object.assign({}, this.options, options);
+    const localOptions = deepMerge(this.options, options);
     return new Redirect(this, localOptions);
   }
 
@@ -95,11 +95,8 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
    * @param flow - Set to `'button'` for popup and iframe flows.
    */
   authorizeURL(options: Partial<SDKOptions> = {}, flow = ''): string {
-    const localOptions: ResolvedOptions = Object.assign(
-      {},
-      this.options,
-      options,
-    );
+    const localOptions: ResolvedOptions = deepMerge(this.options, options);
+
     if (!localOptions.state) {
       localOptions.state = random.string(localOptions.transaction.key_length);
     }
@@ -178,10 +175,13 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
     }
 
     this.transaction.generate({
-      state: localOptions.state,
+      state: params.state ?? localOptions.state,
       code_verifier: params.code_verifier,
     });
-    this.redirectUriParamsPersister.persist(params as PersistParams);
+    this.redirectUriParamsPersister.persist({
+      state: params.state ?? localOptions.state,
+      redirect_uri: params.redirect_uri ?? localOptions.redirect_uri,
+    });
 
     delete params.code_verifier;
 
