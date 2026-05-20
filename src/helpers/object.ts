@@ -1,16 +1,32 @@
 /**
- * @author Auth0 https://github.com/auth0/auth0.js
- * @license MIT
+ * Creates a new object composed of the picked object properties.
+ *
+ * This function takes an object and an array of keys, and returns a new object that
+ * includes only the properties corresponding to the specified keys.
+ * @template T - The type of object.
+ * @template K - The type of keys in object.
+ * @param {T} obj - The object to pick keys from.
+ * @param {K[]} keys - An array of keys to be picked from the object.
+ * @returns {Pick<T, K>} A new object with the specified keys picked.
+ * @example
+ * const obj = { a: 1, b: 2, c: 3 };
+ * const result = pick(obj, ['a', 'c']);
+ * // result will be { a: 1, c: 3 }
+ * @see [es-toolkit/pick](https://github.com/toss/es-toolkit/blob/970ae85401f7e43c938bb83535d9145297bdf6cc/src/object/pick.ts)
  */
-export function pick<T extends object, K extends PropertyKey>(
-  object: T,
-  keys: K[],
-): Partial<Pick<T, Extract<K, keyof T>>> {
-  return keys.reduce<Partial<T>>((prev, key) => {
-    const val = (object as Record<PropertyKey, unknown>)[key];
-    if (val) {
-      (prev as Record<PropertyKey, unknown>)[key] = val;
+export function pick<T extends Record<string, unknown>, K extends keyof T>(
+  obj: T,
+  keys: readonly K[],
+): Pick<T, K> {
+  const result = {} as Pick<T, K>;
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+
+    if (obj[key] !== undefined) {
+      result[key] = obj[key];
     }
-    return prev;
-  }, {}) as Partial<Pick<T, Extract<K, keyof T>>>;
+  }
+
+  return result;
 }
