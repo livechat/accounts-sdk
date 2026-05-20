@@ -1,4 +1,122 @@
-import {pick} from './object';
+import {deepMerge, pick} from './object';
+import {type SDKOptions} from '../types/sdk';
+
+describe('helpers/deepMerge', function () {
+  describe('shallow fields', function () {
+    it('merges top-level primitive fields', function () {
+      const target: SDKOptions = {client_id: 'aaa', response_type: 'token'};
+      const result = deepMerge(target, {response_type: 'code'});
+      expect(result).toEqual({client_id: 'aaa', response_type: 'code'});
+    });
+
+    it('adds new fields from source', function () {
+      const target: SDKOptions = {client_id: 'aaa'};
+      const result = deepMerge(target, {prompt: 'consent'});
+      expect(result).toEqual({client_id: 'aaa', prompt: 'consent'});
+    });
+
+    it('does not overwrite target value when source value is undefined', function () {
+      const target: SDKOptions = {client_id: 'aaa', prompt: 'consent'};
+      const result = deepMerge(target, {prompt: undefined});
+      expect(result.prompt).toBe('consent');
+    });
+
+    it('preserves falsy source values (null, empty string, false, 0)', function () {
+      const target: SDKOptions = {
+        client_id: 'aaa',
+        scope: 'agents--all:rw',
+        email_hint: 'user@example.com',
+        verify_state: true,
+      };
+      const result = deepMerge(target, {
+        scope: null,
+        email_hint: '',
+        verify_state: false,
+      });
+      expect(result.scope).toBeNull();
+      expect(result.email_hint).toBe('');
+      expect(result.verify_state).toBe(false);
+    });
+  });
+
+  describe('nested plain objects', function () {
+    it('deep merges tracking options', function () {
+      const target: SDKOptions = {
+        client_id: 'aaa',
+        tracking: {utm_source: 'app', utm_medium: 'web'},
+      };
+      const result = deepMerge(target, {tracking: {utm_campaign: 'launch'}});
+      expect(result.tracking).toEqual({
+        utm_source: 'app',
+        utm_medium: 'web',
+        utm_campaign: 'launch',
+      });
+    });
+
+    it('deep merges transaction options', function () {
+      const target: SDKOptions = {
+        client_id: 'aaa',
+        transaction: {namespace: 'com.livechat', key_length: 32},
+      };
+      const result = deepMerge(target, {
+        transaction: {force_local_storage: true},
+      });
+      expect(result.transaction).toEqual({
+        namespace: 'com.livechat',
+        key_length: 32,
+        force_local_storage: true,
+      });
+    });
+
+    it('deep merges pkce options', function () {
+      const target: SDKOptions = {
+        client_id: 'aaa',
+        pkce: {enabled: true, code_verifier_length: 128},
+      };
+      const result = deepMerge(target, {
+        pkce: {code_challenge_method: 'S256'},
+      });
+      expect(result.pkce).toEqual({
+        enabled: true,
+        code_verifier_length: 128,
+        code_challenge_method: 'S256',
+      });
+    });
+  });
+
+  describe('multiple sources', function () {
+    it('applies sources left-to-right', function () {
+      const target: SDKOptions = {client_id: 'aaa'};
+      const result = deepMerge(
+        target,
+        {response_type: 'token'},
+        {response_type: 'code'},
+      );
+      expect(result.response_type).toBe('code');
+    });
+
+    it('deep merges nested objects across multiple sources', function () {
+      const target: SDKOptions = {client_id: 'aaa'};
+      const result = deepMerge(
+        target,
+        {tracking: {utm_source: 'app'}},
+        {tracking: {utm_medium: 'web'}},
+      );
+      expect(result.tracking).toEqual({utm_source: 'app', utm_medium: 'web'});
+    });
+  });
+
+  describe('immutability', function () {
+    it('does not mutate the target', function () {
+      const target: SDKOptions = {
+        client_id: 'aaa',
+        tracking: {utm_source: 'app'},
+      };
+      deepMerge(target, {tracking: {utm_medium: 'web'}});
+      expect(target.tracking).toEqual({utm_source: 'app'});
+    });
+  });
+});
 
 describe('helpers/pick', function () {
   it('returns only the requested keys', function () {

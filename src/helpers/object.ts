@@ -30,3 +30,43 @@ export function pick<T extends Record<string, unknown>, K extends keyof T>(
 
   return result;
 }
+
+type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends Record<string, unknown> ? DeepPartial<T[K]> : T[K];
+};
+
+/**
+ * Recursively merges own enumerable properties of source objects into the target object.
+ * Plain object values are merged recursively; all other values (arrays, primitives, class instances)
+ * are replaced by the source value. Source `undefined` values do not overwrite target values.
+ */
+export function deepMerge<T extends Record<string, unknown>>(
+  target: T,
+  ...sources: DeepPartial<T>[]
+): T {
+  const result = {...target};
+
+  for (const source of sources) {
+    for (const key in source) {
+      const sourceValue = source[key];
+      const targetValue = result[key as keyof T];
+
+      if (isPlainObject(sourceValue) && isPlainObject(targetValue)) {
+        (result as Record<string, unknown>)[key] = deepMerge(
+          targetValue as Record<string, unknown>,
+          sourceValue as Record<string, unknown>,
+        );
+      } else if (sourceValue !== undefined) {
+        (result as Record<string, unknown>)[key] = sourceValue;
+      }
+    }
+  }
+
+  return result;
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (typeof value !== 'object' || value === null) return false;
+  const proto = Object.getPrototypeOf(value);
+  return proto === Object.prototype || proto === null;
+}
