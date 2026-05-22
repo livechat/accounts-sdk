@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add `object.deepMerge()` utility for recursive object merging
+- Add `object.omitBy()` utility for filtering object properties by predicate
+
+### Changed
+- `pick()` now preserves falsy values (`0`, `false`, `""`, `null`) — only `undefined` properties are dropped
+
+### Fixed
+- Fix default options with nested properties being overwritten when merging
+- Fix `transaction.generate` passing `undefined` state
+- Omit empty string and `null` values from `authorizeURL` query parameters
+
 ### Removed
 - Remove deprecated `pkce.code_challange_method` option — use `pkce.code_challenge_method` instead
 
