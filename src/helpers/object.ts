@@ -12,13 +12,12 @@
  * const obj = { a: 1, b: 2, c: 3 };
  * const result = pick(obj, ['a', 'c']);
  * // result will be { a: 1, c: 3 }
- * @see [es-toolkit/pick](https://github.com/toss/es-toolkit/blob/970ae85401f7e43c938bb83535d9145297bdf6cc/src/object/pick.ts)
  */
 export function pick<T extends Record<string, unknown>, K extends keyof T>(
   obj: T,
   keys: readonly K[],
 ): Pick<T, K> {
-  const result = {} as Pick<T, K>;
+  const result = Object.create(null) as Pick<T, K>;
 
   for (const key of keys) {
     if (obj[key] !== undefined) {
@@ -36,7 +35,7 @@ type DeepPartial<T> = {
 };
 
 /**
- * Recursively merges own enumerable properties of source objects into the target object.
+ * Recursively merges properties of source objects into the target object.
  * Plain object values are merged recursively; all other values (arrays, primitives, class instances)
  * are replaced by the source value. Source `undefined` values do not overwrite target values.
  */
@@ -75,7 +74,7 @@ export function omitBy<T extends Record<string, unknown>>(
   obj: T,
   predicate: (value: T[keyof T], key: keyof T) => boolean,
 ): Partial<T> {
-  const result: Partial<T> = {};
+  const result: Partial<T> = Object.create(null);
 
   for (const key in obj) {
     if (

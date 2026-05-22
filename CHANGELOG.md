@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Add `object.mergeDeep()` utility for recursive object merging
+- Add `object.deepMerge()` utility for recursive object merging
 - Add `object.omitBy()` utility for filtering object properties by predicate
 
 ### Changed
