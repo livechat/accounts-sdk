@@ -116,6 +116,15 @@ describe('sdk.authorizeURL()', function () {
       expect(q1.state).toBe('state1');
       expect(q2.state).toBe('state2');
     });
+
+    it('keeps non-empty params while omitting empty-string and null ones', function () {
+      const query = parseQuery(
+        sdk.authorizeURL({ organization_id: 'org_123', prompt: '', scope: null })
+      );
+      expect(query.organization_id).toBe('org_123');
+      expect(query.prompt).toBeUndefined();
+      expect(query.scope).toBeUndefined();
+    });
   });
 
   describe('response types', function () {
