@@ -7,21 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- Add `object.deepMerge()` utility for recursive object merging
-- Add `object.omitBy()` utility for filtering object properties by predicate
-
-### Changed
-- `pick()` now preserves falsy values (`0`, `false`, `""`, `null`) — only `undefined` properties are dropped
-
-### Fixed
-- Fix default options with nested properties being overwritten when merging
-- Fix `transaction.generate` passing `undefined` state
-- Omit empty string and `null` values from `authorizeURL` query parameters
-
-### Removed
-- Remove deprecated `pkce.code_challange_method` option — use `pkce.code_challenge_method` instead
-
 ## [3.0.0] - 2026-04-29
 
 ### Added
@@ -32,6 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrate entire source and test suite from JavaScript to TypeScript (#77)
 - Narrow `response_type` option type from `string` to `'token' | 'code'` literal union (#77)
 - Replace Babel (`@rollup/plugin-babel`) with `@rollup/plugin-typescript`; replace `babel-jest` with `ts-jest` (#77)
+- `pick()` now preserves falsy values (`0`, `false`, `""`, `null`) — only `undefined` properties are dropped
+
+### Fixed
+- Fix default options with nested properties being overwritten when merging
+- Fix `transaction.generate` passing `undefined` state
+- Omit empty string and `null` values from `authorizeURL` query parameters
+
+### Removed
+- Remove deprecated `pkce.code_challange_method` option — use `pkce.code_challenge_method` instead
 
 ## [2.3.0] - 2026-03-30
 
