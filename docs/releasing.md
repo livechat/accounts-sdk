@@ -52,6 +52,7 @@ To release a new version of the package to npm:
    - Ensure the changes are categorized properly (Added, Changed, Fixed, Security, Documentation)
    - Add a new empty `[Unreleased]` section at the top
    - Update the version comparison links at the bottom of the file
+   - Avoid including non-security updates of dependencies
 
    Example:
    ```markdown
