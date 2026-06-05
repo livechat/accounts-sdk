@@ -4,9 +4,8 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'weekly'
-      day: 'monday'
-      time: '09:00'
+      interval: 'cron'
+      cronjob: '0 9 1,15 * *'
       timezone: 'Europe/Warsaw'
     open-pull-requests-limit: 10
     commit-message:
@@ -33,9 +32,8 @@ updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'weekly'
-      day: 'monday'
-      time: '09:00'
+      interval: 'cron'
+      cronjob: '0 9 1,15 * *'
       timezone: 'Europe/Warsaw'
     open-pull-requests-limit: 5
     commit-message:
