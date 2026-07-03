@@ -53,3 +53,50 @@ jobs:
 
       - name: Run build
         run: npm run build
+
+  e2e:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: '24.0.0'
+          cache: 'npm'
+
+      - name: Install Aikido Safe Chain 1.5.3
+        shell: bash
+        run: |
+          curl -fsSL -o /tmp/install-safe-chain.sh https://github.com/AikidoSec/safe-chain/releases/download/1.5.3/install-safe-chain.sh
+          echo "0107cbbbf90159379756157e902acae512d62ffbd174307e42c5fe9f266792d3  /tmp/install-safe-chain.sh" | sha256sum -c
+          sh /tmp/install-safe-chain.sh --ci
+      - name: Verify Aikido Safe Chain
+        shell: bash
+        run: safe-chain --version && npm safe-chain-verify
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      # Real e2e tests against a live auth server, gated on E2E_* secrets.
+      # Until those secrets exist in this repo, every test below self-skips.
+      - name: Run e2e tests
+        run: npm run test:e2e
+        env:
+          E2E_CLIENT_ID: ${{ secrets.E2E_CLIENT_ID }}
+          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

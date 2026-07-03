@@ -1,0 +1,83 @@
+/* exported getE2EConfig, showResult, exchangeCodeForToken, handleAuthorizeResult */
+
+// window.__E2E_CONFIG__ is set either by Playwright's page.addInitScript
+// (automated tests, see e2e/helpers/env.ts) or by config.local.js, generated
+// from e2e/.env by e2e/helpers/generate-local-config.mjs (manual testing
+// without Playwright).
+function getE2EConfig() {
+  // Forwarded as-is into `new AccountsSDK(...)` — any SDKOptions field (scope,
+  // state, email_hint, organization_id, prompt, ...) can be set this way from
+  // a test via page.addInitScript, not just the 4 originally wired fields.
+  return Object.assign({response_type: 'token'}, window.__E2E_CONFIG__ || {});
+}
+
+function showResult(value) {
+  document.getElementById('result').textContent = JSON.stringify(
+    value,
+    null,
+    2,
+  );
+}
+
+// Exchanges an authorization code + PKCE code_verifier for a token, the step
+// every real integration must perform itself now that the implicit grant
+// flow is deprecated (the SDK only gets you the code, not the token).
+function exchangeCodeForToken(sdk, code, codeVerifier) {
+  return fetch(sdk.options.server_url + '/v2/token', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      client_id: sdk.options.client_id,
+      redirect_uri: sdk.options.redirect_uri,
+      code: code,
+      code_verifier: codeVerifier,
+      grant_type: 'authorization_code',
+    }),
+  }).then(function (response) {
+    if (!response.ok) {
+      return response.text().then(function (body) {
+        throw new Error(
+          'token exchange failed: ' + response.status + ' ' + body,
+        );
+      });
+    }
+    return response.json();
+  });
+}
+
+// Shared by popup/iframe/redirect handlers: verifies the transaction and, for
+// the code + PKCE flow, exchanges the code for a real token — the same steps
+// a real integration needs regardless of which flow delivered the code.
+function handleAuthorizeResult(sdk, authorizeData) {
+  const transaction = sdk.verify(authorizeData);
+
+  if (authorizeData.type !== 'code') {
+    showResult({authorizeData: authorizeData, transaction: transaction});
+    return;
+  }
+
+  if (!transaction || !transaction.code_verifier) {
+    showResult({
+      authorizeData: authorizeData,
+      transaction: transaction,
+      error: 'missing code_verifier - cannot exchange code for a token',
+    });
+    return;
+  }
+
+  exchangeCodeForToken(sdk, authorizeData.code, transaction.code_verifier)
+    .then(function (tokenResponse) {
+      showResult({
+        authorizeData: authorizeData,
+        transaction: transaction,
+        tokenResponse: tokenResponse,
+      });
+    })
+    .catch(function (error) {
+      showResult({
+        authorizeData: authorizeData,
+        transaction: transaction,
+        error: String(error),
+      });
+    });
+}

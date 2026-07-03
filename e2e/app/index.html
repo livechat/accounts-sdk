@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>accounts-sdk e2e fixture</title>
+  </head>
+  <body>
+    <button id="popup-btn">Login via popup</button>
+    <button id="redirect-btn">Login via redirect</button>
+    <button id="iframe-btn">Login via iframe</button>
+    <pre id="result"></pre>
+
+    <script src="/dist/accounts-sdk.js"></script>
+    <script src="config.local.js"></script>
+    <script src="app.js"></script>
+    <script>
+      var config = getE2EConfig();
+      var sdk = new AccountsSDK(config);
+
+      document
+        .getElementById('popup-btn')
+        .addEventListener('click', function () {
+          sdk
+            .popup()
+            .authorize()
+            .then(function (authorizeData) {
+              handleAuthorizeResult(sdk, authorizeData);
+            })
+            .catch(function (error) {
+              showResult({error: String(error)});
+            });
+        });
+
+      document
+        .getElementById('redirect-btn')
+        .addEventListener('click', function () {
+          sdk.redirect().authorize();
+        });
+
+      document
+        .getElementById('iframe-btn')
+        .addEventListener('click', function () {
+          sdk
+            .iframe()
+            .authorize()
+            .then(function (authorizeData) {
+              handleAuthorizeResult(sdk, authorizeData);
+            })
+            .catch(function (error) {
+              showResult({error: String(error)});
+            });
+        });
+    </script>
+  </body>
+</html>

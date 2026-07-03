@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>accounts-sdk e2e fixture - redirect target</title>
+  </head>
+  <body>
+    <pre id="result">pending</pre>
+
+    <script src="/dist/accounts-sdk.js"></script>
+    <script src="config.local.js"></script>
+    <script src="app.js"></script>
+    <script>
+      var config = getE2EConfig();
+      var sdk = new AccountsSDK(config);
+
+      sdk
+        .redirect()
+        .authorizeData()
+        .then(function (authorizeData) {
+          handleAuthorizeResult(sdk, authorizeData);
+        })
+        .catch(function (error) {
+          showResult({error: String(error)});
+        });
+    </script>
+  </body>
+</html>
