@@ -13,7 +13,6 @@ test.describe('redirect login flow', () => {
     page,
   }) => {
     await page.addInitScript((injected) => {
-      // @ts-expect-error - injected app config, see e2e/app/app.js
       window.__E2E_CONFIG__ = injected;
     }, sdkConfig());
 
@@ -41,9 +40,7 @@ test.describe('redirect login flow', () => {
     // Verify the SDK parsed every prop out of that URL and validated the
     // transaction state (see e2e/app/redirect.html).
     await expect(page.locator('#result')).not.toHaveText('pending');
-    const result = JSON.parse(
-      (await page.locator('#result').textContent()) ?? '{}',
-    );
+    const result = (await page.evaluate(() => window.__E2E_RESULT__)) as any;
 
     expect(result.error).toBeUndefined();
     expect(result.authorizeData).toMatchObject({
@@ -63,7 +60,6 @@ test.describe('redirect login flow', () => {
   }) => {
     await page.addInitScript(
       (injected) => {
-        // @ts-expect-error - injected app config, see e2e/app/app.js
         window.__E2E_CONFIG__ = injected;
       },
       sdkConfig({response_type: 'code'}),
@@ -88,9 +84,7 @@ test.describe('redirect login flow', () => {
     // (see e2e/app/redirect.html) — that's an extra network round-trip,
     // so wait for it to actually finish before reading the result.
     await expect(page.locator('#result')).not.toHaveText('pending');
-    const result = JSON.parse(
-      (await page.locator('#result').textContent()) ?? '{}',
-    );
+    const result = (await page.evaluate(() => window.__E2E_RESULT__)) as any;
 
     expect(result.error).toBeUndefined();
     expect(result.authorizeData).toMatchObject({
@@ -132,7 +126,6 @@ test.describe('redirect login flow', () => {
 
     await page.addInitScript(
       (injected) => {
-        // @ts-expect-error - injected app config, see e2e/app/app.js
         window.__E2E_CONFIG__ = injected;
       },
       sdkConfig({redirect_uri: `${baseRedirectUri}?app_param=hello#app-anchor`}),
@@ -158,9 +151,7 @@ test.describe('redirect login flow', () => {
     // The server's own token response must still be merged in alongside it.
     expect(url.hash).toContain('access_token=');
 
-    const result = JSON.parse(
-      (await page.locator('#result').textContent()) ?? '{}',
-    );
+    const result = (await page.evaluate(() => window.__E2E_RESULT__)) as any;
     expect(result.error).toBeUndefined();
     expect(result.authorizeData.type).toBe('token');
   });
@@ -172,7 +163,6 @@ test.describe('redirect login flow', () => {
 
     await page.addInitScript(
       (injected) => {
-        // @ts-expect-error - injected app config, see e2e/app/app.js
         window.__E2E_CONFIG__ = injected;
       },
       sdkConfig({email_hint: username}),
@@ -189,7 +179,6 @@ test.describe('redirect login flow', () => {
 
     await page.addInitScript(
       (injected) => {
-        // @ts-expect-error - injected app config, see e2e/app/app.js
         window.__E2E_CONFIG__ = injected;
       },
       sdkConfig({state: customState}),
@@ -206,9 +195,7 @@ test.describe('redirect login flow', () => {
     await page.waitForURL('**/e2e/app/redirect.html*');
     await expect(page.locator('#result')).not.toHaveText('pending');
 
-    const result = JSON.parse(
-      (await page.locator('#result').textContent()) ?? '{}',
-    );
+    const result = (await page.evaluate(() => window.__E2E_RESULT__)) as any;
     expect(result.authorizeData.state).toBe(customState);
     expect(result.transaction).not.toBeNull();
     expect(result.transaction.state).toBe(customState);

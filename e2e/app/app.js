@@ -11,9 +11,36 @@ function getE2EConfig() {
   return Object.assign({response_type: 'token'}, window.__E2E_CONFIG__ || {});
 }
 
+const SENSITIVE_KEYS = ['access_token', 'refresh_token', 'code', 'code_verifier'];
+
+// Deep-clones value, replacing sensitive string fields with '<redacted>' —
+// used only for what gets rendered into the DOM (see showResult). Playwright
+// traces/screenshots capture DOM content, and this fixture's result objects
+// carry real OAuth tokens, so they must never appear there unmasked.
+function redact(value) {
+  if (Array.isArray(value)) {
+    return value.map(redact);
+  }
+  if (value && typeof value === 'object') {
+    const clone = {};
+    Object.keys(value).forEach(function (key) {
+      if (SENSITIVE_KEYS.indexOf(key) !== -1 && typeof value[key] === 'string') {
+        clone[key] = '<redacted>';
+      } else {
+        clone[key] = redact(value[key]);
+      }
+    });
+    return clone;
+  }
+  return value;
+}
+
 function showResult(value) {
+  // Tests read the real, unredacted values via
+  // page.evaluate(() => window.__E2E_RESULT__) — never from the DOM.
+  window.__E2E_RESULT__ = value;
   document.getElementById('result').textContent = JSON.stringify(
-    value,
+    redact(value),
     null,
     2,
   );
