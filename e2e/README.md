@@ -29,14 +29,13 @@ fallback. Revisit if the iframe flow becomes load-bearing again.
    and stored as a CI secret.
 2. Create an OAuth client at
    https://www.labs.text.com/app/settings/integrations/api-access/oauth-clients.
-3. Set the client's redirect URI to `REDIRECT_URI` from `e2e/helpers/env.ts`
-   (currently `http://localhost:4173/e2e/app/redirect.html`).
+3. Set the client's redirect URI to whatever you'll use as `E2E_REDIRECT_URI`
+   below (e.g. `http://localhost:4173/e2e/app/redirect.html`).
 4. Note the generated `client_id` — this is `E2E_CLIENT_ID`. A `client_secret`
    may also be issued; these tests don't use it (the code + PKCE flow is a
    public-client flow, no secret involved).
-5. Copy `e2e/.env.example` to `e2e/.env` and fill in
-   `E2E_CLIENT_ID`/`E2E_USERNAME`/`E2E_PASSWORD` — or add the same as repo
-   secrets for CI.
+5. Copy `e2e/.env.example` to `e2e/.env` and fill in the values — or add the
+   same as repo secrets for CI.
 6. Install browsers once: `npx playwright install chromium`.
 7. Run: `npm run test:e2e`.
 
@@ -53,16 +52,13 @@ is safe to run before real credentials exist.
 
 ## Environment variables
 
-| Variable        | Required | Description                                 |
-| --------------- | -------- | -------------------------------------------- |
-| `E2E_CLIENT_ID` | yes      | client_id of the test OAuth client           |
-| `E2E_USERNAME`  | yes      | login/email of the dedicated test account    |
-| `E2E_PASSWORD`  | yes      | password of the dedicated test account       |
-
-`server_url`/`redirect_uri` are fixed constants (`SERVER_URL`/`REDIRECT_URI`
-in `e2e/helpers/env.ts`) rather than env vars, since this test client is
-tied to one specific server + registered redirect URI and isn't expected to
-change per-machine.
+| Variable           | Required | Description                                                |
+| ------------------ | -------- | ----------------------------------------------------------- |
+| `E2E_CLIENT_ID`    | yes      | client_id of the test OAuth client                          |
+| `E2E_USERNAME`     | yes      | login/email of the dedicated test account                   |
+| `E2E_PASSWORD`     | yes      | password of the dedicated test account                      |
+| `E2E_SERVER_URL`   | no       | auth server base URL (defaults to the SDK's own default)    |
+| `E2E_REDIRECT_URI` | no       | overrides the redirect URI used by the redirect flow test   |
 
 ## Manual testing without Playwright
 

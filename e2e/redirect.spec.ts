@@ -4,7 +4,6 @@ import {
   skipReason,
   sdkConfig,
   credentials,
-  REDIRECT_URI,
 } from './helpers/env';
 
 test.describe('redirect login flow', () => {
@@ -40,6 +39,7 @@ test.describe('redirect login flow', () => {
     expect(hashParams.get('token_type')).toBe('Bearer');
 
     // Verify the SDK parsed every prop out of that URL and validated the
+    // transaction state (see e2e/app/redirect.html).
     await expect(page.locator('#result')).not.toHaveText('pending');
     const result = JSON.parse(
       (await page.locator('#result').textContent()) ?? '{}',
@@ -126,12 +126,16 @@ test.describe('redirect login flow', () => {
     // history.replaceState once the response lands back here — merged with
     // whatever the server itself appended. See
     // src/helpers/persisters/redirectUriParams.ts.
+    const baseRedirectUri =
+      process.env.E2E_REDIRECT_URI ??
+      `${test.info().project.use.baseURL}/e2e/app/redirect.html`;
+
     await page.addInitScript(
       (injected) => {
         // @ts-expect-error - injected app config, see e2e/app/app.js
         window.__E2E_CONFIG__ = injected;
       },
-      sdkConfig({redirect_uri: `${REDIRECT_URI}?app_param=hello#app-anchor`}),
+      sdkConfig({redirect_uri: `${baseRedirectUri}?app_param=hello#app-anchor`}),
     );
 
     await page.goto('/e2e/app/index.html');

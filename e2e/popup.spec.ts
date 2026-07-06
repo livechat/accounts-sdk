@@ -47,7 +47,7 @@ test.describe('popup login flow', () => {
     // something this SDK controls (see listener.ts's mapping of `scopes` ->
     // `scope` and `expires_in` parsing, which only run when the source value
     // is truthy). Asserting the real shape here so a future fix shows up as
-    // as a (welcome) test failure instead of silently not being noticed.
+    // a (welcome) test failure instead of silently not being noticed.
     expect(result.authorizeData).toMatchObject({
       type: 'token',
       token_type: null,

@@ -58,6 +58,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    # `secrets` isn't allowed in step `if:` conditions, only in env/with/run —
+    # so surface it as a job-level env var and gate steps on that instead.
+    env:
+      HAS_E2E_SECRETS: ${{ secrets.E2E_CLIENT_ID != '' }}
 
     steps:
       - name: Checkout code
@@ -81,20 +85,26 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Real e2e tests against a live auth server, gated on E2E_* secrets.
+      # Until those secrets exist in this repo, skip the expensive browser
+      # install/run/upload steps entirely rather than let them run for
+      # nothing (test:e2e would just self-skip anyway).
       - name: Install Playwright browsers
+        if: ${{ env.HAS_E2E_SECRETS == 'true' }}
         run: npx playwright install --with-deps chromium
 
-      # Real e2e tests against a live auth server, gated on E2E_* secrets.
-      # Until those secrets exist in this repo, every test below self-skips.
       - name: Run e2e tests
+        if: ${{ env.HAS_E2E_SECRETS == 'true' }}
         run: npm run test:e2e
         env:
           E2E_CLIENT_ID: ${{ secrets.E2E_CLIENT_ID }}
           E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
           E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+          E2E_SERVER_URL: ${{ secrets.E2E_SERVER_URL }}
+          E2E_REDIRECT_URI: ${{ secrets.E2E_REDIRECT_URI }}
 
       - name: Upload Playwright report
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && env.HAS_E2E_SECRETS == 'true' }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: playwright-report

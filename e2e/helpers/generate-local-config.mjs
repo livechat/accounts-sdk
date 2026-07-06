@@ -13,11 +13,10 @@ if (existsSync(envPath)) {
   process.loadEnvFile(envPath);
 }
 
-// Keep in sync with SERVER_URL/REDIRECT_URI in e2e/helpers/env.ts.
 const config = {
   client_id: process.env.E2E_CLIENT_ID,
-  server_url: 'https://accounts.labs.livechat.com',
-  redirect_uri: 'http://localhost:4173/e2e/app/redirect.html',
+  server_url: process.env.E2E_SERVER_URL,
+  redirect_uri: process.env.E2E_REDIRECT_URI,
   response_type: 'token',
 };
 

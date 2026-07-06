@@ -20,12 +20,12 @@
     "prepare": "npm run build",
     "build": "npm run clean && rollup -c",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint --fix ./src rollup.config.js eslint.config.js",
+    "lint": "eslint ./src ./e2e",
+    "lint:fix": "eslint --fix ./src ./e2e rollup.config.js eslint.config.js",
     "test": "jest",
     "test:dev": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:e2e": "npm run build && playwright test --config e2e/playwright.config.ts",
+    "test:e2e": "node e2e/helpers/generate-local-config.mjs && npm run build && playwright test --config e2e/playwright.config.ts",
     "test:e2e:manual": "node e2e/helpers/generate-local-config.mjs && npm run build && npx http-server . -p 4173 -s"
   },
   "jest": {
