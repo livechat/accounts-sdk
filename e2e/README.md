@@ -23,21 +23,20 @@ fallback. Revisit if the iframe flow becomes load-bearing again.
 
 ## Setup
 
-1. Create an account at https://www.labs.text.com/app — this becomes your
-   **dedicated test account** (`E2E_USERNAME`/`E2E_PASSWORD`). Don't use a
-   personal or production account, since credentials are entered by the test
-   and stored as a CI secret.
+1. Create a test account — this becomes your **dedicated test account** (`E2E_USERNAME`/`E2E_PASSWORD`).
+   Don't use a personal or production account, since credentials are entered by the test and stored as a CI secret.
 2. Create an OAuth client at
-   https://www.labs.text.com/app/settings/integrations/api-access/oauth-clients.
-3. Set the client's redirect URI to whatever you'll use as `E2E_REDIRECT_URI`
-   below (e.g. `http://localhost:4173/e2e/app/redirect.html`).
-4. Note the generated `client_id` — this is `E2E_CLIENT_ID`. A `client_secret`
-   may also be issued; these tests don't use it (the code + PKCE flow is a
-   public-client flow, no secret involved).
-5. Copy `e2e/.env.example` to `e2e/.env` and fill in the values — or add the
-   same as repo secrets for CI.
-6. Install browsers once: `npx playwright install chromium`.
-7. Run: `npm run test:e2e`.
+   `/app/settings/integrations/api-access/oauth-clients`
+   - Set the client's redirect URI to whatever you'll use as `E2E_REDIRECT_URI`
+     below (e.g. `http://localhost:4173/e2e/app/redirect.html`).
+   - Note the generated `client_id` — this is `E2E_CLIENT_ID`. A `client_secret`
+     may also be issued; these tests don't use it (the code + PKCE flow is a
+     public-client flow, no secret involved).
+   - Add the scopes required by the tests, e.g. `accounts--my:rw` from `e2e/redirect.spec.ts`
+3. Copy `e2e/.env.example` to `e2e/.env` and fill in
+   `E2E_CLIENT_ID`/`E2E_USERNAME`/`E2E_PASSWORD`/`E2E_SERVER_URL`/`E2E_REDIRECT_URI` — or as repo secrets for CI.
+4. Install browsers once: `npx playwright install chromium`.
+5. Run: `npm run test:e2e`.
 
 `playwright.config.ts` loads `.env` itself (via `process.loadEnvFile`) if
 the file exists, so no manual `source`/`export` is needed — this also makes
@@ -52,13 +51,13 @@ is safe to run before real credentials exist.
 
 ## Environment variables
 
-| Variable           | Required | Description                                                |
-| ------------------ | -------- | ----------------------------------------------------------- |
-| `E2E_CLIENT_ID`    | yes      | client_id of the test OAuth client                          |
-| `E2E_USERNAME`     | yes      | login/email of the dedicated test account                   |
-| `E2E_PASSWORD`     | yes      | password of the dedicated test account                      |
-| `E2E_SERVER_URL`   | no       | auth server base URL (defaults to the SDK's own default)    |
-| `E2E_REDIRECT_URI` | no       | overrides the redirect URI used by the redirect flow test   |
+| Variable           | Required | Description                                               |
+| ------------------ | -------- | --------------------------------------------------------- |
+| `E2E_CLIENT_ID`    | yes      | client_id of the test OAuth client                        |
+| `E2E_USERNAME`     | yes      | login/email of the dedicated test account                 |
+| `E2E_PASSWORD`     | yes      | password of the dedicated test account                    |
+| `E2E_SERVER_URL`   | no       | auth server base URL (defaults to the SDK's own default)  |
+| `E2E_REDIRECT_URI` | no       | overrides the redirect URI used by the redirect flow test |
 
 ## Manual testing without Playwright
 
