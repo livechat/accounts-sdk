@@ -11,7 +11,7 @@ function getE2EConfig() {
   return Object.assign({response_type: 'token'}, window.__E2E_CONFIG__ || {});
 }
 
-const SENSITIVE_KEYS = ['access_token', 'refresh_token', 'code', 'code_verifier'];
+const SENSITIVE_KEYS = new Set(['access_token', 'refresh_token', 'code', 'code_verifier']);
 
 // Deep-clones value, replacing sensitive string fields with '<redacted>' —
 // used only for what gets rendered into the DOM (see showResult). Playwright
@@ -24,7 +24,7 @@ function redact(value) {
   if (value && typeof value === 'object') {
     const clone = {};
     Object.keys(value).forEach(function (key) {
-      if (SENSITIVE_KEYS.indexOf(key) !== -1 && typeof value[key] === 'string') {
+      if (SENSITIVE_KEYS.has(key) && typeof value[key] === 'string') {
         clone[key] = '<redacted>';
       } else {
         clone[key] = redact(value[key]);
@@ -49,8 +49,8 @@ function showResult(value) {
 // Exchanges an authorization code + PKCE code_verifier for a token, the step
 // every real integration must perform itself now that the implicit grant
 // flow is deprecated (the SDK only gets you the code, not the token).
-function exchangeCodeForToken(sdk, code, codeVerifier) {
-  return fetch(sdk.options.server_url + '/v2/token', {
+async function exchangeCodeForToken(sdk, code, codeVerifier) {
+  const response = await fetch(sdk.options.server_url + '/v2/token', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
@@ -60,22 +60,20 @@ function exchangeCodeForToken(sdk, code, codeVerifier) {
       code_verifier: codeVerifier,
       grant_type: 'authorization_code',
     }),
-  }).then(function (response) {
-    if (!response.ok) {
-      return response.text().then(function (body) {
-        throw new Error(
-          'token exchange failed: ' + response.status + ' ' + body,
-        );
-      });
-    }
-    return response.json();
   });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error('token exchange failed: ' + response.status + ' ' + body);
+  }
+
+  return response.json();
 }
 
 // Shared by popup/iframe/redirect handlers: verifies the transaction and, for
 // the code + PKCE flow, exchanges the code for a real token — the same steps
 // a real integration needs regardless of which flow delivered the code.
-function handleAuthorizeResult(sdk, authorizeData) {
+async function handleAuthorizeResult(sdk, authorizeData) {
   const transaction = sdk.verify(authorizeData);
 
   if (authorizeData.type !== 'code') {
@@ -92,19 +90,22 @@ function handleAuthorizeResult(sdk, authorizeData) {
     return;
   }
 
-  exchangeCodeForToken(sdk, authorizeData.code, transaction.code_verifier)
-    .then(function (tokenResponse) {
-      showResult({
-        authorizeData: authorizeData,
-        transaction: transaction,
-        tokenResponse: tokenResponse,
-      });
-    })
-    .catch(function (error) {
-      showResult({
-        authorizeData: authorizeData,
-        transaction: transaction,
-        error: String(error),
-      });
+  try {
+    const tokenResponse = await exchangeCodeForToken(
+      sdk,
+      authorizeData.code,
+      transaction.code_verifier,
+    );
+    showResult({
+      authorizeData: authorizeData,
+      transaction: transaction,
+      tokenResponse: tokenResponse,
     });
+  } catch (error) {
+    showResult({
+      authorizeData: authorizeData,
+      transaction: transaction,
+      error: String(error),
+    });
+  }
 }

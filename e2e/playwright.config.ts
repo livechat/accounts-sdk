@@ -18,7 +18,10 @@ export default defineConfig({
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL: 'http://localhost:4173',
-    trace: 'retain-on-failure',
+    // Traces can capture request/response bodies, and these tests exchange
+    // real OAuth tokens — keep them local-only (debugging), never in CI
+    // where they'd get uploaded as an artifact.
+    trace: process.env.CI ? 'off' : 'retain-on-failure',
   },
   webServer: {
     // cwd defaults to this config file's directory (e2e/), so serve the

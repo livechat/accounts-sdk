@@ -6,7 +6,7 @@ export const hasCredentials = Boolean(
 
 export const skipReason = 'requires E2E_* env vars — see e2e/README.md';
 
-export function sdkConfig(overrides: Record<string, string | undefined> = {}) {
+export function sdkConfig(overrides: Record<string, unknown> = {}) {
   return {
     client_id: process.env.E2E_CLIENT_ID,
     server_url: process.env.E2E_SERVER_URL,
