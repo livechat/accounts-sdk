@@ -53,3 +53,57 @@ jobs:
 
       - name: Run build
         run: npm run build
+
+  e2e:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: '24.0.0'
+          cache: 'npm'
+
+      - name: Install Aikido Safe Chain 1.5.3
+        shell: bash
+        run: |
+          curl -fsSL -o /tmp/install-safe-chain.sh https://github.com/AikidoSec/safe-chain/releases/download/1.5.3/install-safe-chain.sh
+          echo "0107cbbbf90159379756157e902acae512d62ffbd174307e42c5fe9f266792d3  /tmp/install-safe-chain.sh" | sha256sum -c
+          sh /tmp/install-safe-chain.sh --ci
+      - name: Verify Aikido Safe Chain
+        shell: bash
+        run: safe-chain --version && npm safe-chain-verify
+      - name: Install dependencies
+        run: npm ci
+
+      # Real e2e tests against a live auth server. Until E2E_* secrets exist
+      # in this repo, npm run test:e2e just self-skips every test (see
+      # hasCredentials in e2e/helpers/env.ts).
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run e2e tests
+        run: npm run test:e2e
+        env:
+          E2E_CLIENT_ID: ${{ secrets.E2E_CLIENT_ID }}
+          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+          E2E_SERVER_URL: ${{ secrets.E2E_SERVER_URL }}
+          E2E_REDIRECT_URI: ${{ secrets.E2E_REDIRECT_URI }}
+
+      # Traces are disabled in CI (see e2e/playwright.config.ts) since they
+      # can capture request/response bodies from real OAuth token exchanges —
+      # this just picks up Playwright's lightweight error-context.md files.
+      - name: Upload e2e failure context
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: e2e-failure-context
+          path: test-results/
+          retention-days: 7
+          if-no-files-found: ignore

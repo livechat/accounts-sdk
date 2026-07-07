@@ -20,17 +20,20 @@
     "prepare": "npm run build",
     "build": "npm run clean && rollup -c",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint --fix ./src rollup.config.js eslint.config.js",
+    "lint": "eslint ./src ./e2e",
+    "lint:fix": "eslint --fix ./src ./e2e rollup.config.js eslint.config.js",
     "test": "jest",
     "test:dev": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:e2e": "node e2e/helpers/generate-local-config.mjs && npm run build && playwright test --config e2e/playwright.config.ts",
+    "test:e2e:manual": "node e2e/helpers/generate-local-config.mjs && npm run build && npx http-server . -p 4173 -s"
   },
   "jest": {
     "testEnvironment": "jsdom",
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/dist/"
+      "/dist/",
+      "/e2e/"
     ],
     "transform": {
       "^.+\\.(ts|js)$": "ts-jest"
@@ -51,12 +54,14 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@playwright/test": "^1.61.1",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.3.0",
     "@types/jest": "^30.0.0",
     "@types/js-cookie": "^3.0.6",
+    "@types/node": "^26.1.0",
     "@types/qs": "^6.15.0",
     "@typescript-eslint/eslint-plugin": "^8.58.2",
     "@typescript-eslint/parser": "^8.58.2",
@@ -66,6 +71,7 @@
     "eslint": "^10.0.2",
     "eslint-plugin-jsdoc": "^63.0.1",
     "globals": "^17.3.0",
+    "http-server": "^14.1.1",
     "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.2.0",
     "rollup": "^4.57.1",

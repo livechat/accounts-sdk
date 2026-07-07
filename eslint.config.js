@@ -11,7 +11,7 @@ export default [
   js.configs.recommended,
   jsdoc.configs['flat/recommended'],
   {
-    files: ['**/*.js'],
+    files: ['**/*.js', '**/*.mjs'],
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: 'module',
@@ -107,6 +107,13 @@ export default [
       'no-var': 'off',
       'no-redeclare': 'off',
       'no-unused-vars': 'off',
+    },
+  },
+  {
+    // Plain global <script> loaded by the e2e sample app pages, not an ES module
+    files: ['e2e/app/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
     },
   },
 ];
