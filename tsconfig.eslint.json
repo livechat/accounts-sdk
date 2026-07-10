@@ -3,6 +3,6 @@
   "compilerOptions": {
     "types": ["jest", "node"]
   },
-  "include": ["src/**/*.ts", "e2e/**/*.ts"],
+  "include": ["src/**/*.ts", "e2e/**/*.ts", "types/**/*.d.ts", "eslint.config.ts", "rollup.config.ts"],
   "exclude": ["node_modules", "dist"]
 }

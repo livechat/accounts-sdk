@@ -3,8 +3,10 @@ import globals from 'globals';
 import jsdoc from 'eslint-plugin-jsdoc';
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
+import {defineConfig} from 'eslint/config';
+import type {ESLint} from 'eslint';
 
-export default [
+export default defineConfig([
   {
     ignores: ['dist/**', 'build/**', 'node_modules/**'],
   },
@@ -32,9 +34,9 @@ export default [
       'yield-star-spacing': ['error', 'after'],
 
       // Custom rules from original config
-      'eqeqeq': ['error', 'always', {'null': 'ignore'}],
+      eqeqeq: ['error', 'always', {null: 'ignore'}],
       'max-len': ['error', {code: 120, comments: 160}],
-      'indent': 'off',
+      indent: 'off',
       'space-before-function-paren': [
         'error',
         {
@@ -63,18 +65,23 @@ export default [
       },
     },
     plugins: {
-      '@typescript-eslint': tsPlugin,
+      // The plugin ships its own `configs` typing that predates eslint core's
+      // flat-config Plugin type — structurally fine at runtime, so bridge it.
+      '@typescript-eslint': tsPlugin as unknown as ESLint.Plugin,
     },
     rules: {
       ...tsPlugin.configs['recommended'].rules,
       'no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_', varsIgnorePattern: '^_'}],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {argsIgnorePattern: '^_', varsIgnorePattern: '^_'},
+      ],
       'no-var': 'error',
       'prefer-rest-params': 'error',
       'prefer-spread': 'error',
       'max-len': ['error', {code: 120, comments: 160}],
-      'indent': 'off',
+      indent: 'off',
       'jsdoc/require-jsdoc': 'off',
       // TypeScript types make JSDoc type annotations redundant
       'jsdoc/require-param': 'off',
@@ -82,7 +89,7 @@ export default [
       'jsdoc/require-param-type': 'off',
       'jsdoc/require-returns-type': 'off',
       'jsdoc/check-param-names': 'off',
-      'eqeqeq': ['error', 'always', {'null': 'ignore'}],
+      eqeqeq: ['error', 'always', {null: 'ignore'}],
       'prefer-const': 'error',
       '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/no-misused-promises': 'error',
@@ -116,4 +123,4 @@ export default [
       sourceType: 'script',
     },
   },
-];
+]);

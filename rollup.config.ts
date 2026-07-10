@@ -1,4 +1,5 @@
 import {createRequire} from 'module';
+import {defineConfig} from 'rollup';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
@@ -8,9 +9,9 @@ import serve from 'rollup-plugin-serve';
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 
-const external = Object.keys(pkg.dependencies || {});
+const external = Object.keys(pkg.dependencies ?? {});
 
-export default [
+export default defineConfig([
   {
     input: 'src/sdk.ts',
     output: [
@@ -38,7 +39,7 @@ export default [
       resolve({extensions: ['.ts', '.js'], browser: true}),
       commonjs(),
       typescript({tsconfig: './tsconfig.build.json', outDir: './dist', rootDir: './src'}),
-      process.env.ROLLUP_WATCH && serve('dist'),
+      process.env.ROLLUP_WATCH ? serve('dist') : undefined,
     ],
   },
   {
@@ -71,4 +72,4 @@ export default [
       }),
     ],
   },
-];
+]);
