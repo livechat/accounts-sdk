@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.1] - 2026-07-13
+
+### Added
+- Add Playwright e2e tests covering the popup and redirect authorization flows (#106)
+
+### Security
+- Resolve npm audit vulnerabilities in transitive dependencies (#107)
+
 ## [3.0.0] - 2026-04-29
 
 ### Added
@@ -172,7 +180,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Updated readme with new features and usage
 
-[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/livechat/accounts-sdk/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/livechat/accounts-sdk/compare/v2.3.0...v3.0.0
 [2.3.0]: https://github.com/livechat/accounts-sdk/compare/v2.2.3...v2.3.0
 [2.2.3]: https://github.com/livechat/accounts-sdk/compare/v2.2.2...v2.2.3
