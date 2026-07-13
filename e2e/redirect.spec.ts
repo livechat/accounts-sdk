@@ -40,7 +40,7 @@ test.describe('redirect login flow', () => {
     // Verify the SDK parsed every prop out of that URL and validated the
     // transaction state (see e2e/app/redirect.html).
     await expect(page.locator('#result')).not.toHaveText('pending');
-    const result = (await page.evaluate(() => window.__E2E_RESULT__)) as any;
+    const result = (await page.evaluate(() => window.__E2E_RESULT__))!;
 
     expect(result.error).toBeUndefined();
     expect(result.authorizeData).toMatchObject({
@@ -52,7 +52,7 @@ test.describe('redirect login flow', () => {
       state: hashParams.get('state'),
     });
     expect(result.transaction).not.toBeNull();
-    expect(result.transaction.state).toBe(result.authorizeData.state);
+    expect(result.transaction!.state).toBe(result.authorizeData.state);
   });
 
   test('logs in via redirect and lands back using code + PKCE flow', async ({
@@ -84,7 +84,7 @@ test.describe('redirect login flow', () => {
     // (see e2e/app/redirect.html) — that's an extra network round-trip,
     // so wait for it to actually finish before reading the result.
     await expect(page.locator('#result')).not.toHaveText('pending');
-    const result = (await page.evaluate(() => window.__E2E_RESULT__)) as any;
+    const result = (await page.evaluate(() => window.__E2E_RESULT__))!;
 
     expect(result.error).toBeUndefined();
     expect(result.authorizeData).toMatchObject({
@@ -96,8 +96,8 @@ test.describe('redirect login flow', () => {
     // PKCE-specific: the SDK generated a code_verifier at authorize-time and
     // must be able to hand it back out of the transaction after the redirect.
     expect(result.transaction).not.toBeNull();
-    expect(result.transaction.state).toBe(result.authorizeData.state);
-    expect(typeof result.transaction.code_verifier).toBe('string');
+    expect(result.transaction!.state).toBe(result.authorizeData.state);
+    expect(typeof result.transaction!.code_verifier).toBe('string');
 
     // The fixture exchanged the code for a real token via POST /v2/token
     // (see exchangeCodeForToken in e2e/app/app.js) — the step every
@@ -108,7 +108,7 @@ test.describe('redirect login flow', () => {
       token_type: 'Bearer',
       expires_in: expect.any(Number),
     });
-    expect(result.transaction.code_verifier.length).toBeGreaterThan(0);
+    expect(result.transaction!.code_verifier!.length).toBeGreaterThan(0);
   });
 
   test('preserves the caller-supplied redirect_uri query and hash params across the round-trip', async ({
@@ -151,7 +151,7 @@ test.describe('redirect login flow', () => {
     // The server's own token response must still be merged in alongside it.
     expect(url.hash).toContain('access_token=');
 
-    const result = (await page.evaluate(() => window.__E2E_RESULT__)) as any;
+    const result = (await page.evaluate(() => window.__E2E_RESULT__))!;
     expect(result.error).toBeUndefined();
     expect(result.authorizeData.type).toBe('token');
   });
@@ -195,9 +195,9 @@ test.describe('redirect login flow', () => {
     await page.waitForURL('**/e2e/app/redirect.html*');
     await expect(page.locator('#result')).not.toHaveText('pending');
 
-    const result = (await page.evaluate(() => window.__E2E_RESULT__)) as any;
+    const result = (await page.evaluate(() => window.__E2E_RESULT__))!;
     expect(result.authorizeData.state).toBe(customState);
     expect(result.transaction).not.toBeNull();
-    expect(result.transaction.state).toBe(customState);
+    expect(result.transaction!.state).toBe(customState);
   });
 });

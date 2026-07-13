@@ -35,7 +35,7 @@ test.describe('popup login flow', () => {
     // The listener resolves synchronously once postMessage arrives — no
     // extra network round-trip for the token flow, unlike code + PKCE below.
     await expect(page.locator('#result')).not.toHaveText('');
-    const result = (await page.evaluate(() => window.__E2E_RESULT__)) as any;
+    const result = (await page.evaluate(() => window.__E2E_RESULT__))!;
 
     expect(result.error).toBeUndefined();
     // NOTE: unlike the redirect flow's URL hash, this env's popup postMessage
@@ -53,7 +53,7 @@ test.describe('popup login flow', () => {
       state: expect.any(String),
     });
     expect(result.transaction).not.toBeNull();
-    expect(result.transaction.state).toBe(result.authorizeData.state);
+    expect(result.transaction!.state).toBe(result.authorizeData.state);
   });
 
   test('logs in via popup and resolves a code + PKCE AuthorizeResponse', async ({
@@ -86,7 +86,7 @@ test.describe('popup login flow', () => {
     // handleAuthorizeResult in e2e/app/app.js) — an extra network round-trip,
     // so wait for it to actually finish before reading the result.
     await expect(page.locator('#result')).not.toHaveText('');
-    const result = (await page.evaluate(() => window.__E2E_RESULT__)) as any;
+    const result = (await page.evaluate(() => window.__E2E_RESULT__))!;
 
     expect(result.error).toBeUndefined();
     expect(result.authorizeData).toMatchObject({
@@ -96,9 +96,9 @@ test.describe('popup login flow', () => {
     });
 
     expect(result.transaction).not.toBeNull();
-    expect(result.transaction.state).toBe(result.authorizeData.state);
-    expect(typeof result.transaction.code_verifier).toBe('string');
-    expect(result.transaction.code_verifier.length).toBeGreaterThan(0);
+    expect(result.transaction!.state).toBe(result.authorizeData.state);
+    expect(typeof result.transaction!.code_verifier).toBe('string');
+    expect(result.transaction!.code_verifier!.length).toBeGreaterThan(0);
 
     expect(result.tokenResponse).toMatchObject({
       access_token: expect.any(String),
@@ -163,10 +163,10 @@ test.describe('popup login flow', () => {
     await popup.waitForEvent('close');
 
     await expect(page.locator('#result')).not.toHaveText('');
-    const result = (await page.evaluate(() => window.__E2E_RESULT__)) as any;
+    const result = (await page.evaluate(() => window.__E2E_RESULT__))!;
 
     expect(result.authorizeData.state).toBe(customState);
     expect(result.transaction).not.toBeNull();
-    expect(result.transaction.state).toBe(customState);
+    expect(result.transaction!.state).toBe(customState);
   });
 });
