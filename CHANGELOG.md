@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 - Resolve npm audit vulnerabilities in vendored brace-expansion transitive dependency (GHSA-3jxr-9vmj-r5cp) (#117)
+- Resolve npm audit vulnerability in js-yaml transitive dependency — quadratic CPU consumption DoS (GHSA-5p4m-2wfm-xmqj) (#122)
 
 ## [3.0.1] - 2026-07-13
 
