@@ -77,10 +77,13 @@ describe('sdk.authorizeURL()', function () {
       );
     });
 
-    it('includes default tracking params', function () {
+    it('empty tracking params by default', function () {
       const query = parseQuery(sdk.authorizeURL());
-      expect(query.utm_source).toBe('accounts.livechat.com');
-      expect(query.utm_medium).toBe('accounts-sdk');
+      expect(query.utm_source).toBeUndefined();
+      expect(query.utm_medium).toBeUndefined();
+      expect(query.utm_campaign).toBeUndefined();
+      expect(query.utm_content).toBeUndefined();
+      expect(query.utm_term).toBeUndefined();
     });
 
     it('uses custom tracking params', function () {
