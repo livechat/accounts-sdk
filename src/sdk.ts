@@ -42,10 +42,7 @@ export default class AccountsSDK implements PopupSDK, IframeSDK, RedirectSDK {
       redirect_uri: '',
       email_hint: null,
       server_url: 'https://accounts.livechat.com',
-      tracking: {
-        utm_source: 'accounts.livechat.com',
-        utm_medium: 'accounts-sdk',
-      },
+      tracking: {},
       transaction: {
         namespace: 'com.livechat.accounts',
         key_length: 32,
