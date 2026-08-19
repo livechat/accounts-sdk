@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.2] - 2026-08-18
+
+### Fixed
+- Remove default UTM values from tracking params — defaults looked like real UTMs and blocked real source attribution (#120)
+
+### Security
+- Resolve npm audit vulnerabilities in vendored brace-expansion transitive dependency (GHSA-3jxr-9vmj-r5cp) (#117)
+- Resolve npm audit vulnerability in js-yaml transitive dependency — quadratic CPU consumption DoS (GHSA-5p4m-2wfm-xmqj) (#122)
+
 ## [3.0.1] - 2026-07-13
 
 ### Added
@@ -180,7 +189,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Updated readme with new features and usage
 
-[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v3.0.1...HEAD
+[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v3.0.2...HEAD
+[3.0.2]: https://github.com/livechat/accounts-sdk/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/livechat/accounts-sdk/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/livechat/accounts-sdk/compare/v2.3.0...v3.0.0
 [2.3.0]: https://github.com/livechat/accounts-sdk/compare/v2.2.3...v2.3.0
