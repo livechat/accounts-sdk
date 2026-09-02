@@ -27,6 +27,7 @@ jobs:
           fail-on-severity: high
           fail-on-scopes: unknown, runtime, development
           comment-summary-in-pr: never
+          show-openssf-scorecard: false
 
   malware-scan:
     name: Scan for malicious packages
