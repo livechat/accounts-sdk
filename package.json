@@ -69,7 +69,7 @@
     "caniuse-lite": "^1.0.30001800",
     "electron-to-chromium": "^1.5.382",
     "eslint": "^10.0.2",
-    "eslint-plugin-jsdoc": "^63.0.1",
+    "eslint-plugin-jsdoc": "^64.3.2",
     "globals": "^17.3.0",
     "http-server": "^14.1.1",
     "jest": "^30.0.0",
