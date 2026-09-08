@@ -53,6 +53,7 @@ To release a new version of the package to npm:
    - Add a new empty `[Unreleased]` section at the top
    - Update the version comparison links at the bottom of the file
    - Avoid including non-security updates of dependencies
+   - To find which dependency-bump PRs actually fix a security advisory (dependabot doesn't always label them), check the [closed Dependabot alerts](https://github.com/livechat/accounts-sdk/security/dependabot?q=is%3Aclosed+sort%3Anewest), sorted newest first, and match each `fixed_at` date/package to the corresponding PR
 
    Example:
    ```markdown
