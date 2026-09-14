@@ -10,6 +10,9 @@ updates:
     open-pull-requests-limit: 10
     commit-message:
       prefix: 'chore'
+    # Dependabot ignores .npmrc, so match Safe Chain's 48h gate here.
+    cooldown:
+      default-days: 2
     labels:
       - 'Dependencies'
       - 'npm'
