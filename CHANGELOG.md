@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.4] - 2026-10-09
+
+### Security
+- Resolve npm audit vulnerabilities in brace-expansion transitive dependency — quadratic-time expansion causing CPU denial of service (GHSA-q2hr-2g5m-vwhr) and denial of service via uncontrolled recursion (GHSA-qhr7-859c-m2p7, GHSA-6j4f-fj2g-mc7p) (#133)
+
 ## [3.0.3] - 2026-09-08
 
 ### Security
@@ -195,7 +200,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Updated readme with new features and usage
 
-[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v3.0.3...HEAD
+[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v3.0.4...HEAD
+[3.0.4]: https://github.com/livechat/accounts-sdk/compare/v3.0.3...v3.0.4
 [3.0.3]: https://github.com/livechat/accounts-sdk/compare/v3.0.2...v3.0.3
 [3.0.2]: https://github.com/livechat/accounts-sdk/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/livechat/accounts-sdk/compare/v3.0.0...v3.0.1
