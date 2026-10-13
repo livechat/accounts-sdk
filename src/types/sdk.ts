@@ -40,13 +40,20 @@ export type TransactionOptions = {
 };
 
 /**
- * UTM tracking parameters appended to every authorization URL so that
- * traffic to the accounts server can be attributed in analytics.
+ * Acquisition context appended to authorization URLs and preserved across redirects.
  */
 export type TrackingOptions = {
+  source_id?: string;
+  source_type?: string;
+  source_url?: string;
+  landing_page?: string;
+  referrer?: string;
+  internal_campaign?: string;
   utm_source?: string;
   utm_medium?: string;
   utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
 };
 
 /**
@@ -89,7 +96,7 @@ export type SDKOptions = {
   server_url?: string;
   /** Path appended to `server_url` in the authorization URL (e.g. `'/signup'`). */
   path?: string;
-  /** UTM tracking parameters added to the authorization URL. */
+  /** Acquisition context added to the authorization URL. No tracking defaults are generated. */
   tracking?: TrackingOptions;
   /** Transaction storage configuration. */
   transaction?: TransactionOptions;

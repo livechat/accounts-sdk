@@ -7,11 +7,27 @@
 import qs from 'qs';
 
 import Persister from '../persister';
+import {type TrackingOptions} from '../../types/sdk';
 import {
   type PersisterOptions,
   type PersistParams,
   type RedirectUriParamsData,
 } from '../../types/persister';
+
+const attributionKeys = [
+  'source_id', 'source_type', 'source_url', 'landing_page', 'referrer',
+  'internal_campaign', 'utm_source', 'utm_medium', 'utm_campaign',
+  'utm_term', 'utm_content',
+] as const satisfies readonly (keyof TrackingOptions)[];
+
+function preserveAttribution(target: qs.ParsedQs, original: qs.ParsedQs): void {
+  for (const key of attributionKeys) {
+    const value = original[key];
+    if (typeof value === 'string' && value !== '') {
+      target[key] = value;
+    }
+  }
+}
 
 export default class RedirectUriParamsPersister {
   persister: Persister;
@@ -28,6 +44,8 @@ export default class RedirectUriParamsPersister {
     const queryParams = qs.parse(redirectUrl.search.substring(1));
     const hashParams = qs.parse(redirectUrl.hash.substring(1));
 
+    preserveAttribution(queryParams, params);
+
     this.persister.set(params.state, {
       query_params: queryParams,
       hash_params: hashParams,
@@ -38,7 +56,7 @@ export default class RedirectUriParamsPersister {
 
   /**
    * Retrieves persisted query and hash params from storage and updates current location accordingly.
-   * Params returned by global accounts overrides persisted params in case of duplications.
+   * Callback params take precedence except for non-empty original attribution values.
    */
   retrieve(state: string): void {
     const redirectUriParams = this.persister.get<RedirectUriParamsData>(state);
@@ -56,6 +74,9 @@ export default class RedirectUriParamsPersister {
       ...(redirectUriParams.hash_params ?? {}),
       ...qs.parse(window.location.hash.substring(1)),
     };
+
+    preserveAttribution(queryParams, redirectUriParams.query_params ?? {});
+    preserveAttribution(hashParams, redirectUriParams.hash_params ?? {});
 
     let uri = window.location.origin + window.location.pathname;
 
