@@ -101,6 +101,29 @@ sdk.redirect().authorizeData().then((authorizeData)=>{
 - `pkce.code_verifier_length=128` **number** code verifier length, between 43 and 128 characters https://tools.ietf.org/html/rfc7636#section-4.1
 - `pkce.code_challenge_method='S256'` **string** code challenge method, use `S256` or `plain`
 
+## Redirect attribution
+
+Pass acquisition context through `tracking`: `source_id`, `source_type`,
+`source_url`, `landing_page`, `referrer`, `internal_campaign`, and the five
+marketing UTM keys (`utm_source`, `utm_medium`, `utm_campaign`, `utm_term`,
+`utm_content`). Values are sent to Accounts as query parameters.
+
+Before authorization, the SDK saves the query and hash from `redirect_uri` with
+the OAuth state. On a successful redirect callback, that saved attribution is
+restored to the URL and takes precedence over conflicting callback values.
+Other parameters, including OAuth response fields, retain callback precedence.
+Explicit `tracking` is sent to Accounts only; it is not added to the callback
+URL, so re-authorizing from a restored URL does not nest `source_url`.
+
+Tracking defaults remain empty. The SDK does not infer `source_url` from the
+referrer or generate an `internal_campaign`. Pass internal tracking through
+`internal_campaign`; reserve UTM keys for external marketing.
+
+With a separate `redirect_uri`, pass the landing page's acquisition context in
+`tracking`; the SDK does not automatically collect it from the current page or
+marketing storage. With the default redirect URI, current URL parameters are
+saved for restoration, but are not automatically forwarded as tracking to Accounts.
+
 ## Changelog
 
 See [CHANGELOG.md](https://github.com/livechat/accounts-sdk/blob/master/CHANGELOG.md) for release history.

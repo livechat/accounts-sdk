@@ -76,6 +76,41 @@ describe('helpers/persisters/RedirectUriParamsPersister', function () {
   });
 
   describe('retrieve', function () {
+    it.each(['query', 'hash'])('preserves attribution but replaces OAuth and app params in %s', (part) => {
+      const original = 'source_url=https%3A%2F%2Ftext.com%2F&source_id=hero&code=old&state=old&app=old';
+      const callback = 'source_url=&source_id=default&code=new&state=new&app=new';
+      const prefix = part === 'query' ? '?' : '#';
+      persister.persist({redirect_uri: `https://example.com/cb${prefix}${original}`, state: 'merge'});
+      window.history.pushState(null, '', `/cb${prefix}${callback}`);
+      persister.retrieve('merge');
+      const restored = new URL(replaceStateSpy.mock.calls[0][2] as string);
+      const params = new URLSearchParams(part === 'query' ? restored.search : restored.hash.substring(1));
+      expect(params.get('source_url')).toBe('https://text.com/');
+      expect(params.get('source_id')).toBe('hero');
+      expect(params.get('code')).toBe('new');
+      expect(params.get('state')).toBe('new');
+      expect(params.get('app')).toBe('new');
+    });
+
+    it('uses callback attribution when the original values are empty, null or missing', () => {
+      persister.persister.set('empty', {query_params: {source_url: '', source_id: null}});
+      window.history.pushState(null, '', '/?source_url=https%3A%2F%2Ftext.com&source_id=hero&utm_source=google');
+      persister.retrieve('empty');
+      const params = new URL(replaceStateSpy.mock.calls[0][2] as string).searchParams;
+      expect(params.get('source_url')).toBe('https://text.com');
+      expect(params.get('source_id')).toBe('hero');
+      expect(params.get('utm_source')).toBe('google');
+    });
+
+    it('restores only redirect URI attribution and isolates states', () => {
+      persister.persist({redirect_uri: 'https://example.com/?source_id=uri', state: 'one'});
+      persister.persist({redirect_uri: 'https://example.com/', state: 'two'});
+      persister.retrieve('one');
+      expect(new URL(replaceStateSpy.mock.calls[0][2] as string).searchParams.get('source_id')).toBe('uri');
+      persister.retrieve('two');
+      expect(new URL(replaceStateSpy.mock.calls[1][2] as string).searchParams.has('source_id')).toBe(false);
+    });
+
     it('calls history.replaceState with merged query params after retrieve', function () {
       const params = {
         redirect_uri: 'https://example.com/cb?foo=bar',
