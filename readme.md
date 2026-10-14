@@ -108,13 +108,12 @@ Pass acquisition context through `tracking`: `source_id`, `source_type`,
 marketing UTM keys (`utm_source`, `utm_medium`, `utm_campaign`, `utm_term`,
 `utm_content`). Values are sent to Accounts as query parameters.
 
-Before authorization, the SDK saves non-empty tracking values with the OAuth
-state, alongside the query and hash from `redirect_uri`. Explicit tracking takes
-precedence over query attribution in `redirect_uri`. On a successful redirect
-callback, saved attribution is restored to the URL and takes precedence over
-conflicting callback values. Other parameters, including OAuth response fields,
-retain callback precedence. Tracking values are restored in the query string;
-attribution originally in the redirect URI hash remains in the hash.
+Before authorization, the SDK saves the query and hash from `redirect_uri` with
+the OAuth state. On a successful redirect callback, that saved attribution is
+restored to the URL and takes precedence over conflicting callback values.
+Other parameters, including OAuth response fields, retain callback precedence.
+Explicit `tracking` is sent to Accounts only; it is not added to the callback
+URL, so re-authorizing from a restored URL does not nest `source_url`.
 
 Tracking defaults remain empty. The SDK does not infer `source_url` from the
 referrer or generate an `internal_campaign`. Pass internal tracking through

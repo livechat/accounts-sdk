@@ -102,15 +102,13 @@ describe('helpers/persisters/RedirectUriParamsPersister', function () {
       expect(params.get('utm_source')).toBe('google');
     });
 
-    it('prefers explicit tracking over redirect URI attribution and isolates states', () => {
-      persister.persist({redirect_uri: 'https://example.com/?source_id=uri', state: 'one', source_id: 'tracking'});
-      persister.persist({redirect_uri: 'https://example.com/?source_id=second', state: 'two', source_id: ''});
+    it('restores only redirect URI attribution and isolates states', () => {
+      persister.persist({redirect_uri: 'https://example.com/?source_id=uri', state: 'one'});
+      persister.persist({redirect_uri: 'https://example.com/', state: 'two'});
       persister.retrieve('one');
-      expect(new URL(replaceStateSpy.mock.calls[0][2] as string).searchParams.get('source_id')).toBe('tracking');
+      expect(new URL(replaceStateSpy.mock.calls[0][2] as string).searchParams.get('source_id')).toBe('uri');
       persister.retrieve('two');
-      expect(new URL(replaceStateSpy.mock.calls[1][2] as string).searchParams.get('source_id')).toBe('second');
-      persister.retrieve('one');
-      expect(new URL(replaceStateSpy.mock.calls[2][2] as string).searchParams.has('source_id')).toBe(false);
+      expect(new URL(replaceStateSpy.mock.calls[1][2] as string).searchParams.has('source_id')).toBe(false);
     });
 
     it('calls history.replaceState with merged query params after retrieve', function () {

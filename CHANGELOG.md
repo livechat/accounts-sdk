@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Preserve non-empty source attribution and external UTM values when merging redirect callbacks.
-- Persist explicitly supplied tracking across redirects, including when using a separate callback URL.
 
 ### Added
 - Type tracking fields for source attribution, landing page, referrer, internal campaign, UTM term and content.

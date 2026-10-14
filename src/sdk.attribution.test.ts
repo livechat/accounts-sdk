@@ -33,37 +33,43 @@ describe('redirect attribution', () => {
     window.history.replaceState(null, '', '/');
   });
 
-  it.each(['token', 'code'] as const)('preserves explicit tracking across a %s roundtrip', async (response_type) => {
-    const options = {response_type, redirect_uri: `${window.location.origin}/callback`};
+  it.each(['token', 'code'] as const)('keeps explicit tracking out of the %s callback URL', async (response_type) => {
+    const options = {response_type, redirect_uri: `${window.location.origin}/callback?app=1`};
     const sdk = makeSDK({...options, tracking: attribution});
     const outgoing = new URL(sdk.authorizeURL({state: 'roundtrip'}));
-    expect(outgoing.searchParams.get('redirect_uri')).toBe(options.redirect_uri);
+    expect(outgoing.searchParams.get('redirect_uri')).toBe(`${window.location.origin}/callback`);
     for (const [key, value] of Object.entries(attribution)) {
       expect(outgoing.searchParams.get(key)).toBe(value);
     }
 
-    const callback = new URLSearchParams({
-      ...Object.fromEntries(Object.keys(attribution).map((key) => [key, 'callback-default'])),
-      source_url: '',
-      state: 'roundtrip',
-      code: 'new-code',
-    });
     const hash = response_type === 'token'
       ? '#access_token=new-token&token_type=Bearer&expires_in=3600&state=roundtrip'
       : '';
-    window.history.replaceState(null, '', `/callback?${callback}${hash}`);
+    window.history.replaceState(null, '', `/callback?state=roundtrip&code=new-code${hash}`);
 
-    const freshSDK = makeSDK(options);
-    const result = await freshSDK.redirect().authorizeData();
+    const result = await makeSDK(options).redirect().authorizeData();
     expect(result.state).toBe('roundtrip');
     expect(result.type).toBe(response_type);
     const restored = new URL(window.location.href);
-    for (const [key, value] of Object.entries(attribution)) {
-      expect(restored.searchParams.get(key)).toBe(value);
+    for (const key of Object.keys(attribution)) {
+      expect(restored.searchParams.has(key)).toBe(false);
     }
+    expect(restored.searchParams.get('app')).toBe('1');
     expect(restored.searchParams.get('code')).toBe('new-code');
     if (result.type === 'token') expect(result.access_token).toBe('new-token');
     if (result.type === 'code') expect(result.code).toBe('new-code');
+  });
+
+  it('does not nest source_url when re-authorizing from a restored callback URL', async () => {
+    window.history.replaceState(null, '', '/pricing/?plan=team');
+    for (const state of ['first', 'second']) {
+      makeSDK({response_type: 'code', tracking: {source_url: window.location.href}}).authorizeURL({state});
+      window.history.replaceState(null, '', `${window.location.pathname}?code=c&state=${state}`);
+      await makeSDK({response_type: 'code'}).redirect().authorizeData();
+    }
+    const params = new URL(window.location.href).searchParams;
+    expect(params.has('source_url')).toBe(false);
+    expect(params.get('plan')).toBe('team');
   });
 
   it('restores external UTMs from the landing URL with the default redirect URI', async () => {

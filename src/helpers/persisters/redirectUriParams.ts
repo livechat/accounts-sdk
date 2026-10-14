@@ -44,8 +44,6 @@ export default class RedirectUriParamsPersister {
     const queryParams = qs.parse(redirectUrl.search.substring(1));
     const hashParams = qs.parse(redirectUrl.hash.substring(1));
 
-    preserveAttribution(queryParams, params);
-
     this.persister.set(params.state, {
       query_params: queryParams,
       hash_params: hashParams,
