@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.5] - 2026-10-22
+
+### Security
+- Resolve npm audit vulnerability in handlebars transitive dependency (#135)
+- Resolve npm audit vulnerability in follow-redirects transitive dependency (#140)
+
 ## [3.0.4] - 2026-10-09
 
 ### Security
@@ -200,7 +206,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Updated readme with new features and usage
 
-[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v3.0.4...HEAD
+[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v3.0.5...HEAD
+[3.0.5]: https://github.com/livechat/accounts-sdk/compare/v3.0.4...v3.0.5
 [3.0.4]: https://github.com/livechat/accounts-sdk/compare/v3.0.3...v3.0.4
 [3.0.3]: https://github.com/livechat/accounts-sdk/compare/v3.0.2...v3.0.3
 [3.0.2]: https://github.com/livechat/accounts-sdk/compare/v3.0.1...v3.0.2
