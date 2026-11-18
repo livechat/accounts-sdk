@@ -7,8 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-11-18
+
 ### Added
-- Node.js 26 (LTS) support: added to CI matrix, `engines` and `.nvmrc` (AS-2431)
+- Add Node.js 26 (LTS) support; CI now tests against Node 22, 24 and 26 (#151)
+
+### Security
+- Resolve npm audit vulnerability in serialize-javascript transitive dependency — XSS via unescaped `</script` at the end of a serialized function body (GHSA-m5mm-p8h7-m29v) (#146)
+- Resolve npm audit vulnerability in qs transitive dependency — `qs.stringify` with `arrayFormat: 'comma'` throws an uncaught TypeError (DoS) (GHSA-6pq8-jhm2-2vcw) (#147)
+- Resolve npm audit vulnerability in follow-redirects transitive dependency — custom credentials can follow redirects (GHSA-mrwp-f3q8-3g9p) (#149)
 
 ## [3.0.5] - 2026-10-22
 
@@ -209,7 +216,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Updated readme with new features and usage
 
-[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v3.0.5...HEAD
+[Unreleased]: https://github.com/livechat/accounts-sdk/compare/v3.1.0...HEAD
+[3.1.0]: https://github.com/livechat/accounts-sdk/compare/v3.0.5...v3.1.0
 [3.0.5]: https://github.com/livechat/accounts-sdk/compare/v3.0.4...v3.0.5
 [3.0.4]: https://github.com/livechat/accounts-sdk/compare/v3.0.3...v3.0.4
 [3.0.3]: https://github.com/livechat/accounts-sdk/compare/v3.0.2...v3.0.3
