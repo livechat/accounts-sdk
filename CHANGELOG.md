@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Node.js 26 (LTS) support: added to CI matrix, `engines` and `.nvmrc` (AS-2431)
+
 ## [3.0.5] - 2026-10-22
 
 ### Security
